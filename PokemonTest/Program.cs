@@ -27,7 +27,7 @@ namespace PokemonTextEdition
             //Introduction code.
             //TODO: Keep this updated!
             Console.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! v0.2 [BETA]");
-            Console.WriteLine("All 151 Pokemon are now in the game! Hurray!");
+            Console.WriteLine("All 152 Pokemon are now in the game! Hurray!");
             Console.WriteLine("Pokemon can now evolve and items are usable! :-)");
 
             Console.WriteLine("\nA letter in parentheses represents a command shortcut. For instance, (f)ight");
