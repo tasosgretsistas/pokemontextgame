@@ -266,7 +266,7 @@ namespace PokemonTextEdition
             else
             {
                 Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input.\n");
 
                 return new Pokemon();
             }

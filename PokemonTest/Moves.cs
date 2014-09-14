@@ -56,7 +56,7 @@ namespace PokemonTextEdition
 
         public Moves()
         {
-            Name = "Sample Move";
+            Name = "Blank";
             Type = "";
         }
     }

@@ -221,6 +221,8 @@ namespace PokemonTextEdition
                 case "Pikachu":
                     moves.Add(ThunderShock, 1);
                     moves.Add(QuickAttack, 7);
+                    moves.Add(VineWhip, 9);
+                    moves.Add(PoisonPoweder, 13);
                     break;
 
                 case "Sandshrew":

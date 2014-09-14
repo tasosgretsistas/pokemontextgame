@@ -193,7 +193,7 @@ namespace PokemonTextEdition
             //A short introduction for the Pokemon.
             //TODO: Add a PokeDex entry?
             Console.WriteLine("\n\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", Overworld.player.party.ElementAt(0).name, Overworld.player.party.ElementAt(0).pokedexSpecies, Overworld.player.party.ElementAt(0).pokedexNumber);
-            Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", Overworld.player.party.ElementAt(0).maxHP, Overworld.player.party.ElementAt(0).PrintMoves());
+            Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", Overworld.player.party.ElementAt(0).maxHP, Overworld.player.party.ElementAt(0).knownMoves.ElementAt(0).Name);
             Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", Overworld.player.party.ElementAt(0).name);
             Console.WriteLine("");           
 

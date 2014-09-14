@@ -243,7 +243,7 @@ namespace PokemonTextEdition
         public void PrintStatus()
         //This method displays all of a Pokemon's current stats, including its level, species and its currently known moves.
         {
-            Console.WriteLine("\nLevel {0} {1}. HP: {2}/{3}. Type: {4}. Pokedex #: {5}.\nAttack: {6}. Defense: {7}. Sp. Attack: {8}. Sp Defense: {9} Speed: {10}.\nKnown moves: {11}",
+            Console.WriteLine("Level {0} {1}. HP: {2}/{3}. Type: {4}. Pokedex #: {5}.\nAttack: {6}. Defense: {7}. Sp. Attack: {8}. Sp Defense: {9} Speed: {10}.\nKnown moves: {11}",
                 level, name, currentHP, maxHP, TypeMessage(), pokedexNumber, attack, defense, specialAttack, specialDefense, speed, PrintMoves());
         }
 
@@ -284,6 +284,8 @@ namespace PokemonTextEdition
 
         public void Faint()
         {
+            //This code runs when a Pokemon would faint, and it basically restores all of a Pokemon's temporary and non-temporary effects back to default.
+
             if (currentHP < 0)
                 currentHP = 0;
 
@@ -294,7 +296,6 @@ namespace PokemonTextEdition
             protect = false;
 
         }
-
 
         public void StatAdjust()
         //This method adjusts a Pokemon's stats based on its level.
@@ -403,6 +404,42 @@ namespace PokemonTextEdition
 
         }
 
+        public Moves SelectMove(bool mandatory)
+        {
+            //This code is used when the player is asked to select one of a Pokemon's moves.
+
+            //First, all of the moves that the Pokemon knows are listed.
+            for (int i = 0; i < this.knownMoves.Count; i++)
+            {
+                Console.WriteLine("{0} - {1}", i + 1, this.knownMoves.ElementAt(i).Name);
+            }
+
+            string input = Console.ReadLine();
+            int index;
+            bool validInput = Int32.TryParse(input, out index);
+
+            //First, input is taken from the player. If the input is a number corresponding to a move in the Pokemon's knownMoves list, it gets selected.
+            if (validInput && index > 0 && index < (this.knownMoves.Count + 1))          
+                return this.knownMoves.ElementAt(index - 1);            
+
+            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
+            else if (input == "" && !mandatory)
+            {
+                Program.Log("The player chose to cancel the operation.", 0);
+
+                return new Moves();
+            }
+
+            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
+            else
+            {
+                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
+                Console.WriteLine("\nInvalid input.\n");
+
+                return new Moves();
+            }
+        }
+
         public void CheckNewMoves()
         //This code checks if the Pokemon learns any new moves at its level.
         {
@@ -433,26 +470,23 @@ namespace PokemonTextEdition
                             case "y":
 
                                 //If he types "yes", he is asked to give input as to which move should be forgotten.
-                                Console.WriteLine("What move should be forgotten? (1-4)\n{0}", PrintMoves());
+                                Console.WriteLine("What move should be forgotten?");
 
-                                int forget;
-                                bool validInput = Int32.TryParse(Console.ReadLine(), out forget);
+                                Moves tempMove = SelectMove(false);
 
                                 //If the input was a number larger than 0 and equal to or smaller than the amount of moves the Pokemon currently knows,
                                 //the user the move selected is forgotten, and the new move is learned in its stead.
-                                if (validInput && forget > 0 && forget <= knownMoves.Count)
+                                if (tempMove.Name != "Blank")
                                 {
-                                    Console.WriteLine("1, 2 and poof!\n{0} forgot {1} and learned {2} instead!", name, knownMoves.ElementAt(forget - 1).Name, move.Key.Name);
-                                    knownMoves.RemoveAt(forget - 1);
+                                    Console.WriteLine("1, 2 and poof!\n{0} forgot {1} and learned {2} instead!", name, tempMove.Name, move.Key.Name);
+                                    knownMoves.Remove(knownMoves.Find(moves => moves.Name == tempMove.Name));
                                     knownMoves.Add(move.Key);
 
                                 }
 
-                                //Else, if the input was not valid, he is taken back to the main screen, where he will be asked
-                                //whether the Pokemon should forget a move again.
+                                //Else, if the input was not valid, he will be asked whether the Pokemon should forget a move again.
                                 else
                                 {
-                                    Console.WriteLine("Invalid input!");
                                     CheckNewMoves();
                                 }
 

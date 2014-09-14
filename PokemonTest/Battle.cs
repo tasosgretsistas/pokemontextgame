@@ -68,7 +68,7 @@ namespace PokemonTextEdition
             enemyTrainer = t;
             encounterType = type;
 
-            Console.WriteLine("\n{0} wants to battle!\n{0} sent out a level {1} {2}!", t.Name, enemyPokemon.level, enemyPokemon.name);
+            Console.WriteLine("\n{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.Name, enemyPokemon.level, enemyPokemon.name);
 
             Actions();
         }
@@ -85,7 +85,7 @@ namespace PokemonTextEdition
             enemyPokemon = e;
             encounterType = "wild";
 
-            Console.WriteLine("\nA wild level {0} {1} appeared!", e.level, e.name);
+            Console.WriteLine("\nA wild level {0} {1} appeared!\n", e.level, e.name);
 
             Actions();
         }
@@ -120,10 +120,12 @@ namespace PokemonTextEdition
 
             Program.Log("The player is taken to the Actions menu.", 1);
 
-            Console.WriteLine("\nWhat will you do?\n(Available commands: (f)ight, (s)tatus, s(w)itch, (c)atch, (r)un)");
+            Console.WriteLine("What will you do?\n(Available commands: (f)ight, (s)tatus, s(w)itch, (c)atch, (r)un)");
 
             string action = Console.ReadLine();
-            Console.WriteLine("");
+
+            if (action != "")
+                Console.WriteLine("");
 
             //This switch handles player input. 
             switch (action)
@@ -157,11 +159,11 @@ namespace PokemonTextEdition
                 case "r":
                     Run();
                     break;
-
+                    
                 default:
                     Program.Log("The player input an invalid command at the Actions screen.", 0);
 
-                    Console.WriteLine("Invalid command!");
+                    Console.WriteLine("Invalid command!\n");
 
                     Actions();
                     break;
@@ -173,25 +175,22 @@ namespace PokemonTextEdition
         void Status()
         {
             //A very simple status screen that displays the current status of the player's and the AI's Pokemon.
-            //NOTE: I wrapped the enemyPokemon.Status()part in a comment block because this is not intended functionality within the game.
-            //However, it is useful for debugging, so I'm keeping it around.
 
             Program.Log("The player views the Status screen.", 0);
 
-            Console.Write("Your Pokemon: ");
+            Console.WriteLine("Your Pokemon: ");
             playerPokemon.PrintStatus();
+            Console.WriteLine("");
 
             if (encounterType == "trainer")
-            {
-                Console.Write("\nYour opponent's Pokemon: ");
-            }
+                Console.Write("Your opponent's Pokemon: ");
+            
             else if (encounterType == "wild")
-            {
-                Console.Write("\nThe wild Pokemon: ");
-            }
+                Console.Write("The wild Pokemon: ");            
 
             enemyPokemon.BriefStatus();
 
+            Console.WriteLine("");
 
             Actions();
         }
@@ -227,7 +226,7 @@ namespace PokemonTextEdition
             else if (pokemon.name != "Blank" && pokemon.currentHP <= 0)
             {
                 Program.Log("The player chose to switch to a fainted Pokemon. Returning to Actions.", 0);
-                Console.WriteLine("That Pokemon has fainted!");
+                Console.WriteLine("\nThat Pokemon has fainted!\n");
 
                 Actions();
             }
@@ -235,12 +234,13 @@ namespace PokemonTextEdition
             else if (pokemon.name != "Blank" && pokemon == playerPokemon)
             {
                 Program.Log("The player chose to switch to the Pokemon that's already active. Returning to Actions.", 0);
-                Console.WriteLine("That Pokemon is already the active Pokemon!");
+                Console.WriteLine("\nThat Pokemon is already the active Pokemon!\n");
 
                 Actions();
             }
 
-
+            else
+                Actions();           
         }
 
         void Fight()
@@ -249,21 +249,19 @@ namespace PokemonTextEdition
 
             Program.Log("The player chooses to fight.", 1);
 
-            string move = "";
-
             //If the player's Pokemon is not move-locked, the player selects a move.
             if (!playerPokemon.moveLocked)
             {
-                Console.WriteLine("Please select a move. \n(Available moves: {0}", playerPokemon.PrintMoves());
+                Console.WriteLine("Please select a move. (Valid input: 1-{0}, or press Enter to return.)\n", playerPokemon.knownMoves.Count);
 
-                move = Console.ReadLine();
+                Moves tempMove = playerPokemon.SelectMove(false);
 
-                //If the active Pokemon knows a move with that name, it becomes currentMove.
-                if (playerPokemon.knownMoves.Exists(m => m.Name == move))
+                //The player is asked to select a move. If his selecetion is correct, the operation goes on.
+                if (tempMove.Name != "Blank")
                 {
-                    playerMove = playerPokemon.knownMoves.Find(m => m.Name == move);
+                    playerMove = tempMove;
 
-                    Program.Log("The player chose the move " + playerMove.Name + ".", 0);
+                    Program.Log("The player selected the move " + playerMove.Name + ".", 0);
 
                     //The AI then selects a move.
                     AI();
@@ -275,7 +273,6 @@ namespace PokemonTextEdition
                 else
                 {
                     //Otherwise, an error message is displayed, and the player is taken back to the Actions menu.
-                    Console.WriteLine("\nThis Pokemon doesn't know a move with that name! Please note that\nmoves are case-sensitive and need spaces, i.e. \"Vine Whip\".");
                     Program.Log("The player chose an invalid move. Returning to Actions.", 0);
 
                     Actions();
@@ -284,9 +281,9 @@ namespace PokemonTextEdition
 
             else
             {
+                //Else if the player's Pokemon is movelocked and it still knows the move it used last turn, that move gets automatically selected.
                 if (playerPokemon.knownMoves.Exists(m => m.Name == previousPlayerMove.Name))
                 {
-                    //If the active Pokemon knows a move with that name, it becomes currentMove.
                     playerMove = playerPokemon.knownMoves.Find(m => m.Name == previousPlayerMove.Name);
 
                     Program.Log("The player's Pokemon is movelocked and automatically uses the move " + playerMove.Name + ".", 0);
@@ -313,7 +310,7 @@ namespace PokemonTextEdition
             else
                 enemyMove = previousEnemyMove;
 
-            Program.Log("The AI chooses the move " + enemyMove.Name + ".", 0);
+            Program.Log("The AI selected the move " + enemyMove.Name + ".", 0);
         }
 
         void SpeedPriority()
@@ -365,6 +362,8 @@ namespace PokemonTextEdition
                 {
                     Program.Log("The turn has ended. Returning to Actions.", 1);
 
+                    Console.WriteLine("");
+
                     Actions();
                 }
             }
@@ -410,7 +409,7 @@ namespace PokemonTextEdition
                 previousEnemyMove = enemyMove;
             }
 
-            if (attackingPokemon.status == "paralysis" && !Paralyzed() || attackingPokemon.status == "sleep" && !Asleep() || attackingPokemon.status == "")
+            if (attackingPokemon.status == "paralysis" && !Paralyzed() || attackingPokemon.status == "sleep" && !Asleep() || attackingPokemon.status == "" || attackingPokemon.status == "poison")
             {
                 Console.WriteLine("\n{0} used {1}!", attackerName, currentMove.Name);
 
@@ -673,7 +672,7 @@ namespace PokemonTextEdition
                 int recoil = (int)Math.Floor(damage * currentMove.EffectN);
 
                 Program.Log(attackerName + " suffers " + recoil.ToString() + " damage in recoil.", 0);
-                Console.WriteLine("{0} is damaged by recoil!", attackerName);
+                Console.WriteLine("\n{0} is damaged by recoil!", attackerName);
 
                 attackingPokemon.currentHP -= recoil;
             }
@@ -997,7 +996,7 @@ namespace PokemonTextEdition
                 aiCurrentPokemonIndex++;
                 enemyPokemon = enemyTrainer.party.ElementAt(aiCurrentPokemonIndex);
 
-                Console.WriteLine("\n{0} sent out a level {1} {2}!", enemyTrainer.Name, enemyPokemon.level, enemyPokemon.name);
+                Console.WriteLine("\n{0} sent out a level {1} {2}!\n", enemyTrainer.Name, enemyPokemon.level, enemyPokemon.name);
                 Program.Log("The AI has more Pokemon, so it sends out " + enemyPokemon.name + ". Returning to Actions.", 1);
 
                 participants.Clear();
@@ -1049,7 +1048,7 @@ namespace PokemonTextEdition
 
             int moneyLoss = (int)(Math.Floor((double)Overworld.player.Money * 0.05));
 
-            Console.WriteLine("You have lost ${0} for blacking out.", moneyLoss);
+            Console.WriteLine("You have lost ${0} for blacking out.\n", moneyLoss);
             Overworld.player.Money -= moneyLoss;
 
             //If the player was battling a trainer, the trainer's victory speech plays.
@@ -1062,7 +1061,7 @@ namespace PokemonTextEdition
 
             else if (encounterType == "wild")
             {
-                Console.WriteLine("\nYou will now be taken to the last city you rested at.");
+                Console.WriteLine("You will now be taken to the last city you rested at.");
 
                 Console.WriteLine("Press any key to continue.");
                 Console.ReadKey();
@@ -1166,7 +1165,7 @@ namespace PokemonTextEdition
             {
                 Program.Log("The player tried to escape from a trainer. Returning to Actions.", 0);
 
-                Console.WriteLine("You can't run away from a trainer fight!");
+                Console.WriteLine("You can't run away from a trainer fight!\n");
 
                 Actions();
             }
@@ -1229,7 +1228,7 @@ namespace PokemonTextEdition
                 else
                 {
                     Program.Log("The player derped - no more PokeBalls. Returning to Actions.", 0);
-                    Console.WriteLine("You don't have any remaining Poke Balls to use!");
+                    Console.WriteLine("You don't have any remaining PokeBalls to use!\n");
 
                     Actions();
                 }
@@ -1238,7 +1237,7 @@ namespace PokemonTextEdition
             else
             {
                 Program.Log("The player derped - trainer fight. Returning to Actions.", 0);
-                Console.WriteLine("You can't throw a PokeBall at a trainer's Pokemon!");
+                Console.WriteLine("You can't throw a PokeBall at a trainer's Pokemon!\n");
 
                 Actions();
             }
@@ -1258,6 +1257,8 @@ namespace PokemonTextEdition
                 if (!fightOver)
                 {
                     Program.Log("The AI attacked. Returning to Actions.", 0);
+
+                    Console.WriteLine("");
 
                     Actions();
                 }
