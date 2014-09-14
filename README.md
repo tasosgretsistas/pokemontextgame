@@ -1,6 +1,7 @@
 Pokemon - Text Edition
 ----------------------
 Version 0.3 [BETA] - September 2014, by Tasos Gretsistas
+
 www.facebook.com/shadowtasos
 
 
