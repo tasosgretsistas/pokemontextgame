@@ -27,6 +27,8 @@ v0.3 - September 2014
 - Pokemon can now evolve, just like in the original games. Pokemon that normally evolve via trading will instead evolve at a set level.
 
 - The introduction has been updated. You can now select a name for yourself and the rival, and there is also a helpful introduction on how to catch wild Pokemon and heal your own.
+ 
+- Selecting a move now works by inputting a number rather than typing the move's name. No more typos!
 
 - All of the Pokemon in your party that participate in a battle will receive experience, rather than just the active one.
 
