@@ -582,14 +582,10 @@ namespace PokemonTextEdition
                 {
                     //The next part prints a message explaining the result of the TypeChart calculation to the player.
                     if (typeMod == 2.0 || typeMod == 4.0)
-                    {
                         Console.WriteLine("It's super effective!");
-                    }
 
                     else if (typeMod == 0.5 || typeMod == 0.25)
-                    {
                         Console.WriteLine("It's not very effective!");
-                    }
 
                     //Same-Type Attack Bonus check. If the Pokemon's attack is the same type as the Pokemon itself, it receives a 50% damage boost.
                     if (attackingPokemon.type == currentMove.Type || attackingPokemon.type2 == currentMove.Type)
@@ -764,9 +760,7 @@ namespace PokemonTextEdition
                     }
 
                     else
-                    {
                         Console.WriteLine("The move failed!");
-                    }
 
                     break;
 
@@ -782,9 +776,7 @@ namespace PokemonTextEdition
                     }
 
                     else
-                    {
                         Console.WriteLine("The move failed!");
-                    }
 
                     break;
 
@@ -811,9 +803,7 @@ namespace PokemonTextEdition
                     }
 
                     else
-                    {
                         Console.WriteLine("The move failed!");
-                    }
 
                     break;
 
@@ -835,9 +825,7 @@ namespace PokemonTextEdition
                     }
 
                     else
-                    {
                         Console.WriteLine("The move failed!");
-                    }
 
                     break;
             }
@@ -859,7 +847,7 @@ namespace PokemonTextEdition
                 Program.Log(playerPokemon.name + " is " + playerPokemon.status + "ed, so it loses HP.", 0);
 
                 Console.WriteLine("\n{0} lost some life to its {1}!", playerPokemon.name, playerPokemon.status);
-                playerPokemon.currentHP -= (int)(Math.Floor((double)(playerPokemon.maxHP / 8.0)));
+                playerPokemon.currentHP -= (int)(Math.Round(((double)(playerPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
 
                 FaintCheck();
             }
@@ -870,7 +858,7 @@ namespace PokemonTextEdition
 
                 Console.WriteLine("\n{0}'s life was drained by Leech Seed!", playerPokemon.name);
 
-                int seedDamage = (int)(Math.Floor((double)(playerPokemon.maxHP / 8.0)));
+                int seedDamage = (int)(Math.Round(((double)(playerPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
 
                 playerPokemon.currentHP -= seedDamage;
                 enemyPokemon.currentHP += seedDamage;
@@ -883,7 +871,7 @@ namespace PokemonTextEdition
                 Program.Log(enemyPokemon.name + " is " + enemyPokemon.status + "ed, so it loses HP.", 0);
 
                 Console.WriteLine("\nThe enemy {0} lost some life to its {1}!", enemyPokemon.name, enemyPokemon.status);
-                enemyPokemon.currentHP -= (int)(Math.Floor((double)(enemyPokemon.maxHP / 8.0)));
+                enemyPokemon.currentHP -= (int)(Math.Round(((double)(enemyPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
 
                 FaintCheck();
             }
@@ -894,7 +882,7 @@ namespace PokemonTextEdition
 
                 Console.WriteLine("\n{0}'s life was drained by Leech Seed!", enemyPokemon.name);
 
-                int seedDamage = (int)(Math.Floor((double)(enemyPokemon.maxHP / 8.0)));
+                int seedDamage = (int)(Math.Round(((double)(enemyPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
 
                 playerPokemon.currentHP += seedDamage;
                 enemyPokemon.currentHP -= seedDamage;
@@ -985,9 +973,7 @@ namespace PokemonTextEdition
             foreach (Pokemon p in participants)
             {
                 if (p.currentHP > 0 && p.level < 101)
-                {
                     Experience(p);
-                }
             }
 
             //If the AI has any remaining healthy Pokemon, it sends out its next Pokemon, based on the aiCurrentPokemonIndex index number.     
@@ -1007,9 +993,7 @@ namespace PokemonTextEdition
 
             //Otherwise, if the AI has no more Pokemon, or if the battle was with a wild Pokemon, the player wins.
             else
-            {
-                Victory();
-            }
+                Victory();            
         }
 
         void Victory()
@@ -1031,9 +1015,7 @@ namespace PokemonTextEdition
             }
 
             else if (encounterType == "wild")
-            {
                 Program.Log("The player was battling a wild Pokemon, and will now return to the overworld.", 0);
-            }
         }
 
         void Defeat()
@@ -1185,11 +1167,11 @@ namespace PokemonTextEdition
                 {
                     CancelMoveLock(playerPokemon);
 
-                    ItemsList.pokeball.Count--;
+                    ItemsList.pokeball.Remove(1, "throw") ;
 
                     Console.WriteLine("Threw a Poke Ball ({1} left) at the wild {0}! 1, 2, 3...", enemyPokemon.name, ItemsList.pokeball.Count);
 
-                    int life = enemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
+                    double life = enemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
                     int ballBonus = 1; //Each specific PokeBall's catch rate multiplier. (NYI)
 
                     //First, the chance to catch the Pokemon is calculated, using its current HP %, its individual catch rate, and the bonus multiplier from the PokeBall used.

@@ -73,7 +73,12 @@ namespace PokemonTextEdition
         public void Remove(int quantity, string method)
         {
             if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == Name)))
+            {
                 Overworld.player.items.Find(i => i.Name == Name).Count -= quantity;
+
+                if (Overworld.player.items.Find(i => i.Name == Name).Count < 1)
+                    Overworld.player.items.Remove(Overworld.player.items.Find(i => i.Name == Name));
+            }
 
             else
             {

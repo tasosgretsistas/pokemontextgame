@@ -17,7 +17,7 @@ namespace PokemonTextEdition
         public void Welcome(List<Item> l)
         {
             //A generic greeting for all stores.
-            Console.WriteLine("\nWelcome to the Pokemon Mart! We've got goods of all kinds! Take a look!");
+            Console.WriteLine("\nWelcome to the Pokemon Mart! We've got goods of all kinds! Take a look!\n");
 
             stock = l;
 
@@ -28,7 +28,7 @@ namespace PokemonTextEdition
         {
             //The store's main menu. Here, the player selects whether he wants to buy, sell, or exit.
 
-            Console.WriteLine("\nWhat would you like to do at the mart?\n(Available actions: buy, sell, exit)");
+            Console.WriteLine("What would you like to do at the mart?\n(Available actions: buy, sell, exit)");
 
             string action = Console.ReadLine();
 
@@ -37,6 +37,7 @@ namespace PokemonTextEdition
                 case "Buy":
                 case "buy":
 
+                    Console.WriteLine("");
                     Buy();
 
                     break;
@@ -44,12 +45,24 @@ namespace PokemonTextEdition
                 case "Sell":
                 case "sell":
 
+                    Console.WriteLine("");
                     Sell();
 
                     break;
 
                 case "Exit":
                 case "exit":
+                    break;
+
+                default:
+                    
+                    if (action != "")
+                        Console.WriteLine("");
+
+                    Console.WriteLine("Invalid input!\n");
+
+                    Options();
+
                     break;
             }
         }
@@ -58,7 +71,6 @@ namespace PokemonTextEdition
         {
             //This method is called up when the player chooses to buy.
 
-            Console.WriteLine("");
             Console.WriteLine("Of course! What are you after? We have the following items in stock:\n");
 
             //The player is asked to select an item.
@@ -70,14 +82,17 @@ namespace PokemonTextEdition
                 int itemCount = 0;
 
                 if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
-                    itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count;
+                    itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count; //This searches for the selected item in the player's bag and returns how many of the item the player has.
 
-                Console.WriteLine("\n{0}s, huh? They're ${1} each. How many would you like to buy?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to buy or press enter to return.)",
+                Console.WriteLine("{0}s, huh? They're ${1} each. How many would you like to buy?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to buy or press enter to return.)",
                                   item.Name, item.Value, itemCount, Overworld.player.Money);
 
                 string decision = Console.ReadLine();
                 int amount;
                 bool validInput = Int32.TryParse(decision, out amount);
+
+                if (decision != "")
+                    Console.WriteLine("");
 
                 //The player then gives input again as to how many of an item he wants to buy.
                 if (validInput && amount > 0)
@@ -95,13 +110,13 @@ namespace PokemonTextEdition
 
                         Overworld.player.Money -= (item.Value * amount);
 
-                        Console.WriteLine("\nThere you go! {0} {1}, ${2} all in all!\nThank you, come again!", amount, formattedName, (item.Value * amount));
+                        Console.WriteLine("There you go! {0} {1}, ${2} all in all!\nThank you, come again!\n", amount, formattedName, (item.Value * amount));
                     }
 
                     //Otherwise, the player is informed that he doesn't have enough money.
                     else
                     {
-                        Console.WriteLine("It appears you don't have enough money!");
+                        Console.WriteLine("It appears you don't have enough money!\n");
                     }
 
                     Options();
@@ -114,7 +129,7 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    Console.WriteLine("Invalid input");
+                    Console.WriteLine("Invalid input.\n");
 
                     Options();
                 }
@@ -128,7 +143,6 @@ namespace PokemonTextEdition
         {
             //This method is called up when the player chooses to sell.
 
-            Console.WriteLine("");
             Console.WriteLine("Selling? No problem! What would you like to sell?");
 
             //The player is asked to select an item.
@@ -143,14 +157,15 @@ namespace PokemonTextEdition
                 if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
                     itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count;
 
-                Console.WriteLine("\n{0}s, right? I can give you ${1} a piece. How many are you selling?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to sell or press enter to return.)",
+                Console.WriteLine("{0}s, right? I can give you ${1} a piece. How many are you selling?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to sell or press enter to return.)",
                                   item.Name, saleValue, itemCount, Overworld.player.Money);
 
                 string decision = Console.ReadLine();
                 int amount;
                 bool validInput = Int32.TryParse(decision, out amount);
 
-                Console.WriteLine("");
+                if (decision != "")
+                    Console.WriteLine("");
 
                 //The player then gives input again as to how many of an item he wants to buy. If the player's input was correct, the operation continues.
                 if (validInput && amount > 0)
@@ -167,13 +182,13 @@ namespace PokemonTextEdition
 
                         Overworld.player.Money += (saleValue * amount);
 
-                        Console.WriteLine("Alright, here you go, ${0} for {1} {2}!\nThank you, come again!", (item.Value * amount), amount, formattedName);
+                        Console.WriteLine("Alright, here you go, ${0} for {1} {2}!\nThank you, come again!\n", (item.Value * amount), amount, formattedName);
                     }
 
                     //Otherwise, the player is informed that he doesn't have enough money.
                     else
                     {
-                        Console.WriteLine("You don't have that many {0} on you.", formattedName);
+                        Console.WriteLine("You don't have that many {0} on you.\n", formattedName);
                     }
 
                     Options();
@@ -186,7 +201,7 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    Console.WriteLine("Invalid input.");
+                    Console.WriteLine("Invalid input.\n");
 
                     Options();
                 }
@@ -209,8 +224,11 @@ namespace PokemonTextEdition
             int index;
             bool validInput = Int32.TryParse(input, out index);
 
+            if (input != "")
+                Console.WriteLine("");
+
             //First, input is taken from the player. If the input is a number corresponding to an item in the mart's stock, that item gets selected.
-            if (validInput && index > 0 && index < stock.Count )
+            if (validInput && index > 0 && index <= stock.Count )
             {
                 return stock.ElementAt(index - 1);
             }
@@ -224,7 +242,7 @@ namespace PokemonTextEdition
             //If the input was smaller than 1, bigger than the mart's stock count or not a number, an error message is shown.
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input.\n");
 
                 return new Item();
             }
@@ -236,14 +254,17 @@ namespace PokemonTextEdition
 
             Overworld.player.ListItems();
 
-            Console.WriteLine("\nPlease select an item to sell. (Valid input: 1-{0})", Overworld.player.items.Count);
+            Console.WriteLine("Please select an item to sell. (Valid input: 1-{0})", Overworld.player.items.Count);
 
             string input = Console.ReadLine();
             int index;
             bool validInput = Int32.TryParse(input, out index);
 
+            if (input != "")
+                Console.WriteLine("");
+
             //First, input is taken from the player. If the input is a number corresponding to an item in the player's bag, that item gets selected.
-            if (validInput && index > 0 && index < Overworld.player.items.Count)
+            if (validInput && index > 0 && index <= Overworld.player.items.Count)
             {
                 return Overworld.player.items.ElementAt(index - 1);
             }
@@ -257,7 +278,7 @@ namespace PokemonTextEdition
             //If the input was smaller than 1, bigger than the player's items count or not a number, an error message is shown.
             else
             {
-                Console.WriteLine("Invalid input.");
+                Console.WriteLine("Invalid input.\n");
 
                 return new Item();
             }

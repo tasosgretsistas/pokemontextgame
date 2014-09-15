@@ -234,10 +234,10 @@ namespace PokemonTextEdition
             }
         }
 
-        public int PercentLife()
+        public double PercentLife()
         //This method returns the Pokemon's remaining life expressed as a percent of its maximum life.
         {
-            return (int)Math.Round((double)currentHP / (double)maxHP * 100);
+            return Math.Round(((double)currentHP / (double)maxHP * 100), 2, MidpointRounding.AwayFromZero);
         }
 
         public void PrintStatus()

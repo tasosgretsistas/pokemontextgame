@@ -127,12 +127,15 @@ namespace PokemonTextEdition
 
         public void PartyStatus()
         {
-            //This method displays the status for each Pokemon in the player's party.
-            Console.WriteLine("\nYour party's status: ");
+            //This method displays the status for each Pokemon in the player's party, separated by an empty line for every Pokemon.
+            Console.WriteLine("\nYour party's status: \n");
 
-            foreach (Pokemon p in party)
+            for (int i = 0; i < party.Count; i++)
             {
-                p.PrintStatus();
+                party.ElementAt(i).PrintStatus();
+
+                if ((i + 1) < party.Count )
+                    Console.WriteLine("");
             }
         }
 
@@ -155,6 +158,8 @@ namespace PokemonTextEdition
             {
                 Console.WriteLine(i.Print());
             }
+
+            Console.WriteLine("");
         }
 
         public void ListItems()
@@ -163,8 +168,16 @@ namespace PokemonTextEdition
 
             Console.WriteLine("\nItems in your bag:\n");
 
-            for (int i = 0; i < items.Count; i++)
-                Console.WriteLine("{0} - {1}", (i + 1), items.ElementAt(i).Print());
+            int counter = 1;
+
+            foreach (Item i in items)
+                if (i.Count > 0)
+                {
+                    Console.WriteLine("{0} - {1}", counter, i.Print());
+                    counter++;
+                }
+
+            Console.WriteLine("");
         }
 
         public void SwitchAround()

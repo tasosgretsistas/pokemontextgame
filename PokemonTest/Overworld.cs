@@ -201,6 +201,9 @@ namespace PokemonTextEdition
 
                 default:
 
+                    if (action != "")
+                        Console.WriteLine("");
+
                     Console.WriteLine("Invalid command.");
 
                     Options();

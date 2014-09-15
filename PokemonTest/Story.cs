@@ -191,7 +191,7 @@ namespace PokemonTextEdition
             Overworld.player.Starter = Overworld.player.party.ElementAt(0).name;
 
             //A short introduction for the Pokemon.
-            //TODO: Add a PokeDex entry?
+
             Console.WriteLine("\n\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", Overworld.player.party.ElementAt(0).name, Overworld.player.party.ElementAt(0).pokedexSpecies, Overworld.player.party.ElementAt(0).pokedexNumber);
             Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", Overworld.player.party.ElementAt(0).maxHP, Overworld.player.party.ElementAt(0).knownMoves.ElementAt(0).Name);
             Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", Overworld.player.party.ElementAt(0).name);
@@ -281,15 +281,18 @@ namespace PokemonTextEdition
             AnyKeyLoadingArea();
 
             //The user's Pokemon is then healed and the game moves on to the Overworld, where the player can navigate and perform additional actions.
-            Overworld.player.party.ElementAt(0).currentHP = Overworld.player.party.ElementAt(0).maxHP;
-            Overworld.player.party.ElementAt(0).status = "";
+
+            Overworld.player.PartyHeal();
+
             Overworld.LoadLocation("pallet");
         }
 
         public static void AnyKey()
         {
             Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
+
+            Console.ReadKey(true);
+
             Console.WriteLine("");
         }
 
@@ -298,7 +301,7 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("Press any key to continue.");
-            Console.ReadKey(); 
+            Console.ReadKey(true); 
 
         }
     }
