@@ -20,13 +20,15 @@ Change log
 
 v0.3 - September 2014
 
-- I have cleaned up a big part of the code and fixed various small bugs. 
+- Cleaned up a big part of the code and fixed various small bugs. 
 
 - All of the 151 original Pokemon are now in the game! Many new moves have been added to go with them, roughly supporting up to level 20.
 
-- Pokemon can now evolve, just like in the original games. Pokemon that normally evolve via trading will instead evolve at a set level.
+- Pokemon can now evolve, just like in the original games. Pokemon that normally evolve via trading will evolve at a set level instead.
 
-- The introduction has been updated. You can now select a name for yourself and the rival, and there is also a helpful introduction on how to catch wild Pokemon and heal your own.
+- You can now use items, both during and outside of combat. Relevant commands have been added.
+
+- The introduction has been updated. You can now select a name for yourself and the rival, and there is also a helpful introduction on how to catch wild Pokemon and heal your Pokemon.
  
 - Selecting a move now works by inputting a number rather than typing the move's name. No more typos!
 
