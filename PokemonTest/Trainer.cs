@@ -87,6 +87,8 @@ namespace PokemonTextEdition
 
             Console.WriteLine(Greeting);
 
+            Console.WriteLine("");
+
             new Battle().Start(this, "trainer");
         }
 

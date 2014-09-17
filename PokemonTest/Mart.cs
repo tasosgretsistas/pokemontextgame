@@ -17,7 +17,7 @@ namespace PokemonTextEdition
         public void Welcome(List<Item> l)
         {
             //A generic greeting for all stores.
-            Console.WriteLine("\nWelcome to the Pokemon Mart! We've got goods of all kinds! Take a look!\n");
+            Console.WriteLine("Welcome to the Pokemon Mart! We've got goods of all kinds! Take a look!\n");
 
             stock = l;
 
@@ -32,12 +32,14 @@ namespace PokemonTextEdition
 
             string action = Console.ReadLine();
 
+            if (action != "")
+                Console.WriteLine("");
+
             switch (action)
             {
                 case "Buy":
                 case "buy":
 
-                    Console.WriteLine("");
                     Buy();
 
                     break;
@@ -45,7 +47,6 @@ namespace PokemonTextEdition
                 case "Sell":
                 case "sell":
 
-                    Console.WriteLine("");
                     Sell();
 
                     break;
@@ -54,10 +55,7 @@ namespace PokemonTextEdition
                 case "exit":
                     break;
 
-                default:
-                    
-                    if (action != "")
-                        Console.WriteLine("");
+                default:  
 
                     Console.WriteLine("Invalid input!\n");
 

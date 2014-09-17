@@ -27,7 +27,7 @@ namespace PokemonTextEdition.Locations
             Description = "the forest's end";
             LongDescription = "The far north part of the forest, bordering Pewter City's outskirts. This\npart of the forest is just thin enough to be able to make out Pewter City\nin the north and an odd cave that you don't see on the map in the east.";
             Connections = "the forest's depths to the south and Route 2 to the north";
-            HelpMessage = "\n\"north\" or \"go north\" - moves you to Pewter City.\n\"south\" or \"go south\" - moves you deeper in the Viridian Forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
+            HelpMessage = "\"north\" or \"go north\" - moves you to Pewter City.\n\"south\" or \"go south\" - moves you deeper in the Viridian Forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 
         public override void Trainer()
@@ -77,15 +77,13 @@ namespace PokemonTextEdition.Locations
 
         public override void GoNorth()
         {
-            Console.WriteLine("");
-
             if (rng.Next(1, 11) > 6)
             {
                 Console.WriteLine("You can definitely see Pewter City ahead of you, but that doesn't mean you");
                 Console.WriteLine("should stop looking at the map, either. You follow the path that you know");
                 Console.WriteLine("is safe enough to tread on, and it pays off - you can see the northern exit.");
 
-                Story.AnyKeyLoadingArea();
+                Story.AnyKey();
             }
 
             else
@@ -93,6 +91,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("You're ecstatic that you can see Pewter and can finally leave the forest.");
                 Console.WriteLine("Sadly, you have also lost focus and wandered off the main path, right");
                 Console.WriteLine("into wild Pokemon territory!");
+                Console.WriteLine("");
                 
                 Encounter();
 
@@ -101,7 +100,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("You sigh in relief that nobody got harmed due to your inattentiveness. No");
                 Console.WriteLine("distractions from now on - you follow the path towards the northern exit.");
 
-                Story.AnyKeyLoadingArea();
+                Story.AnyKey();
             }
 
             if (!michael.Defeated())
@@ -115,15 +114,13 @@ namespace PokemonTextEdition.Locations
 
         public override void GoSouth()
         {
-            Console.WriteLine("");
-
             if (rng.Next(1, 11) > 5)
             {
                 Console.WriteLine("You know for certain that you can handle wild Pokemon here, but you still");
                 Console.WriteLine("decide to play it safe. Taking advantage of the higher visibility in this");
                 Console.WriteLine("part of the forest, you head straight for the glade in the forest's center.");
 
-                Story.AnyKeyLoadingArea();
+                Story.AnyKey();
             }
 
             else
@@ -131,6 +128,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("Feeling very confident in your ability to take any wild Pokemon on, you");
                 Console.WriteLine("casually stroll through the forest. Not completely unexpectedly, a wild");
                 Console.WriteLine("Pokemon decides to take you up on your challenge!");
+                Console.WriteLine("");
                 
                 Encounter();
 
@@ -139,7 +137,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("Hah, no problem. You got some valuable battle experience AND you're almost");
                 Console.WriteLine("where you wanted to go - the forest's center. Score 1 for you and your party!");
 
-                Story.AnyKeyLoadingArea();
+                Story.AnyKey();
             }
         }
     }

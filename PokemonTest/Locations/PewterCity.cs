@@ -30,7 +30,7 @@ namespace PokemonTextEdition.Locations
             Description = "the city between rugged mountains";
             LongDescription = "This quiet city atop the mountainside offers a much needed rest for trainers\nwho just crossed the Viridian Forest. Rest not for too long, however --\nyour first battle with a Gym Leader awaits you here, so be prepared!";
             Connections = "Route 2 to the south and Route 3 to the east";
-            HelpMessage = "\n\"south\" or \"go south\" - moves you to Route 2.\n\"east\" or \"go east\" - moves you to Route 3.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.\n\"gym\" - takes you to the Pewter City gym.";
+            HelpMessage = "\"south\" or \"go south\" - moves you to Route 2.\n\"east\" or \"go east\" - moves you to Route 3.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.\n\"gym\" - takes you to the Pewter City gym.";
         }
 
         public override void GoSouth()

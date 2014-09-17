@@ -24,7 +24,7 @@ namespace PokemonTextEdition.Items
 
             Program.Log("The player is trying to use a " + Name + ".", 0);
 
-            Console.WriteLine("\nUse {0} on which Pokemon?\n(Valid input: 1-{0} or press Enter to return)\n", Name, Overworld.player.party.Count);
+            Console.WriteLine("Use {0} on which Pokemon?\n(Valid input: 1-{1} or press Enter to return)\n", Name, Overworld.player.party.Count);
 
             Pokemon pokemon = Overworld.player.SelectPokemon(false);
 
@@ -36,17 +36,17 @@ namespace PokemonTextEdition.Items
                 {
                     int previousHP = pokemon.currentHP;
 
-                    if (pokemon.maxHP < (previousHP + healAmount))
+                    if (pokemon.maxHP > (previousHP + healAmount))
                         pokemon.currentHP += healAmount;
 
                     else
                         pokemon.currentHP = pokemon.maxHP;
 
-                    Console.WriteLine("\n{0} HP was restored to {1}.", (pokemon.currentHP - previousHP), pokemon.name);
+                    Console.WriteLine("\n{0} HP was restored to {1}.\n", (pokemon.currentHP - previousHP), pokemon.name);
 
                     Program.Log("The player uses a Potion on " + pokemon.name + ", restoring " + (pokemon.currentHP - previousHP) + "HP.", 1);
 
-                    Count--;
+                    Remove(1, "use");
 
                     return true;
                 }
@@ -54,7 +54,7 @@ namespace PokemonTextEdition.Items
                 else if (pokemon.currentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
-                    Console.WriteLine("You cannot use a {0} on a Pokemon that has fainted.", Name);
+                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.\n", Name);
 
                     return false;
                 }
@@ -62,7 +62,7 @@ namespace PokemonTextEdition.Items
                 else
                 {
                     Program.Log("The player selected a Pokemon that was already at max HP.", 0);
-                    Console.WriteLine("That Pokemon is already at max HP.");
+                    Console.WriteLine("\nThat Pokemon is already at max HP.\n");
 
                     return false;
                 }

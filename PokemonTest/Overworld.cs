@@ -30,16 +30,20 @@ namespace PokemonTextEdition
             currentLocation = Locations.Find(location => location.Tag == l);
             currentLocation.PrintLocation();
 
-            Program.Log("The player moved to " + currentLocation.Name + " (" + currentLocation.Tag + ").", 1);               
+            Program.Log("The player moved to " + currentLocation.Name + " (" + currentLocation.Tag + ").", 1);
 
+            Console.WriteLine("");
             Options();
         }
 
         public static void Options()
         {
-            Console.WriteLine("\nWhat will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
+            Console.WriteLine("What will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
 
             string action = Console.ReadLine();
+
+            if (action != "")
+                Console.WriteLine("");
 
             switch (action)
             {
@@ -126,6 +130,7 @@ namespace PokemonTextEdition
                     Console.WriteLine("\"s(w)itch\" - allows you to change the order of the Pokemon in your party.");
                     Console.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
                     Console.WriteLine("\"s(a)ve\" - saves your progress in the game.");
+                    Console.WriteLine("");
 
                     Options();
 
@@ -155,7 +160,7 @@ namespace PokemonTextEdition
                 case "items":
                 case "i":
 
-                    player.Items();
+                    player.ItemsMain();
 
                     Options();
 
@@ -175,6 +180,8 @@ namespace PokemonTextEdition
 
                     foreach(Pokemon p in player.party)
                         p.PrintIVs();
+
+                    Console.WriteLine("");
                     
                     Options();
 
@@ -182,7 +189,7 @@ namespace PokemonTextEdition
 
                 case "screwtherules":
 
-                    Console.WriteLine("I have money!");
+                    Console.WriteLine("I have money!\n");
 
                     foreach (Pokemon p in player.party)
                     {
@@ -195,16 +202,15 @@ namespace PokemonTextEdition
                         p.StatAdjust();
                     }
 
+                    Overworld.player.PartyHeal();
+
                     Options();
 
                     break;
 
                 default:
-
-                    if (action != "")
-                        Console.WriteLine("");
-
-                    Console.WriteLine("Invalid command.");
+                    
+                    Console.WriteLine("Invalid command.\n");
 
                     Options();
 

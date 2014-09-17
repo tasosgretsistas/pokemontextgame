@@ -24,7 +24,7 @@ namespace PokemonTextEdition.Locations
             Description = "the forest's entrance";
             LongDescription = "This is the northern side of Route 2. Viridian Forest's northern entrance\nis located here. Many trainers choose to train their Pokemon here to prepare\nfor their battle with the Gym Leader in Pewter City, Brock.";
             Connections = "Pewter City to the north and the Viridian Forest\nto the south";            
-            HelpMessage = "\n\"north\" or \"go north\" - moves you to Pewter City.\n\"south\" or \"go south\" - moves you to the Viridian Forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
+            HelpMessage = "\"north\" or \"go north\" - moves you to Pewter City.\n\"south\" or \"go south\" - moves you to the Viridian Forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 
         public override void Encounter()
@@ -56,12 +56,12 @@ namespace PokemonTextEdition.Locations
 
         public override void GoNorth()
         {
-            Console.WriteLine("\nYou choose to stay to the path and head straight for Pewter City.");
+            Console.WriteLine("You choose to stay to the path and head straight for Pewter City.");
         }
 
         public override void GoSouth()
         {
-            Console.WriteLine("\nYou avoid the tall grass and follow the road to the Viridian Forest.");
+            Console.WriteLine("You avoid the tall grass and follow the road to the Viridian Forest.");
         }
     }
 }

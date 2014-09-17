@@ -29,7 +29,6 @@ namespace PokemonTextEdition.NPCs
 
             Console.WriteLine("\"This can't be happening! Did I make the wrong choice, picking {0}?", party.ElementAt(0).name);
             Console.WriteLine(" Gah...\"");
-            Console.WriteLine("");
         }
 
         public override void Victory()
@@ -40,7 +39,6 @@ namespace PokemonTextEdition.NPCs
 
             Console.WriteLine("\"Ha ha ha! I told you {0} is a weak Pokemon! ", Overworld.player.party.ElementAt(0).name);
             Console.WriteLine("\n My {0} was clearly stronger!\"", party.ElementAt(0).name);
-            Console.WriteLine("");
         }
 
     }

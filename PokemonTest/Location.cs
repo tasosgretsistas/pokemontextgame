@@ -38,7 +38,7 @@ namespace PokemonTextEdition
 
         public void PrintLocation()
         {
-            Console.Write("\nYou are now in {0}, {1}.\n\n{2}\n\nThis {3} is connected to {4}.\n", Name, Description, LongDescription, Type, Connections);
+            Console.Write("You are now in {0}, {1}.\n\n{2}\n\nThis {3} is connected to {4}.\n", Name, Description, LongDescription, Type, Connections);
         }
 
         public void Help()

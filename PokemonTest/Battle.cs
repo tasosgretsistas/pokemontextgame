@@ -68,7 +68,7 @@ namespace PokemonTextEdition
             enemyTrainer = t;
             encounterType = type;
 
-            Console.WriteLine("\n{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.Name, enemyPokemon.level, enemyPokemon.name);
+            Console.WriteLine("{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.Name, enemyPokemon.level, enemyPokemon.name);
 
             Actions();
         }
@@ -85,7 +85,7 @@ namespace PokemonTextEdition
             enemyPokemon = e;
             encounterType = "wild";
 
-            Console.WriteLine("\nA wild level {0} {1} appeared!\n", e.level, e.name);
+            Console.WriteLine("A wild level {0} {1} appeared!\n", e.level, e.name);
 
             Actions();
         }
@@ -540,7 +540,7 @@ namespace PokemonTextEdition
 
             int numberOfHits = 1, hits = 1; //The number of times an attack will strike, for multi-hit attacks.
 
-            Program.Log(attackerName + " attacks " + defenderName + " (" + defendingPokemon.currentHP + "/" + defendingPokemon.maxHP + " HP) with "
+            Program.Log(attackerName + " attacks " + defendingPokemon.name + " (" + defendingPokemon.currentHP + "/" + defendingPokemon.maxHP + " HP) with "
                         + currentMove.Name + " (typeMod: " + typeMod.ToString() + ")", 1);
 
             //Multi-hit attack calculation.
@@ -1000,7 +1000,7 @@ namespace PokemonTextEdition
         {
             //The "You win!" code. 
 
-            Console.WriteLine("\nCongratulations! You won!");
+            Console.WriteLine("\nCongratulations! You won!\n");
 
             fightOver = true;
             Program.Log("The AI has no more Pokemon, so the player wins. fightOver is now true.", 1);
@@ -1120,7 +1120,7 @@ namespace PokemonTextEdition
                     Program.Log("The player successfully escaped. (Seed = " + chanceToEscape.ToString() + ", Rate = " + escapeFactor.ToString() + ")" +
                                     " The player should now return to the overworld.", 1);
 
-                    Console.WriteLine("Escaped succesfully!");
+                    Console.WriteLine("Escaped succesfully!\n");
 
                     CancelTemporaryEffects(playerPokemon);
 
@@ -1188,6 +1188,8 @@ namespace PokemonTextEdition
                         Console.WriteLine("Gotcha! The wild {0} was caught!", enemyPokemon.name);
 
                         Overworld.player.AddPokemon(enemyPokemon, "catch");
+
+                        Console.WriteLine("");
 
                         CancelTemporaryEffects(playerPokemon);
 
