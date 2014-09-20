@@ -30,18 +30,12 @@ namespace PokemonTextEdition.Locations
         }
 
         public override void Trainer()
-        {        
-            
+        { 
+            if (nick.Defeated())      
+                nickr.Encounter();            
 
-            if (nick.Defeated())
-            {
-                nickr.Encounter();
-            }
-
-            else
-            {
-                Console.WriteLine("You need to defeat all of the trainers in an area before using this command!");
-            }
+            else  
+                Console.WriteLine("You need to defeat all of the trainers in this area before using this command!\n");            
         }
 
         public override void Encounter()
@@ -95,8 +89,6 @@ namespace PokemonTextEdition.Locations
 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("Phew, that was a close one back there, but both you and your Pokemon are");
                 Console.WriteLine("okay at least. You decide to be a bit more careful from now on, as you go");
                 Console.WriteLine("even deeper into this dangerous forest.");
@@ -124,9 +116,7 @@ namespace PokemonTextEdition.Locations
             if (rng.Next(1, 11) > 5)
             {
                 Console.WriteLine("Carefully following the path you took when you first went into the forest,");
-                Console.WriteLine("you navigate towards the southern exit. Not long later, you reach Route 2.");
-
-                Story.AnyKey();
+                Console.WriteLine("you navigate towards the southern exit. Not long later, you reach Route 2.");               
             }
 
             else
@@ -138,13 +128,11 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("Thankfully you weren't fully unprepared for that. Collecting yourself, you");
                 Console.WriteLine("follow the signs around the forest until you are finally back at Route 2.");
-
-                Story.AnyKey();
             }
+
+            Story.AnyKey();
         }
     }
 }

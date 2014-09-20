@@ -188,7 +188,7 @@ namespace PokemonTextEdition
                     break;
             }
 
-            Overworld.player.Starter = Overworld.player.party.ElementAt(0).name;
+            Overworld.player.StartingPokemon = Overworld.player.party.ElementAt(0).name;
 
             //A short introduction for the Pokemon.
 
@@ -272,7 +272,7 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
-            Console.WriteLine("ready to head out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.Starter);
+            Console.WriteLine("ready to head out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
 
             AnyKey();
 

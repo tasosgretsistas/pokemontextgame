@@ -42,7 +42,7 @@ namespace PokemonTextEdition.Items
                     else
                         pokemon.currentHP = pokemon.maxHP;
 
-                    Console.WriteLine("\n{0} HP was restored to {1}.\n", (pokemon.currentHP - previousHP), pokemon.name);
+                    Console.WriteLine("\n{0} HP was restored to {1}.", (pokemon.currentHP - previousHP), pokemon.name);
 
                     Program.Log("The player uses a Potion on " + pokemon.name + ", restoring " + (pokemon.currentHP - previousHP) + "HP.", 1);
 
@@ -54,7 +54,7 @@ namespace PokemonTextEdition.Items
                 else if (pokemon.currentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
-                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.\n", Name);
+                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);
 
                     return false;
                 }
@@ -62,7 +62,7 @@ namespace PokemonTextEdition.Items
                 else
                 {
                     Program.Log("The player selected a Pokemon that was already at max HP.", 0);
-                    Console.WriteLine("\nThat Pokemon is already at max HP.\n");
+                    Console.WriteLine("\nThat Pokemon is already at max HP.");
 
                     return false;
                 }

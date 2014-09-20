@@ -24,7 +24,7 @@ namespace PokemonTextEdition.Items
 
             Program.Log("The player is trying to use a " + Name + ".", 0);
 
-            Console.WriteLine("\nUse {0} on which Pokemon?\n(Valid input: 1-{0} or press Enter to return)\n", Name, Overworld.player.party.Count);
+            Console.WriteLine("Use {0} on which Pokemon?\n(Valid input: 1-{0} or press Enter to return)\n", Name, Overworld.player.party.Count);
 
             Pokemon pokemon = Overworld.player.SelectPokemon(false);
 
@@ -40,7 +40,7 @@ namespace PokemonTextEdition.Items
 
                     Program.Log("The uses a " + Name + " on " + pokemon.name + ", curing it of its " + healType + ".", 1);
 
-                    Count--;
+                    Remove(1, "use");
 
                     return true;
                 }
@@ -48,7 +48,7 @@ namespace PokemonTextEdition.Items
                 else if (pokemon.currentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
-                    Console.WriteLine("You cannot use a {0} on a Pokemon that has fainted.", Name);
+                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);
 
                     return false;
                 }
@@ -56,7 +56,7 @@ namespace PokemonTextEdition.Items
                 else
                 {
                     Program.Log("The Pokemon the user selected was not afflicted by " + healType + ".", 0);
-                    Console.WriteLine("{0} is not suffering.", Name);
+                    Console.WriteLine("\n{0} is not suffering from {1}.", Name, healType);
 
                     return false;
                 }

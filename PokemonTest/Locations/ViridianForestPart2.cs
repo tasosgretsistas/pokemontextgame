@@ -12,7 +12,6 @@ namespace PokemonTextEdition.Locations
         Random rng = new Random();
 
         Trainer eric = TrainerList.trainers.Find(t => t.ID == "2");
-
         Trainer ericr = TrainerList.trainers.Find(t => t.ID == "2r");
 
         public ViridianForestPart2()
@@ -31,18 +30,12 @@ namespace PokemonTextEdition.Locations
         }
 
         public override void Trainer()
-        {
-            
-
+        {   
             if (eric.Defeated())
-            {
-                ericr.Encounter();
-            }
+                ericr.Encounter();           
 
             else
-            {
-                Console.WriteLine("\nYou need to defeat all of the trainers in an area before using this command!");
-            }
+                Console.WriteLine("You need to defeat all of the trainers in this area before using this command!\n");            
         }
 
         public override void Encounter()
@@ -90,8 +83,6 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("Both you and your food are safe - for now. You go back to reading the map,");
                 Console.WriteLine("which points you in the way north and once again back into the forest.");
 
@@ -114,8 +105,6 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("You know this path fairly well by now, so you feel confident in your ability");
                 Console.WriteLine("to get around this part with no hiccups. You even stop by the glade for a");
                 Console.WriteLine("moment to see the view before you're on your way to the southern side.");
-
-                Story.AnyKey();
             }
 
             else
@@ -127,14 +116,12 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("Looking at the map, you realize that you're at the completely wrong place.");
                 Console.WriteLine("Heading due east, you reach the big glade in the middle with the beautiful");
                 Console.WriteLine("view, and then the path that leads to the southern side of the forest.");
-
-                Story.AnyKey();
             }
+
+            Story.AnyKey();
         }
     }
 }

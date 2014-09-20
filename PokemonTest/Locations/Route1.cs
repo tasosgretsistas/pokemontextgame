@@ -52,9 +52,8 @@ namespace PokemonTextEdition.Locations
             {
                 Console.WriteLine("You decide to stick to the road, avoiding the tall grass. You walk north");
                 Console.WriteLine("for a couple of minutes, until you can finally see Viridian City!");
-
-                Story.AnyKey();
             }
+
             else
             {
                 Console.WriteLine("You take a shortcut through the tall grass on your way north through a path");
@@ -63,13 +62,11 @@ namespace PokemonTextEdition.Locations
 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("You are just about exhausted after dealing with the wild Pokemon. The");
                 Console.WriteLine("shortcut has paid off though - in the horizon before you looms Viridian City!");
-
-                Story.AnyKey();
             }
+
+            Story.AnyKey();
         }
 
         public override void GoSouth()
@@ -80,9 +77,8 @@ namespace PokemonTextEdition.Locations
             {
                 Console.WriteLine("You skillfully jump from ledge to ledge in order to avoid the tall grass.");
                 Console.WriteLine("After a few minutes of walking, you can finally see your house in Pallet!");
-
-                Story.AnyKey();
             }
+
             else
             {
                 Console.WriteLine("You decide to take the scenic route to Pallet, straight through the tall");
@@ -92,13 +88,11 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("You withdraw your Pokemon with a sigh of relief. It wasn't all bad though,");
                 Console.WriteLine("-- you had fun, gained some valuable experience and you're nearly home!");
-
-                Story.AnyKey();
             }
+
+            Story.AnyKey();
         }
     }
 }

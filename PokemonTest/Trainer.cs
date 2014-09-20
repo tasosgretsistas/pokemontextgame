@@ -10,6 +10,21 @@ namespace PokemonTextEdition
         //A class that represents enemy trainers within the game.
 
         public string Name { get; set; } //The trainer's name.
+        public string Type { get; set; } //The trainer's "class" - i.e., Hiker, Bug Catcher, etc.
+        public string DisplayName //The trainer's displayed name - a combination of his trainer type (if any) and name.
+        {
+            get
+            {
+                string n = Name;
+
+                if (Type != "")
+                    n = Type + " " + Name;
+
+                return n;
+            }
+        }
+
+
         public string Greeting { get; set; }  //The trainer's generic greeting.
         public string DefeatSpeech { get; set; }  //The trainer's generic message upon losing.
         public string VictorySpeech { get; set; } //The trainer's generic message upon winning.
@@ -32,8 +47,9 @@ namespace PokemonTextEdition
         /// <param name="tParty">The trainer's party of Pokemon. Maximum size is 6.</param>
         /// <param name="tMoney">The amount of money the trainer yields upon being defeated.</param>
         /// <param name="tid">The trainer's unique identifier number for the TrainerList list.</param>
-        public Trainer(string tName, string tGreeting, string tDefeat, string tVictory, List<Pokemon> tParty, int tMoney, string tid)
+        public Trainer(string tType, string tName, string tGreeting, string tDefeat, string tVictory, List<Pokemon> tParty, int tMoney, string tid)
         {
+            Type = tType;
             Name = tName;
             Greeting = "\n\"" + tGreeting + "\"";
             DefeatSpeech = "\n\"" + tDefeat + "\"";
@@ -99,7 +115,7 @@ namespace PokemonTextEdition
             Overworld.player.defeatedTrainers.Add(ID);
 
             Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
+            Console.ReadKey(true);
 
             Console.WriteLine(DefeatSpeech);
         }
@@ -109,12 +125,11 @@ namespace PokemonTextEdition
             Console.WriteLine(VictorySpeech);
             Console.WriteLine("\nYou will now be taken to the last city you rested at.");
 
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey();
+            Story.AnyKey();
 
             Overworld.player.PartyHeal();
 
-            Overworld.LoadLocation(Overworld.player.LastHeal);
+            Overworld.LoadLocation(Overworld.player.LastHealLocation);
         }
     }
 }

@@ -141,72 +141,83 @@ namespace PokemonTextEdition
         {
             //This method is called up when the player chooses to sell.
 
-            Console.WriteLine("Selling? No problem! What would you like to sell?");
-
-            //The player is asked to select an item.
-            item = ItemSelection();
-
-            //If the player selected a valid item, its properties are displayed, and the operation carries on.
-            if (item.Name != "Sample Item")
+            if (Overworld.player.items.Count > 0)
             {
-                int saleValue = (int)(item.Value / 2); //The item's price for selling - half the purchasing price.
-                int itemCount = 0;
 
-                if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
-                    itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count;
+                Console.WriteLine("Selling? No problem! What would you like to sell?\n");
 
-                Console.WriteLine("{0}s, right? I can give you ${1} a piece. How many are you selling?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to sell or press enter to return.)",
-                                  item.Name, saleValue, itemCount, Overworld.player.Money);
+                //The player is asked to select an item.
+                item = Overworld.player.SelectItem("sell");
 
-                string decision = Console.ReadLine();
-                int amount;
-                bool validInput = Int32.TryParse(decision, out amount);
-
-                if (decision != "")
-                    Console.WriteLine("");
-
-                //The player then gives input again as to how many of an item he wants to buy. If the player's input was correct, the operation continues.
-                if (validInput && amount > 0)
+                //If the player selected a valid item, its properties are displayed, and the operation carries on.
+                if (item.Name != "Sample Item")
                 {
-                    string formattedName = item.Name;
+                    int saleValue = (int)(item.Value / 2); //The item's price for selling - half the purchasing price.
+                    int itemCount = 0;
 
-                    if (amount > 1)
-                        formattedName += "s";
+                    if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
+                        itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count;
 
-                    //If the player at least as many of the selected item as the given amount, that many of that item are removed from the player's bag.
-                    if (item.Count >= amount)
+                    Console.WriteLine("{0}s, right? I can give you ${1} a piece. How many are you selling?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to sell or press enter to return.)",
+                                      item.Name, saleValue, itemCount, Overworld.player.Money);
+
+                    string decision = Console.ReadLine();
+                    int amount;
+                    bool validInput = Int32.TryParse(decision, out amount);
+
+                    if (decision != "")
+                        Console.WriteLine("");
+
+                    //The player then gives input again as to how many of an item he wants to buy. If the player's input was correct, the operation continues.
+                    if (validInput && amount > 0)
                     {
-                        item.Remove(amount, "sell");
+                        string formattedName = item.Name;
 
-                        Overworld.player.Money += (saleValue * amount);
+                        if (amount > 1)
+                            formattedName += "s";
 
-                        Console.WriteLine("Alright, here you go, ${0} for {1} {2}!\nThank you, come again!\n", (item.Value * amount), amount, formattedName);
+                        //If the player at least as many of the selected item as the given amount, that many of that item are removed from the player's bag.
+                        if (item.Count >= amount)
+                        {
+                            item.Remove(amount, "sell");
+
+                            Overworld.player.Money += (saleValue * amount);
+
+                            Console.WriteLine("Alright, here you go, ${0} for {1} {2}!\nThank you, come again!\n", (item.Value * amount), amount, formattedName);
+                        }
+
+                        //Otherwise, the player is informed that he doesn't have enough money.
+                        else
+                        {
+                            Console.WriteLine("You don't have that many {0} on you.\n", formattedName);
+                        }
+
+                        Options();
                     }
 
-                    //Otherwise, the player is informed that he doesn't have enough money.
+                    else if (decision == "")
+                    {
+                        Options();
+                    }
+
                     else
                     {
-                        Console.WriteLine("You don't have that many {0} on you.\n", formattedName);
+                        Console.WriteLine("Invalid input.\n");
+
+                        Options();
                     }
-
-                    Options();
-                }
-
-                else if (decision == "")
-                {
-                    Options();
                 }
 
                 else
-                {
-                    Console.WriteLine("Invalid input.\n");
-
                     Options();
-                }
             }
 
             else
+            {
+                Console.WriteLine("You don't have any items to sell!\n");
+
                 Options();
+            }
         }
 
         Item DisplayStock()
@@ -244,44 +255,6 @@ namespace PokemonTextEdition
 
                 return new Item();
             }
-        }
-
-        Item ItemSelection()
-        {
-            //This method is used when the player needs to select an item to sell from his bag.
-
-            Overworld.player.ListItems();
-
-            Console.WriteLine("Please select an item to sell. (Valid input: 1-{0})", Overworld.player.items.Count);
-
-            string input = Console.ReadLine();
-            int index;
-            bool validInput = Int32.TryParse(input, out index);
-
-            if (input != "")
-                Console.WriteLine("");
-
-            //First, input is taken from the player. If the input is a number corresponding to an item in the player's bag, that item gets selected.
-            if (validInput && index > 0 && index <= Overworld.player.items.Count)
-            {
-                return Overworld.player.items.ElementAt(index - 1);
-            }
-
-            //If the player hit enter, he is returned back to the mart main screen.
-            else if (input == "")
-            {
-                return new Item();
-            }
-
-            //If the input was smaller than 1, bigger than the player's items count or not a number, an error message is shown.
-            else
-            {
-                Console.WriteLine("Invalid input.\n");
-
-                return new Item();
-            }
-        }
-
-        
+        }  
     }
 }

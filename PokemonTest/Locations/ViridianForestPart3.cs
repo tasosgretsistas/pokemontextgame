@@ -12,7 +12,6 @@ namespace PokemonTextEdition.Locations
         Random rng = new Random();
 
         Trainer michael = TrainerList.trainers.Find(t => t.ID == "3");
-
         Trainer michaelr = TrainerList.trainers.Find(t => t.ID == "3r");    
  
         public ViridianForestPart3()
@@ -31,18 +30,12 @@ namespace PokemonTextEdition.Locations
         }
 
         public override void Trainer()
-        {
-            
-
-            if (michael.Defeated())
-            {
-                michaelr.Encounter();
-            }
+        { 
+            if (michael.Defeated())            
+                michaelr.Encounter();           
 
             else
-            {
-                Console.WriteLine("\nYou need to defeat all of the trainers in an area before using this command!");
-            }
+                Console.WriteLine("You need to defeat all of the trainers in this area before using this command!\n");
         }
 
         public override void Encounter()
@@ -95,8 +88,6 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("You sigh in relief that nobody got harmed due to your inattentiveness. No");
                 Console.WriteLine("distractions from now on - you follow the path towards the northern exit.");
 
@@ -119,8 +110,6 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("You know for certain that you can handle wild Pokemon here, but you still");
                 Console.WriteLine("decide to play it safe. Taking advantage of the higher visibility in this");
                 Console.WriteLine("part of the forest, you head straight for the glade in the forest's center.");
-
-                Story.AnyKey();
             }
 
             else
@@ -132,13 +121,11 @@ namespace PokemonTextEdition.Locations
                 
                 Encounter();
 
-                Console.WriteLine("");
-
                 Console.WriteLine("Hah, no problem. You got some valuable battle experience AND you're almost");
                 Console.WriteLine("where you wanted to go - the forest's center. Score 1 for you and your party!");
-
-                Story.AnyKey();
             }
+
+            Story.AnyKey();
         }
     }
 }

@@ -83,11 +83,17 @@
     <Compile Include="Items\PokeBall.cs" />
     <Compile Include="Items\Potion.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="Locations\MtMoonPart1.cs" />
+    <Compile Include="Locations\MtMoonPart2.cs" />
+    <Compile Include="Locations\MtMoonPart3.cs" />
+    <Compile Include="Locations\MtMoonSecret.cs" />
     <Compile Include="Locations\PalletTown.cs" />
     <Compile Include="Locations\PewterCity.cs" />
     <Compile Include="Locations\Route1.cs" />
     <Compile Include="Locations\Route2N.cs" />
     <Compile Include="Locations\Route2S.cs" />
+    <Compile Include="Locations\Route3E.cs" />
+    <Compile Include="Locations\Route3W.cs" />
     <Compile Include="Locations\ViridianCity.cs" />
     <Compile Include="Locations\ViridianForestPart1.cs" />
     <Compile Include="Locations\ViridianForestPart2.cs" />

@@ -17,19 +17,17 @@ namespace PokemonTextEdition
         public string RivalName { get; set; }
 
         //The player's starting Pokemon. Determines the rival's Pokemon during various stages of the game.
-        public string Starter { get; set; }
+        public string StartingPokemon { get; set; }
 
         //The player's basic parameters.
         public int Money { get; set; }
-        public int Badges { get; set; }
-
         public List<string> badgeList = new List<string>();
 
         //The player's current location. Used for saving/loading only.
         public string Location { get; set; }
 
         //The last city in which the player healed. Used when the player runs out of Pokemon.
-        public string LastHeal { get; set; }
+        public string LastHealLocation { get; set; }
 
         //The various lists of Pokemon that a player might have.
         public List<Pokemon> party = new List<Pokemon>();
@@ -47,10 +45,9 @@ namespace PokemonTextEdition
         {
             Name = "Ash";
             RivalName = "Gary";
-            Starter = "";
-            LastHeal = "pallet";
+            StartingPokemon = "";
+            LastHealLocation = "pallet";
             Money = 500;
-            Badges = 0;
         }
 
         public bool PartyFull()
@@ -189,13 +186,13 @@ namespace PokemonTextEdition
 
                     default:
 
-                        Console.WriteLine("Invalid input!");
+                        Console.WriteLine("Invalid input!\n");
                         break;
                 }
             }
 
             else
-                Console.WriteLine("There are no items in your bag!");
+                Console.WriteLine("There are no items in your bag!\n");
         }
 
         public void DisplayItems()
@@ -233,7 +230,7 @@ namespace PokemonTextEdition
 
             else
             {
-                Console.WriteLine("\nItems in your bag: ");
+                Console.WriteLine("Items in your bag: ");
 
                 foreach (Item i in items)
                 {
@@ -246,47 +243,43 @@ namespace PokemonTextEdition
             }
         }
 
-        public void ListItems()
-        {
-            //This method displays the contents of your bag and their corresponding index number, and is to be called when an item needs to be selected for using.
-
-            Console.WriteLine("\nItems in your bag:\n");
-
-            int counter = 1;
-
-            foreach (Item i in items)
-                if (i.Count > 0)
-                {
-                    Console.WriteLine("{0} - {1}", counter, i.Print());
-                    counter++;
-                }
-
-            Console.WriteLine("");
-        }
-
         public void UseItems()
         {
-           Item item = SelectItem("use");
+            //This method simply uses an item. An item is selected using the SelectItem method, and it is subsequently used.
 
-           item.Use();
+            Item item = SelectItem("use");
 
-           /*
+            if (item.Name != "Sample Item")
+            {
+                item.Use();
+                Console.WriteLine("");
+            }
 
-           if (item.Name != "Sample Item")
-           {
-               if (item.Type == "pokeball")
-                   ((PokeBall)item).Use();
-
-                else if (item.Type == "potion")
-                    ((Potion)item).Use();
-
-                else if (item.Type == "heal")
-                   ((Heal)item).Use();
-           }*/
-
-           ItemsMain();
+            ItemsMain();
         }
 
+        public bool UseItemsCombat()
+        {
+            Item item = SelectItem("use");
+
+            if (item.Name != "Sample Item")
+            {
+                if (item.UseCombat())
+                    return true;
+
+                else
+                    return false;
+            }
+
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// This method is used for selecting an item off the player's bag. 
+        /// </summary>
+        /// <param name="method">This designates how the item is going to be utilized - i.e. use, sell, discard. It affects the displayed message.</param>
+        /// <returns></returns>
         public Item SelectItem(string method)
         {
             //This method is used for selecting an item off the player's bag. 
@@ -310,7 +303,7 @@ namespace PokemonTextEdition
                 {
                     items.Where(item => item.Type == input).ToList().ForEach(item => { tempList.Add(item); });
                 }
-                
+
                 else if (input != "")
                 {
                     Console.WriteLine("There were no items of type \"{0}\" in your bag.\n", input);
@@ -321,12 +314,10 @@ namespace PokemonTextEdition
                 else
                     return new Item();
             }
-            
+
             //Else if there are less than 10 items in the player's bag, there is no need for a sublist so tempList becomes the player's bag. 
             else
-            {  
                 tempList = items;
-            }
 
             //Next, the game displays the contents of tempList next to their corresponding index number, and the player is asked for input again.
 
@@ -352,20 +343,13 @@ namespace PokemonTextEdition
 
             //If the input is a number corresponding to an item in tempList, that item gets selected.
             if (validInput && index > 0 && index <= tempList.Count)
-            {
                 return tempList.ElementAt(index - 1);
-            }
-
-            //If the player hit enter, he is returned back to whatever was happening.
-            else if (input2 == "")
-            {
-                return new Item();
-            }
 
             //If the input was smaller than 1, bigger than the tempList items count or not a number, an error message is shown.
             else
             {
-                Console.WriteLine("Invalid input.\n");
+                if (input2 != "")
+                    Console.WriteLine("Invalid input.\n");
 
                 return new Item();
             }

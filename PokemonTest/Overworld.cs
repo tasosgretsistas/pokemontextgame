@@ -21,7 +21,7 @@ namespace PokemonTextEdition
 
         //A list of every available location.
         static List<Location> Locations = new List<Location>() { new PalletTown(), new Route1(), new ViridianCity(), new Route2S(), new ViridianForestPart1(), 
-        new ViridianForestPart2(), new ViridianForestPart3(), new Route2N(), new PewterCity() };
+        new ViridianForestPart2(), new ViridianForestPart3(), new Route2N(), new PewterCity(), new Route3W(), new Route3E() };
 
         public static void LoadLocation(string l)
         {
@@ -65,6 +65,26 @@ namespace PokemonTextEdition
                     if (Locations.Exists(location => location.Tag == currentLocation.South))                    
                         LoadLocation(currentLocation.South);
                     
+                    break;
+
+                case "go east":
+                case "east":
+
+                    currentLocation.GoEast();
+
+                    if (Locations.Exists(location => location.Tag == currentLocation.East))
+                        LoadLocation(currentLocation.East);
+
+                    break;
+
+                case "go west":
+                case "west":
+
+                    currentLocation.GoWest();
+
+                    if (Locations.Exists(location => location.Tag == currentLocation.West))
+                        LoadLocation(currentLocation.West);
+
                     break;
                     
                 case "Fight":
