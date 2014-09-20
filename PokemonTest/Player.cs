@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PokemonTextEdition.Properties;
+using PokemonTextEdition.Items;
 
 namespace PokemonTextEdition
 {
@@ -16,19 +17,17 @@ namespace PokemonTextEdition
         public string RivalName { get; set; }
 
         //The player's starting Pokemon. Determines the rival's Pokemon during various stages of the game.
-        public string Starter { get; set; }
+        public string StartingPokemon { get; set; }
 
         //The player's basic parameters.
         public int Money { get; set; }
-        public int Badges { get; set; }
-
         public List<string> badgeList = new List<string>();
 
         //The player's current location. Used for saving/loading only.
         public string Location { get; set; }
 
         //The last city in which the player healed. Used when the player runs out of Pokemon.
-        public string LastHeal { get; set; }
+        public string LastHealLocation { get; set; }
 
         //The various lists of Pokemon that a player might have.
         public List<Pokemon> party = new List<Pokemon>();
@@ -46,11 +45,9 @@ namespace PokemonTextEdition
         {
             Name = "Ash";
             RivalName = "Gary";
-            Starter = "";
-            LastHeal = "pallet";
+            StartingPokemon = "";
+            LastHealLocation = "pallet";
             Money = 500;
-            Badges = 0;
-
         }
 
         public bool PartyFull()
@@ -94,7 +91,7 @@ namespace PokemonTextEdition
 
                 Console.WriteLine("{0} was added to the party!", p.name);
 
-                party.Add(p);                
+                party.Add(p);
             }
 
             else if (!BoxFull())
@@ -108,7 +105,7 @@ namespace PokemonTextEdition
 
                 Console.WriteLine("Your party is full, so {0}{1} was sent to the box.", extraText, p.name);
 
-                box.Add(p);                
+                box.Add(p);
             }
 
             else
@@ -128,14 +125,13 @@ namespace PokemonTextEdition
         public void PartyStatus()
         {
             //This method displays the status for each Pokemon in the player's party, separated by an empty line for every Pokemon.
-            Console.WriteLine("\nYour party's status: \n");
+            Console.WriteLine("Your party's status: \n");
 
             for (int i = 0; i < party.Count; i++)
             {
                 party.ElementAt(i).PrintStatus();
 
-                if ((i + 1) < party.Count )
-                    Console.WriteLine("");
+                Console.WriteLine("");
             }
         }
 
@@ -148,102 +144,300 @@ namespace PokemonTextEdition
             }
         }
 
-        public void Items()
+        public void ItemsMain()
+        {
+            //This is the main method for accessing the player's bag. The player is asked if he wants to 
+            //simply view his bag's contents or use an item, and gets redirected to the relevant menu.
+            //If there are no items in the player's bag, a relevant message is displayed instead.
+
+            if (items.Count > 0)
+            {
+                Console.WriteLine("What would you like to do with the items in your bag?");
+                Console.WriteLine("(V)iew items, (u)se items, or Enter to return.");
+
+                string input = Console.ReadLine();
+
+                if (input != "")
+                    Console.WriteLine("");
+
+                switch (input)
+                {
+                    case "View":
+                    case "view":
+                    case "V":
+                    case "v":
+
+                        DisplayItems();
+
+                        break;
+
+                    case "Use":
+                    case "use":
+                    case "U":
+                    case "u":
+
+                        UseItems();
+
+                        break;
+
+                    case "":
+
+                        break;
+
+                    default:
+
+                        Console.WriteLine("Invalid input!\n");
+                        break;
+                }
+            }
+
+            else
+                Console.WriteLine("There are no items in your bag!\n");
+        }
+
+        public void DisplayItems()
         {
             //This method simply displays the contents of your bag, and is to be called when an item is not going to be used.
 
-            Console.WriteLine("\nItems in your bag: ");
-
-            foreach (Item i in items)
+            //If there are more than 10 unique kinds of items in the player's bag, he is asked to select a particular type to display.
+            if (items.Count > 10)
             {
-                Console.WriteLine(i.Print());
+                Console.WriteLine("What kind of item would you like to view?");
+                Console.WriteLine("(Valid input: pokeball, potion, heal, misc)");
+
+                string input = Console.ReadLine();
+
+                if (input != "")
+                    Console.WriteLine("");
+
+                if (items.Exists(item => item.Type == input))
+                {
+                    items.Where(item => item.Type == input).ToList().ForEach(item => Console.WriteLine(item.Print()));
+
+                    Console.WriteLine("");
+
+                    ItemsMain();
+                }
+
+                else
+                {
+                    if (input != "")
+                        Console.WriteLine("There were no items of type \"{0}\" in your bag.\n", input);
+
+                    ItemsMain();
+                }
             }
 
-            Console.WriteLine("");
+            else
+            {
+                Console.WriteLine("Items in your bag: ");
+
+                foreach (Item i in items)
+                {
+                    Console.WriteLine(i.Print());
+                }
+
+                Console.WriteLine("");
+
+                ItemsMain();
+            }
         }
 
-        public void ListItems()
+        public void UseItems()
         {
-            //This method displays the contents of your bag and their corresponding index number, and is to be called when an item needs to be selected for using.
+            //This method simply uses an item. An item is selected using the SelectItem method, and it is subsequently used.
 
-            Console.WriteLine("\nItems in your bag:\n");
+            Item item = SelectItem("use");
+
+            if (item.Name != "Sample Item")
+            {
+                item.Use();
+                Console.WriteLine("");
+            }
+
+            ItemsMain();
+        }
+
+        public bool UseItemsCombat()
+        {
+            Item item = SelectItem("use");
+
+            if (item.Name != "Sample Item")
+            {
+                if (item.UseCombat())
+                    return true;
+
+                else
+                    return false;
+            }
+
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// This method is used for selecting an item off the player's bag. 
+        /// </summary>
+        /// <param name="method">This designates how the item is going to be utilized - i.e. use, sell, discard. It affects the displayed message.</param>
+        /// <returns></returns>
+        public Item SelectItem(string method)
+        {
+            //This method is used for selecting an item off the player's bag. 
+            //Frankly this became a bit too big and difficult to follow, so I'm not too happy with it.
+
+            List<Item> tempList = new List<Item>(); //A temporary list used to display a sublist of a specific type of items, should the player's bag hold too more than 10 items.
+
+            //If there are more than 10 unique kinds of items in the player's bag, he is asked to select a particular type of item to display.
+            if (items.Count > 10)
+            {
+                Console.WriteLine("What kind of item would you like to {0}?", method);
+                Console.WriteLine("(Valid input: pokeball, potion, heal, misc)");
+
+                string input = Console.ReadLine();
+
+                if (input != "")
+                    Console.WriteLine("");
+
+                //Input is taken from the player as to what kind of items to display, and if the input is correct, the tempList list is populated by items of that particular type.
+                if (items.Exists(item => item.Type == input))
+                {
+                    items.Where(item => item.Type == input).ToList().ForEach(item => { tempList.Add(item); });
+                }
+
+                else if (input != "")
+                {
+                    Console.WriteLine("There were no items of type \"{0}\" in your bag.\n", input);
+
+                    return new Item();
+                }
+
+                else
+                    return new Item();
+            }
+
+            //Else if there are less than 10 items in the player's bag, there is no need for a sublist so tempList becomes the player's bag. 
+            else
+                tempList = items;
+
+            //Next, the game displays the contents of tempList next to their corresponding index number, and the player is asked for input again.
 
             int counter = 1;
 
-            foreach (Item i in items)
+            foreach (Item i in tempList)
+            {
                 if (i.Count > 0)
                 {
                     Console.WriteLine("{0} - {1}", counter, i.Print());
                     counter++;
                 }
+            }
 
-            Console.WriteLine("");
+            Console.WriteLine("\nPlease select an item to {0}. (Valid input: 1-{1}, or Enter to return.)", method, tempList.Count);
+
+            string input2 = Console.ReadLine();
+            int index;
+            bool validInput = Int32.TryParse(input2, out index);
+
+            if (input2 != "")
+                Console.WriteLine("");
+
+            //If the input is a number corresponding to an item in tempList, that item gets selected.
+            if (validInput && index > 0 && index <= tempList.Count)
+                return tempList.ElementAt(index - 1);
+
+            //If the input was smaller than 1, bigger than the tempList items count or not a number, an error message is shown.
+            else
+            {
+                if (input2 != "")
+                    Console.WriteLine("Invalid input.\n");
+
+                return new Item();
+            }
         }
 
         public void SwitchAround()
         {
-            Pokemon temp1 = new Pokemon();
-            Pokemon temp2 = new Pokemon();
+            //This method is used to switch around the order of Pokemon in the player's party.
+
+            //Temporary Pokemon objects to handle the switching operation.
+            Pokemon pokemon1 = new Pokemon();
+            Pokemon pokemon2 = new Pokemon();
 
             if (party.Count > 1)
             {
+                //First, all of the player's Pokemon are listed.
 
-                Console.WriteLine("\nPlease select a Pokemon to be switched with another. (Valid input: 1-{0})\n", party.Count);
+                Console.WriteLine("Please select a Pokemon to be switched with another. \n(Valid input: 1-{0} or press Enter to return)\n", party.Count);
 
                 for (int i = 0; i < party.Count; i++)
                 {
                     Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).name, party.ElementAt(i).currentHP, party.ElementAt(i).maxHP);
                 }
 
-                int one;
-                bool validInput = Int32.TryParse(Console.ReadLine(), out one);
+                string input = Console.ReadLine();
+                int selection1;
+                bool validInput = Int32.TryParse(input, out selection1);
+
+                if (input != "")
+                    Console.WriteLine("");
 
                 //Next, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
-                if (validInput && one > 0 && one < (party.Count + 1))
+                if (validInput && selection1 > 0 && selection1 < (party.Count + 1))
                 {
-                    temp1 = party.ElementAt(one - 1);
-                    party.RemoveAt(one - 1);
+                    //The selected Pokemon is temporarily removed from the party and the player's remaining Pokemon are listed.
 
-                    Console.WriteLine("\nNow please select the Pokemon it will be switched with. (Valid input: 1-{0})\n", party.Count);
+                    pokemon1 = party.ElementAt(selection1 - 1);
+                    party.RemoveAt(selection1 - 1);
+
+                    Console.WriteLine("Now please select the Pokemon it will be switched with. (Valid input: 1-{0})\n", party.Count);
 
                     for (int i = 0; i < party.Count; i++)
                     {
                         Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).name, party.ElementAt(i).currentHP, party.ElementAt(i).maxHP);
                     }
 
-                    int two;
-                    bool validInput2 = Int32.TryParse(Console.ReadLine(), out two);
+                    string input2 = Console.ReadLine();
+                    int selection2;
+                    bool validInput2 = Int32.TryParse(input2, out selection2);
 
-                    if (validInput2 && two > 0 && two < (party.Count + 1))
+                    if (input2 != "")
+                        Console.WriteLine("");
+
+                    //Input is taken from the player again. If the input is a number corresponding to one of the remaining Pokemon in the player's party, the operation carries on.
+                    if (validInput2 && selection2 > 0 && selection2 < (party.Count + 1))
                     {
-                        temp2 = party.ElementAt(two - 1);
-                        party.RemoveAt(two - 1);
+                        //The second Pokemon is also temporarily removed from the player's party.
 
-                        party.Insert((two - 1), temp1);
-                        party.Insert((one - 1), temp2);
+                        pokemon2 = party.ElementAt(selection2 - 1);
+                        party.RemoveAt(selection2 - 1);
 
-                        Console.WriteLine("\nPokemon succesfully switched.");
+                        //Then, 
+
+                        party.Insert((selection2 - 1), pokemon1);
+                        party.Insert((selection1 - 1), pokemon2);
+
+                        Console.WriteLine("Pokemon succesfully switched.\n");
                     }
 
                     else
                     {
-                        Console.WriteLine("Incorrect input.");
-                        party.Insert((one - 1), temp1);
+                        Console.WriteLine("Invalid input.\n");
+                        party.Insert((selection1 - 1), pokemon1);
                     }
 
                 }
 
                 else
                 {
-                    Console.WriteLine("Incorrect input.");
+                    if (input != "")
+                        Console.WriteLine("Invalid input.\n");
                 }
             }
 
             else if (party.Count == 1)
             {
-                Console.WriteLine("You only have one Pokemon!");
+                Console.WriteLine("\nThere is only one Pokemon in your party!\n");
             }
-
         }
 
         public Pokemon SelectPokemon(bool mandatory)
@@ -262,7 +456,7 @@ namespace PokemonTextEdition
             bool validInput = Int32.TryParse(input, out index);
 
             //First, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
-            if (validInput && index > 0 && index < (party.Count + 1))
+            if (validInput && index > 0 && index <= party.Count)
             {
                 return party.ElementAt(index - 1);
             }

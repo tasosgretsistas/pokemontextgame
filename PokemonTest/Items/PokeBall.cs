@@ -17,7 +17,14 @@ namespace PokemonTextEdition.Items
             Type = "pokeball";
         }
 
+        public override bool UseCombat()
+        {
+            Program.Log("The player tried to use a " + Name + " during combat.", 0);
 
+            Console.WriteLine("To use a {0}, use the \"(c)atch\" command from the actions screen.\n", Name);
+
+            return false;
+        }
 
     }
 }

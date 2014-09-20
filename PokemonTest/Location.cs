@@ -38,7 +38,7 @@ namespace PokemonTextEdition
 
         public void PrintLocation()
         {
-            Console.Write("\nYou are now in {0}, {1}.\n\n{2}\n\nThis {3} is connected to {4}.\n", Name, Description, LongDescription, Type, Connections);
+            Console.Write("You are now in {0}, {1}.\n\n{2}\n\nThis {3} is connected to {4}.\n", Name, Description, LongDescription, Type, Connections);
         }
 
         public void Help()
@@ -54,32 +54,32 @@ namespace PokemonTextEdition
 
         public virtual void Encounter()
         {
-            Console.WriteLine("\nThere are no wild Pokemon in {0}.", Name);
+            Console.WriteLine("There are no wild Pokemon in {0}.\n", Name);
         }
 
         public virtual void Trainer()
         {
-            Console.WriteLine("\nThere are no trainers in {0}.", Name);
+            Console.WriteLine("There are no trainers in {0}.\n", Name);
         }
 
         public virtual void GoNorth()
         {
-            Console.WriteLine("\nThere's nothing due north of {0}.", Name);
+            Console.WriteLine("There's nothing due north of {0}.\n", Name);
         }
 
         public virtual void GoSouth()
         {
-            Console.WriteLine("\nThere's nothing due south of {0}.", Name);
+            Console.WriteLine("There's nothing due south of {0}.\n", Name);
         }
 
         public virtual void GoWest()
         {
-            Console.WriteLine("\nThere's nothing due west of {0}.", Name);
+            Console.WriteLine("There's nothing due west of {0}.\n", Name);
         }
 
         public virtual void GoEast()
         {
-            Console.WriteLine("\nThere's nothing due east of {0}.", Name);
+            Console.WriteLine("There's nothing due east of {0}.\n", Name);
         }
 
         public virtual void Heal()
@@ -95,13 +95,13 @@ namespace PokemonTextEdition
                     p.currentHP = p.maxHP;
                     p.status = "";
                 }
-                Console.WriteLine("\nYour Pokemon are now fully healed!");
-                Overworld.player.LastHeal = this.Tag;
+                Console.WriteLine("Your Pokemon are now fully healed!\n");
+                Overworld.player.LastHealLocation = this.Tag;
             }
 
             else
             {
-                Console.WriteLine("\nThere is no Pokemon Center in {0}.", Name);
+                Console.WriteLine("There is no Pokemon Center in {0}.\n", Name);
             }
         }
 
@@ -114,13 +114,13 @@ namespace PokemonTextEdition
 
             else
             {
-                Console.WriteLine("\nThere is no Pokemon Mart in {0}.", Name);
+                Console.WriteLine("There is no Pokemon Mart in {0}\n.", Name);
             }
         }
 
         public virtual void Gym()
         {
-            Console.WriteLine("\nThere is no Pokemon Gym in {0}.");
+            Console.WriteLine("There is no Pokemon Gym in {0}.\n", Name);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace PokemonTextEdition
 
         //A list of every available location.
         static List<Location> Locations = new List<Location>() { new PalletTown(), new Route1(), new ViridianCity(), new Route2S(), new ViridianForestPart1(), 
-        new ViridianForestPart2(), new ViridianForestPart3(), new Route2N(), new PewterCity() };
+        new ViridianForestPart2(), new ViridianForestPart3(), new Route2N(), new PewterCity(), new Route3W(), new Route3E() };
 
         public static void LoadLocation(string l)
         {
@@ -30,16 +30,20 @@ namespace PokemonTextEdition
             currentLocation = Locations.Find(location => location.Tag == l);
             currentLocation.PrintLocation();
 
-            Program.Log("The player moved to " + currentLocation.Name + " (" + currentLocation.Tag + ").", 1);               
+            Program.Log("The player moved to " + currentLocation.Name + " (" + currentLocation.Tag + ").", 1);
 
+            Console.WriteLine("");
             Options();
         }
 
         public static void Options()
         {
-            Console.WriteLine("\nWhat will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
+            Console.WriteLine("What will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
 
             string action = Console.ReadLine();
+
+            if (action != "")
+                Console.WriteLine("");
 
             switch (action)
             {
@@ -61,6 +65,26 @@ namespace PokemonTextEdition
                     if (Locations.Exists(location => location.Tag == currentLocation.South))                    
                         LoadLocation(currentLocation.South);
                     
+                    break;
+
+                case "go east":
+                case "east":
+
+                    currentLocation.GoEast();
+
+                    if (Locations.Exists(location => location.Tag == currentLocation.East))
+                        LoadLocation(currentLocation.East);
+
+                    break;
+
+                case "go west":
+                case "west":
+
+                    currentLocation.GoWest();
+
+                    if (Locations.Exists(location => location.Tag == currentLocation.West))
+                        LoadLocation(currentLocation.West);
+
                     break;
                     
                 case "Fight":
@@ -126,6 +150,7 @@ namespace PokemonTextEdition
                     Console.WriteLine("\"s(w)itch\" - allows you to change the order of the Pokemon in your party.");
                     Console.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
                     Console.WriteLine("\"s(a)ve\" - saves your progress in the game.");
+                    Console.WriteLine("");
 
                     Options();
 
@@ -155,7 +180,7 @@ namespace PokemonTextEdition
                 case "items":
                 case "i":
 
-                    player.Items();
+                    player.ItemsMain();
 
                     Options();
 
@@ -175,6 +200,8 @@ namespace PokemonTextEdition
 
                     foreach(Pokemon p in player.party)
                         p.PrintIVs();
+
+                    Console.WriteLine("");
                     
                     Options();
 
@@ -182,7 +209,7 @@ namespace PokemonTextEdition
 
                 case "screwtherules":
 
-                    Console.WriteLine("I have money!");
+                    Console.WriteLine("I have money!\n");
 
                     foreach (Pokemon p in player.party)
                     {
@@ -195,16 +222,15 @@ namespace PokemonTextEdition
                         p.StatAdjust();
                     }
 
+                    Overworld.player.PartyHeal();
+
                     Options();
 
                     break;
 
                 default:
-
-                    if (action != "")
-                        Console.WriteLine("");
-
-                    Console.WriteLine("Invalid command.");
+                    
+                    Console.WriteLine("Invalid command.\n");
 
                     Options();
 

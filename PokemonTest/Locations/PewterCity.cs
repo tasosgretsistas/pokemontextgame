@@ -25,12 +25,12 @@ namespace PokemonTextEdition.Locations
             Tag = "pewter";
 
             South = "route2n";
-            East = "route3";
+            East = "route3w";
 
             Description = "the city between rugged mountains";
             LongDescription = "This quiet city atop the mountainside offers a much needed rest for trainers\nwho just crossed the Viridian Forest. Rest not for too long, however --\nyour first battle with a Gym Leader awaits you here, so be prepared!";
             Connections = "Route 2 to the south and Route 3 to the east";
-            HelpMessage = "\n\"south\" or \"go south\" - moves you to Route 2.\n\"east\" or \"go east\" - moves you to Route 3.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.\n\"gym\" - takes you to the Pewter City gym.";
+            HelpMessage = "\"south\" or \"go south\" - moves you to Route 2.\n\"east\" or \"go east\" - moves you to Route 3.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.\n\"gym\" - takes you to the Pewter City gym.";
         }
 
         public override void GoSouth()
@@ -39,52 +39,72 @@ namespace PokemonTextEdition.Locations
 
         public override void GoEast()
         {
-            Console.WriteLine("This location is not currently in the game.");
-            Overworld.LoadLocation("pewter");
+            if (!Overworld.player.defeatedTrainers.Contains("brock"))
+            {
+                Console.WriteLine("Just as you start walking towards the rocky path that leads eastward, a man");
+                Console.WriteLine("equipped in mountain gear comes running at you.");
+                Console.WriteLine("");
+
+                Console.WriteLine("\"Oi there! The road east is dangerous and many trainers who underestimate it");
+                Console.WriteLine("quickly find themselves overwhelmed! I suggest you at least become strong");
+                Console.WriteLine(" enough to beat Brock at the Pewter Gym before venturing this way.\"");
+
+                Console.WriteLine("The traveler looks like he knows what he's talking about. You heed his advice");
+                Console.WriteLine("and head back to Pewter City -- there is a gym waiting to be challenged!");
+
+                Overworld.LoadLocation("pewter");
+            } 
+
+            else
+            {
+            }
         }
 
         public override void Gym()
         {
             if (!brock.Defeated())
             {
-                Console.WriteLine("\nYou're standing before a 5-meter tall door - the entrance to the Pewter Gym.\nYou can't help but feel a bit uneasy at the thought of what challenges await.");
+                Console.WriteLine("You're standing before a 5-meter tall door - the entrance to the Pewter Gym.\nYou can't help but feel a bit uneasy at the thought of what challenges await.\n");
 
-                Console.WriteLine("\nAre you ready to start your gym challenge? It is recommended that you save.\n(Valid input: yes to begin, enter to return)");
+                Console.WriteLine("Are you ready to start your gym challenge? It is recommended that you save.\n(Valid input: yes to begin, enter to return)");
 
                 string decision = Console.ReadLine();
 
-                if (decision == "yes")
+                switch (decision)
                 {
-                    if (!fred.Defeated())
-                    {
-                        fred.Encounter();
+                    case "Yes":
+                    case "yes":
+                    case "y":
 
-                        Console.WriteLine("\nYou decide to take a short break after that difficult fight.");
-                    }
+                        if (!fred.Defeated())
+                        {
+                            fred.Encounter();
 
-                    else if (!dave.Defeated())
-                    {
-                        dave.Encounter();
+                            Console.WriteLine("\nYou decide to take a short break after that difficult fight.\n");
+                        }
 
-                        Console.WriteLine("\nYou decide to take a short break after that difficult fight.");
-                    }
+                        else if (!dave.Defeated())
+                        {
+                            dave.Encounter();
 
-                    else if (!brock.Defeated())
-                    {
-                        brock.Encounter();
+                            Console.WriteLine("\nYou decide to take a short break after that difficult fight.\n");
+                        }
 
-                        Console.WriteLine("\nWhoa - you've really done it, you've defeated the first Gym Leader.\nOnly 7 more to go!");
-                        Console.WriteLine("\nThe current version of the game only goes up to this point. Thanks for playing!");
-                    }
-                }
+                        else if (!brock.Defeated())
+                        {
+                            brock.Encounter();
 
-                else if (decision == "no" || decision == "")
-                {
-                }
+                            Console.WriteLine("You've done it! You've defeated the first Gym Leader! You can't help feeling");
+                            Console.WriteLine("hyped after that one. Next stop, the Cerulean City gym!\n");
+                        }
 
-                else
-                {
-                    Console.WriteLine("Invalid input.");
+                        break;
+
+                    default:
+
+                        if (decision != "")
+                            Console.WriteLine("");
+                        break;
                 }
             }
 

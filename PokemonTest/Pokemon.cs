@@ -316,18 +316,32 @@ namespace PokemonTextEdition
 
             level++;
             experience -= 300;
+
             Console.WriteLine("\n{0} levelled up to {1}!", name, level);
 
             StatAdjust();
+
             Console.WriteLine("HP +{0}, Attack +{1}, Defense +{2}, Sp. Attack +{3}, Sp. Defense +{4}, Speed +{5}.",
                 maxHP - tempHP, attack - tempAtk, defense - tempDef, specialAttack - tempSpa, specialDefense - tempSpd, speed - tempSpe);
 
-            if (currentHP != 0)
+            int differenceHP = maxHP - tempHP;
+
+            if (currentHP != 0) //This is not needed as fainted Pokemon can't level up by default, but it's here as foolproof.
             {
-                currentHP += (maxHP - tempHP);
+                //If the difference between the Pokemon's new max HP and its old max HP added to its current HP is smaller than its max HP, it gets healed for the difference.
+                if (maxHP > currentHP + differenceHP)
+                    currentHP += differenceHP;
+                
+                //Else it gets simply healed to full.
+                else
+                    currentHP = maxHP;
             }
 
-            CheckNewMoves();
+            if (CheckNewMoves())
+            {
+                Console.WriteLine("");
+                LearnNewMoves();
+            }
 
             if (evolution != "doesNotEvolve" && evolutionLevel <= level)
             {
@@ -391,17 +405,31 @@ namespace PokemonTextEdition
                     //Then, the Pokemon's stats get re-adjusted, it gets healed by the difference between its old max HP and its new max HP, and it learns new moves, if any.
                     StatAdjust();
 
-                    this.currentHP += (this.maxHP - oldMaxHP);
+                    int differenceHP = maxHP - oldMaxHP;
+
+                    if (currentHP != 0) //This is needed as fainted Pokemon can be evolved by using a moonstone.
+                    {
+                        //If the difference between the Pokemon's new max HP and its old max HP added to its current HP is smaller than its max HP, it gets healed for the difference.
+                        if (maxHP > currentHP + differenceHP)
+                            currentHP += differenceHP;
+
+                        //Else it gets simply healed to full.
+                        else
+                            currentHP = maxHP;
+                    }
 
                     Program.Log(oldPokemon + " evolved into " + name + ".", 1);
                     Console.Write("Congratulations! Your {0} evolved into {1}!", oldPokemon, name);
                     Console.WriteLine("");
 
-                    CheckNewMoves();
+                    if (CheckNewMoves())
+                    {
+                        Console.WriteLine("");
+                        LearnNewMoves();
+                    }
 
                     break;
             }
-
         }
 
         public Moves SelectMove(bool mandatory)
@@ -440,28 +468,42 @@ namespace PokemonTextEdition
             }
         }
 
-        public void CheckNewMoves()
+        public bool CheckNewMoves()
+        {
+            if (availableMoves.ContainsValue(level))
+            {
+                return true;
+            }
+
+            else
+                return false;
+        }
+
+        public void LearnNewMoves()
         //This code checks if the Pokemon learns any new moves at its level.
         {
             foreach (KeyValuePair<Moves, int> move in availableMoves)
             {
                 //First, the game checks whether any move in the Pokemon's available moves list matches its current level and if the Pokemon doesn't already know that move.
-                if (move.Value == level && !knownMoves.Contains(move.Key))
+                if (move.Value == level && !knownMoves.Exists(m => m.Name == move.Key.Name))
                 {
                     //If so, and if the Pokemon currently knows less than 4 moves, it learns the new move.
                     if (knownMoves.Count < 4)
                     {
                         knownMoves.Add(move.Key);
-                        Console.WriteLine("\n{0} learned the move {1}!", name, move.Key.Name);
+                        Console.WriteLine("{0} learned the move {1}!", name, move.Key.Name);
                     }
 
                     //Otherwise, the user is asked if the Pokemon should forget a move in order to learn the new move.
                     else
                     {
-                        Console.WriteLine("\n{0} wants to learn the move {1}, but it already knows 4 moves.", name, move.Key.Name);
-                        Console.WriteLine("Should a move be forgotten in order to learn {1}?\n(\"(y)es\" to forget a move, or enter to cancel)", move.Key.Name);
+                        Console.WriteLine("{0} wants to learn the move {1}, but it already knows 4 moves.\n", name, move.Key.Name);
+                        Console.WriteLine("Should a move be forgotten in order to learn {0}?\n(\"(y)es\" to forget a move, or enter to cancel)", move.Key.Name);
 
                         string decision = Console.ReadLine();
+
+                        if (decision != "")
+                            Console.WriteLine("");
 
                         switch (decision)
                         {
@@ -478,7 +520,7 @@ namespace PokemonTextEdition
                                 //the user the move selected is forgotten, and the new move is learned in its stead.
                                 if (tempMove.Name != "Blank")
                                 {
-                                    Console.WriteLine("1, 2 and poof!\n{0} forgot {1} and learned {2} instead!", name, tempMove.Name, move.Key.Name);
+                                    Console.WriteLine("\n1, 2 and poof!\n{0} forgot {1} and learned {2} instead!", name, tempMove.Name, move.Key.Name);
                                     knownMoves.Remove(knownMoves.Find(moves => moves.Name == tempMove.Name));
                                     knownMoves.Add(move.Key);
 
@@ -487,7 +529,7 @@ namespace PokemonTextEdition
                                 //Else, if the input was not valid, he will be asked whether the Pokemon should forget a move again.
                                 else
                                 {
-                                    CheckNewMoves();
+                                    LearnNewMoves();
                                 }
 
                                 break;
@@ -498,8 +540,10 @@ namespace PokemonTextEdition
                                 Console.WriteLine("Are you sure that {0} should not learn {1}?", name, move.Key.Name);
                                 Console.WriteLine("(\"(y)es\" to cancel completely, or enter to re-try)");
 
+                                string decision2 = Console.ReadLine();
+
                                 //A second switch to verify the user's answer.
-                                switch (Console.ReadLine())
+                                switch (decision2)
                                 {
                                     case "Yes":
                                     case "yes":
@@ -511,7 +555,11 @@ namespace PokemonTextEdition
                                     default:
 
                                         //Any other input will start this process all over again.
-                                        CheckNewMoves();
+
+                                        if (decision2 != "")
+                                            Console.WriteLine("");
+
+                                        LearnNewMoves();
                                         break;
                                 }
 

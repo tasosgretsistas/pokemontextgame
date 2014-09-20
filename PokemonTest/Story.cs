@@ -27,7 +27,6 @@ namespace PokemonTextEdition
             Console.WriteLine("Uh oh, you're gonna be late! You quickly put on the first set of clothes you");
             Console.WriteLine("find and head straight for Professor Oak's lab. The Professor is standing");
             Console.WriteLine("beside a table with three Pokeballs on it.");
-            Console.WriteLine("");
 
             AnyKey();
 
@@ -135,9 +134,10 @@ namespace PokemonTextEdition
 
             Generator generator = new Generator();
 
-            string selection = Console.ReadLine();
-
-           
+            string selection = Console.ReadLine();  
+         
+            if (selection != "")
+                Console.WriteLine("");
 
             //The Generator is invoked to create two Pokemon, based on the player's input.
             //One for the player depending on his input, and a Pokemon that's strong vs the user's for the rival.
@@ -177,18 +177,18 @@ namespace PokemonTextEdition
                 case "p":
                     Overworld.player.party.Add(generator.Create("Pikachu", 25));
                     rival.party.Add(generator.Create("Eevee", 5));
-                    Console.WriteLine("\nQuite the cheater, aren't you...");
+                    Console.WriteLine("Quite the cheater, aren't you...");
                     Program.Log("The player selected Pikachu. Hopefully I am the player and my secret's not out yet.", 0);
                     break;
 
                 default:
-                    Console.WriteLine("\nInvalid selection! Please try again.");
+                    Console.WriteLine("Invalid selection! Please try again.");
                     Console.WriteLine("");
                     SelectPokemon();
                     break;
             }
 
-            Overworld.player.Starter = Overworld.player.party.ElementAt(0).name;
+            Overworld.player.StartingPokemon = Overworld.player.party.ElementAt(0).name;
 
             //A short introduction for the Pokemon.
 
@@ -200,12 +200,12 @@ namespace PokemonTextEdition
             Console.WriteLine("Just as you pick up the Pokeball containing {0}, you hear someone", Overworld.player.party.ElementAt(0).name);
             Console.WriteLine("calling your name from behind you. It's your rival, {0} - it seems", rival.Name);
             Console.WriteLine("that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
-            Console.WriteLine("");
 
             AnyKey();
 
             Console.WriteLine("\"So, {0}, huh? I figured you'd pick a chump Pokemon like that!", Overworld.player.party.ElementAt(0).name);
             Console.WriteLine(" Very well - let me show you why my {0} is the superior Pokemon!\"", rival.party.ElementAt(0).name);
+            Console.WriteLine("");
 
             //The first battle with the rival then starts.
 
@@ -227,7 +227,6 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("And just like that, {0} took off.", rival.Name);
-            Console.WriteLine("");
 
             AnyKey();
 
@@ -243,7 +242,6 @@ namespace PokemonTextEdition
             Console.WriteLine("");           
 
             Console.WriteLine("\"{0}!! Hold on!!\"", Overworld.player.Name);
-            Console.WriteLine("");
 
             AnyKey();
 
@@ -257,7 +255,6 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             ItemsList.pokeball.Add(5, "obtain");
-            Console.WriteLine("");
 
             AnyKey();
 
@@ -266,7 +263,6 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             ItemsList.potion.Add(5, "obtain");
-            Console.WriteLine("");
 
             AnyKey();
 
@@ -276,9 +272,9 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
-            Console.WriteLine("ready to head out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.Starter);
+            Console.WriteLine("ready to head out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
 
-            AnyKeyLoadingArea();
+            AnyKey();
 
             //The user's Pokemon is then healed and the game moves on to the Overworld, where the player can navigate and perform additional actions.
 
@@ -289,20 +285,11 @@ namespace PokemonTextEdition
 
         public static void AnyKey()
         {
-            Console.WriteLine("Press any key to continue.");
+            Console.WriteLine("\nPress any key to continue.");
 
             Console.ReadKey(true);
 
             Console.WriteLine("");
-        }
-
-        public static void AnyKeyLoadingArea()
-        {
-            Console.WriteLine("");
-
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey(true); 
-
         }
     }
 }
