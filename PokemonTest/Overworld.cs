@@ -123,7 +123,7 @@ namespace PokemonTextEdition
                 case "mart":
                 case "m":
 
-                    currentLocation.Shop();
+                    currentLocation.Mart();
 
                     Options();
 

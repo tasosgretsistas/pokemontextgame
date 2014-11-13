@@ -25,7 +25,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the forest's end";
             LongDescription = "The far north part of the forest, bordering Pewter City's outskirts. This\npart of the forest is just thin enough to be able to make out Pewter City\nin the north and an odd cave that you don't see on the map in the east.";
-            Connections = "the forest's depths to the south and Route 2 to the north";
+            ConnectionsMessage = "Going due south would take you to the deepest part of the forest, while going\nnorth leads to the northern side of Route 2 and the outskirts of Pewter City.";
             HelpMessage = "\"north\" or \"go north\" - moves you to Pewter City.\n\"south\" or \"go south\" - moves you deeper in the Viridian Forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 

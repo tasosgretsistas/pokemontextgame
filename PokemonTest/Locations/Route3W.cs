@@ -33,8 +33,8 @@ namespace PokemonTextEdition.Locations
 
             Description = "the rocky road";
             LongDescription = "This rocky path marks the beginning of the long mountain trail that leads to\nMt. Moon. Many strong trainers head this way after emerging victorious from\nthe Pewter City gym. Be careful as you challenge them!";
-            Connections = "Pewter City to the west and eastern Route 3\nto the east";            
-            HelpMessage = "\"west\" or \"go west\" - moves you to Pewter City.\n\"east\" or \"go east\" - moves you to eastern Route 2.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
+            ConnectionsMessage = "Pewter City is close by to the west of here, while going east finds one at the\neastern end of Route 3 and the entrance to Mt. Moon.";
+            HelpMessage = "\"west\" or \"go west\" - moves you to Pewter City.\n\"east\" or \"go east\" - moves you to eastern Route 2.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 
         public override void Trainer()

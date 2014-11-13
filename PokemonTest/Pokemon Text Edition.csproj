@@ -79,7 +79,7 @@
     <Compile Include="Generator.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemsList.cs" />
-    <Compile Include="Items\Heal.cs" />
+    <Compile Include="Items\StatusHeal.cs" />
     <Compile Include="Items\PokeBall.cs" />
     <Compile Include="Items\Potion.cs" />
     <Compile Include="Location.cs" />

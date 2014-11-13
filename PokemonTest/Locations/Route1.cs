@@ -23,7 +23,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "your first trial";
             LongDescription = "The sound of rustling grass can alarm even the most experienced trainers.\nWatch your step - you could be ambushed by wild Pokemon in the tall grass!";
-            Connections = "Pallet Town to the south and Viridian City\nto the north";            
+            ConnectionsMessage = "A pleasant downhill walk due south leads to Pallet Town, and Viridian City is\nis located a short distance off to the north.";            
             HelpMessage = "\"north\" or \"go north\" - moves you to Viridian City.\n\"south\" or \"go south\" - moves you to Pallet Town.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 

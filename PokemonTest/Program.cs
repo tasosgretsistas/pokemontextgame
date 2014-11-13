@@ -11,12 +11,17 @@ namespace PokemonTextEdition
 {
     public class Program
     {
+        //Current game version.
+        private const string version = "v0.2 [BETA]";
+
         //This parameter determines how severe a message needs to be in order to get logged.
         //0 = trivial, 1 = important, 2 = vital.
         private const int logLevel = 0;
 
+        public static bool GodMode { get; set; }
+
         private const string saveGame = "savegame.sav"; //The name of the save game file to be used.
-        
+
         //The font colour for each kind of message. (NYI)
         public static ConsoleColor quotesColor = ConsoleColor.Green;
         public static ConsoleColor battleColor = ConsoleColor.Red;
@@ -25,7 +30,7 @@ namespace PokemonTextEdition
         {
             //Introduction code. Keep this updated!
 
-            Console.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! v0.2 [BETA]");
+            Console.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! " + version);
             Console.WriteLine("All 151 Pokemon are now in the game! Hurray!");
             Console.WriteLine("Pokemon can now evolve and you can use items! :-)");
             Console.WriteLine("");
@@ -51,7 +56,7 @@ namespace PokemonTextEdition
                 case "skip":
                 case "S":
                 case "s":
-                    
+
                     Console.WriteLine("By default the player will be named \"{0}\" and the rival \"{1}\".\n", Overworld.player.Name, Overworld.player.RivalName);
 
                     Story.SelectPokemon();
@@ -86,14 +91,10 @@ namespace PokemonTextEdition
             try
             {
                 Stream stream = File.Open(saveGame, FileMode.Create);
-                BinaryFormatter formatter = new BinaryFormatter();                
+                BinaryFormatter formatter = new BinaryFormatter();
 
                 Overworld.player.Location = Overworld.currentLocation.Tag;
                 formatter.Serialize(stream, Overworld.player);
-
-                Log("The game saved successfully.", 1);
-
-                Console.WriteLine("Saved!\n");
 
                 stream.Close();
             }
@@ -112,6 +113,13 @@ namespace PokemonTextEdition
                 Console.WriteLine("The game will now return to what was happening. Press any key to continue.\n");
                 Console.ReadKey(true);
             }
+
+            finally
+            {
+                Log("The game saved successfully.", 1);
+
+                Console.WriteLine("Saved!\n");
+            }
         }
 
         public static void Load()
@@ -124,15 +132,13 @@ namespace PokemonTextEdition
                 Console.Write("Loading game... ");
 
                 //If it does exist, it then tries to open the file and load the player's information.
-                
+
                 try
                 {
                     Stream stream = File.Open(saveGame, FileMode.Open);
-                    BinaryFormatter formatter = new BinaryFormatter();                    
+                    BinaryFormatter formatter = new BinaryFormatter();
 
                     Overworld.player = (Player)formatter.Deserialize(stream);
-
-                    Log("The game loaded successfully.", 1);                    
 
                     stream.Close();
                 }
@@ -157,6 +163,8 @@ namespace PokemonTextEdition
                 //If this operation is succesful, the player is taken to the corresponding Overworld menu for his saved location.
                 finally
                 {
+                    Log("The game loaded successfully.", 1);
+
                     Console.WriteLine("Loaded succesfully!\n");
 
                     Overworld.LoadLocation(Overworld.player.Location);

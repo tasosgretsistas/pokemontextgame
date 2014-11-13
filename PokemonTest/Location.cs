@@ -7,6 +7,8 @@ namespace PokemonTextEdition
 {
     public class Location
     {
+        #region Declarations & Constructors
+
         //The location's primary attributes.
         //The tag is a helpful identification string for the location, used mostly for checking its connection to other locations.
         public string Name { get; set; }
@@ -16,7 +18,7 @@ namespace PokemonTextEdition
         //The location's descriptive elements.
         public string Description { get; set; }
         public string LongDescription { get; set; }
-        public string Connections { get; set; }
+        public string ConnectionsMessage { get; set; }
         public string HelpMessage { get; set; }
 
         //A list of tags representing this location's connected locations.
@@ -36,9 +38,11 @@ namespace PokemonTextEdition
         {
         }
 
+        #endregion
+
         public void PrintLocation()
         {
-            Console.Write("You are now in {0}, {1}.\n\n{2}\n\nThis {3} is connected to {4}.\n", Name, Description, LongDescription, Type, Connections);
+            Console.Write("You are now in {0}, {1}.\n\n{2}\n\n{3}\n", Name, Description, LongDescription, ConnectionsMessage);
         }
 
         public void Help()
@@ -59,7 +63,7 @@ namespace PokemonTextEdition
 
         public virtual void Trainer()
         {
-            Console.WriteLine("There are no trainers in {0}.\n", Name);
+            Console.WriteLine("There are no trainers to battle in {0}.\n", Name);
         }
 
         public virtual void GoNorth()
@@ -88,7 +92,7 @@ namespace PokemonTextEdition
             //If the player is inside a city, his Pokemon will get healed,  and the "lastHeal" tag which specifies what city the player last healed in will update. 
             //If the player is not within a city, an error message will be displayed.
            
-            if (Type == "city" || Type == "town")
+            if (Type == "city" || Type == "town" || Tag != "route3e")
             {
                 foreach (Pokemon p in Overworld.player.party)
                 {
@@ -105,7 +109,7 @@ namespace PokemonTextEdition
             }
         }
 
-        public virtual void Shop()
+        public virtual void Mart()
         {
             if (Type == "city")
             {

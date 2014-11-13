@@ -19,11 +19,11 @@ namespace PokemonTextEdition.Locations
             Tag = "route3e";
 
             West = "route3w";
-            East = "mtmoonpt1";
+            East = "mtmoon1";
 
             Description = "the mountain's plateau";
-            LongDescription = "Atop the plateau at the east end of this route lies the entrance to Mt. Moon.\nMost people stop at the Pokemon Center to rest after the long journey uphill\nbefore heading into the perilous cave.";
-            Connections = "western end of Route 3 to the west and Mt Moon\nto the east";
+            LongDescription = "Atop the plateau at the east end of this route lies the entrance to Mt. Moon.\nMost people stop at the Pokemon Center here to rest after that long uphill\njourney before heading into the perilous cave.";
+            ConnectionsMessage = "Following the mountain trail down to the west leads to the west end of Route 3\nand to the east lies a cave - the entrance to Mt. Moon's interior.";
             HelpMessage = "\"west\" or \"go west\" - moves you to western Route 3.\n\"east\" or \"go east\" - moves you to Mt. Moon.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 
@@ -72,8 +72,8 @@ namespace PokemonTextEdition.Locations
 
         public override void GoEast()
         {
-            Console.WriteLine("Not yet implemented.");
-            Overworld.LoadLocation(this.Tag);
+            Console.WriteLine("Feeling confident in your ability to take on whatever challenges await inside");
+            Console.WriteLine("the cave, you turn on your flashlight as you head inside with a sure step.");
         }
     }
 }

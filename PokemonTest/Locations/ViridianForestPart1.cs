@@ -25,7 +25,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the natural maze";
             LongDescription = "This deep forest is the first major obstacle for most aspiring trainers.\nBug-type Pokemon abode, it is very easy to get lost in the thick forest.";
-            Connections = "Route 2 to the south and the forest's\ndepths to the north";
+            ConnectionsMessage = "Going south of here would lead you to southern Route 2, while going north\nwould take you right into the heart of the forest.";
             HelpMessage = "\"north\" or \"go north\" - moves you deeper in the Viridian Forest.\n\"south\" or \"go south\" - moves you to Viridian City.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 

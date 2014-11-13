@@ -25,7 +25,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the forest's grove";
             LongDescription = "The deepest part of the Viridian Forest. A big grove lies in the middle.\nCareful - you never know what kind of danger could lurk around the corner.";
-            Connections = "the southern Forest to the south and the northern\nforest to the north";
+            ConnectionsMessage = "The edges of the forest are located in each direction. The Viridian City end\nto the south, and the Pewter City end to the north.";
             HelpMessage = "\"north\" or \"go north\" - moves you to the north part of the forest.\n\"south\" or \"go south\" - moves you to the south part of the forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 

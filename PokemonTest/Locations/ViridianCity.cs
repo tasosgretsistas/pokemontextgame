@@ -20,7 +20,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the evergreen city";
             LongDescription = "This bustling city is most young trainers' first stop. There is a Pokemon\nCenter to heal your Pokemon, as well as a Mart where you can buy items.\nThe Viridian Gym is also located here, but it is currently closed.";
-            Connections = "Route 1 to the south, Route 2 to the north and\nthe Indigo Plateau to the west";         
+            ConnectionsMessage = "Route 1 is just south off here, and Route 2 within a few minutes to the north.\nTo the west lies Route 22, the gateway to Indigo Plateau.";         
             HelpMessage = "\"north\" or \"go north\" - moves you to Route 2.\n\"south\" or \"go south\" - moves you to Route 1.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.";
 
             martStock.Add(ItemsList.pokeball);

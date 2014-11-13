@@ -6,15 +6,15 @@ using System.Text;
 namespace PokemonTextEdition.Items
 {
     [Serializable]
-    class Heal : Item
+    class StatusHeal : Item
     {
         public string healType; //The type of status ailment this particular item heals.
 
-        public Heal(string iName, string iDescription, bool iMultiple, int iValue, string iHeal)
+        public StatusHeal(string iName, string iDescription, bool iMultiple, int iValue, string iHeal)
             : base(iName, iDescription, iMultiple, iValue)
         {
             healType = iHeal;
-            Type = "heal";
+            Type = "statusheal";
         }
 
         public override bool Use()

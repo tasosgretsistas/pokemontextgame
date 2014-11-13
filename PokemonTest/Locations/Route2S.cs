@@ -23,7 +23,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the forest's entrance";
             LongDescription = "This long trail eventually leads to the southern entrance of the Viridian\nForest. Many trainers choose to train their Pokemon here before venturing\ninto the forest for the first time.";
-            Connections = "Viridian City to the south and the Viridian\nForest to the north";            
+            ConnectionsMessage = "This route connects Viridian City from the south to the Viridian Forest to the\nnorth, all within walking distance.";            
             HelpMessage = "\"north\" or \"go north\" - moves you to Viridian Forest.\n\"south\" or \"go south\" - moves you to Viridian City.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 

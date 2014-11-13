@@ -25,7 +25,7 @@ namespace PokemonTextEdition
         //and the number coefficient of its effect - i.e. the effect's probability.
         public bool SecondaryEffect { get; set; }
         public int EffectID { get; set; }
-        public double EffectN { get; set; } 
+        public float EffectN { get; set; } 
 
         /// <summary>
         /// The primary constructor for the Move class, representing a Pokemon's potential attack.
@@ -40,7 +40,7 @@ namespace PokemonTextEdition
         /// <param name="moveSecondaryEffect">A flag to be used for moves that have secondary effects.</param>
         /// <param name="moveEffectID">The move's secondary effect ID number. Each unique effect has a different ID.</param>
         /// <param name="moveEffectN">The move's secondary effect and the effect's coefficient - for instance, the effect's probability, or the amount of damage it'd deal.</param>
-        public Moves(string moveName, string moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, double moveEffectN)
+        public Moves(string moveName, string moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, float moveEffectN)
         {
             Name = moveName;
             Type = moveType;

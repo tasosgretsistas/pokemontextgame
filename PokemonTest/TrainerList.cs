@@ -61,6 +61,19 @@ namespace PokemonTextEdition
            new Trainer("Lass", "Mandy", "Picnics are so fun that I'm having another one. A battle? Fine by me.", "Owie. Never mind the battle, my stomach is starting to hurt - I ate too much!", 
                        "Yup, nothing more refreshing than a battle after a picnic in the morning!", new List<Pokemon> { new Generator().Create("Jigglypuff", 16)}, 240, "9r"),
 
+           new Trainer("Lass", "Lana", "After searching for so long, I finally ran into a Clefairy, and of course I\n caught it! And now I get to test it out in a battle, I'm so lucky today!", 
+               "Oh no! I guess I need to raise my Clefairy first and gain some experience with\n it before it is really fighting-fit... ", 
+               "Haha! Did you see that?! My Clefairy is so strong, it was well worth searching\n for it for all of those hours!", new List<Pokemon> { new Generator().Create("Clefairy", 15)}, 230, "10"),
+            
+           new Trainer("Lass", "Lana", "I've been training with my Clefairy here at Mt. Moon, its natural habitat.\n This time we certainly won't lose! Let's do it, Clefairy!", 
+               "Ahhh, we lost again! Let's train some more, Clefairy!", "I told you we'd gotten stronger! Me and Clefairy, we're the strongest team!", 
+               new List<Pokemon> { new Generator().Create("Clefairy", 17)}, 270, "10r"),
+
+           new Trainer("Super Nerd", "Simon", "There are strong magnetic forces at work inside this cave, and a lot of static\n electricity stored inside the granite. My Electric-type Pokemon love it!", "Hold on, let me record the data of our battle on my computer.", 
+                       "It was foolish of you to challenge me while my power level is so much higher.", new List<Pokemon> { new Generator().Create("Magnemite", 11), new Generator().Create("Voltorb", 11)}, 250, "11"),
+
+           new Trainer("Super Nerd", "Simon", "My Electric-type Pokemon have absorbed a lot of static electricity from these\n halls, and they have become super-charged! We won't lose!", "Y-Your data, it's on a completely different level than before...", 
+                       "I have become stronger thanks to the power of science!", new List<Pokemon> { new Generator().Create("Magnemite", 13), new Generator().Create("Voltorb", 13)}, 270, "11r"),
        };
     }
 }

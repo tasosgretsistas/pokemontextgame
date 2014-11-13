@@ -7,6 +7,8 @@ namespace PokemonTextEdition
 {
     class MovesList
     {
+        //All of the available moves in the game.
+
         /*
          * EFFECT IDs
          * 1 = % based burn.
@@ -29,9 +31,7 @@ namespace PokemonTextEdition
          * 18 - Item steal.
          * 19 - Moves with set damage equal to the Pokemon's level.
          * 20 - Confusion.
-         */
-
-        //All of the available moves in the game.
+         */        
 
         //Normal type.
         static public Moves Tackle = new Moves("Tackle", "Normal", 50, 100, "Physical", 0, false, false, 0, 0);
@@ -39,7 +39,7 @@ namespace PokemonTextEdition
         static public Moves QuickAttack = new Moves("Quick Attack", "Normal", 40, 100, "Physical", 1, false, false, 0, 0);
         static public Moves Swift = new Moves("Swift", "Normal", 60, 100, "Special", 0, true, false, 0, 0);
         static public Moves Rage = new Moves("Rage", "Normal", 20, 100, "Physical", 0, false, false, 4, 0);
-        static public Moves TakeDown = new Moves("Take Down", "Normal", 90, 85, "Physical", 0, false, false, 8, 0.25);
+        static public Moves TakeDown = new Moves("Take Down", "Normal", 90, 85, "Physical", 0, false, false, 8, 0.25f);
         static public Moves RapidSpin = new Moves("Rapid Spin", "Normal", 20, 100, "Physical", 0, false, true, 11, 0);
         static public Moves Protect = new Moves("Protect", "Normal", 0, 100, "Status", 4, true, false, 12, 0);
         static public Moves BodySlam = new Moves("Body Slam", "Normal", 85, 100, "Physical", 0, false, true, 2, 31);
@@ -49,7 +49,7 @@ namespace PokemonTextEdition
         static public Moves DizzyPunch = new Moves("Dizzy Punch", "Normal", 70, 100, "Physical", 0, false, true, 15, 21);
         static public Moves DoubleHit = new Moves("Double Hit", "Normal", 35, 90, "Physical", 0, false, false, 13, 2);
         static public Moves DoubleSlap = new Moves("Double Slap", "Normal", 15, 85, "Physical", 0, false, false, 13, 5);
-        static public Moves DoubleEdge = new Moves("Double-Edge", "Normal", 120, 100, "Physical", 0, false, false, 8, 0.33);
+        static public Moves DoubleEdge = new Moves("Double-Edge", "Normal", 120, 100, "Physical", 0, false, false, 8, 0.33f);
         static public Moves Pound = new Moves("Pound", "Normal", 40, 100, "Physical", 0, false, false, 0, 0);
         static public Moves Sing = new Moves("Sing", "Normal", 0, 55, "Status", 0, false, false, 7, 0);
         static public Moves FuryAttack = new Moves("Fury Attack", "Normal", 15, 85, "Physical", 0, false, false, 13, 5);

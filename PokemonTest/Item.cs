@@ -8,6 +8,7 @@ namespace PokemonTextEdition
     [Serializable]
     public class Item
     {
+        #region Declarations & Constructors
         public string Name { get; set; } //The item's name.
         public string Type { get; set; } //The item's type - i.e., pokeball, potion, heal, etc.
         public string Description { get; set; } //A description of the item's purpose.
@@ -53,6 +54,20 @@ namespace PokemonTextEdition
             Description = iDescription;
             CanUseMultiple = iMultiple;
             Value = iValue;
+        }
+        #endregion
+
+        public string AddRemoveQuantityFormat(int quantity)
+        {
+            //This method quickly formats the name of the item depending on the quantity to be added/removed.
+
+            string countMessage;
+
+            if (quantity == 1)
+                return countMessage = "a " + Name;
+
+            else
+                return countMessage = quantity + " " + Name + "s";
         }
 
         public void Add(int quantity, string method)
@@ -101,19 +116,6 @@ namespace PokemonTextEdition
             if (method == "use")
                 Console.WriteLine("You used {0}!", AddRemoveQuantityFormat(quantity));
              */
-        }
-
-        public string AddRemoveQuantityFormat(int quantity)
-        {
-            //This method quickly formats the name of the item depending on the quantity to be added/removed.
-
-            string countMessage;
-
-            if (quantity == 1)
-                return countMessage = "a " + Name;
-
-            else
-                return countMessage = quantity + " " + Name + "s";
         }
 
         public virtual bool Use()

@@ -291,7 +291,7 @@ namespace PokemonTextEdition
             if (items.Count > 10)
             {
                 Console.WriteLine("What kind of item would you like to {0}?", method);
-                Console.WriteLine("(Valid input: pokeball, potion, heal, misc)");
+                Console.WriteLine("(Valid input: pokeball, potion, status heal, misc)");
 
                 string input = Console.ReadLine();
 
@@ -440,7 +440,7 @@ namespace PokemonTextEdition
             }
         }
 
-        public Pokemon SelectPokemon(bool mandatory)
+        public Pokemon SelectPokemon(bool mandatorySelection)
         {
             //This code is used when the player is asked to select a Pokemon in his party.
 
@@ -462,7 +462,7 @@ namespace PokemonTextEdition
             }
 
             //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
-            else if (input == "" && !mandatory)
+            else if (input == "" && !mandatorySelection)
             {
                 Program.Log("The player chose to cancel the operation.", 0);
 

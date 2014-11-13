@@ -8,6 +8,8 @@ namespace PokemonTextEdition
 {
     class Battle
     {
+        #region Declarations
+
         //A random number generator that all methods that require randomness will use.
         Random rng = new Random();
 
@@ -30,7 +32,7 @@ namespace PokemonTextEdition
 
         //These variables are used to check whether a Pokemon is using the same move as before.
         //This is useful for moves that deal increased damage while being used consecutively.
-        double sameMoveDamageBonus = 1;
+        float sameMoveDamageBonus = 1;
         Moves previousPlayerMove = new Moves();
         Moves previousEnemyMove = new Moves();
 
@@ -49,6 +51,9 @@ namespace PokemonTextEdition
         //An integer that counts how many times the player has tried to escape.
         int escapeAttempts = 1;
 
+        #endregion
+
+        #region Battle Start
 
         /// <summary>
         /// This method is used to start a battle with a trainer or a special Pokemon. The Wild method is used for battles with wild Pokemon.
@@ -108,11 +113,9 @@ namespace PokemonTextEdition
             }
         }
 
-        void AddToParticipants(Pokemon p)
-        {
-            if (!participants.Contains(p))
-                participants.Add(p);
-        }
+        #endregion
+        
+        #region Basic Actions
 
         void Actions()
         {
@@ -165,7 +168,7 @@ namespace PokemonTextEdition
                 case "r":
                     Run();
                     break;
-                    
+
                 default:
                     Program.Log("The player input an invalid command at the Actions screen.", 0);
 
@@ -203,8 +206,11 @@ namespace PokemonTextEdition
 
         void Item()
         {
-            if (Overworld.player.UseItemsCombat())
-                //The AI will attack once following the player's switch.
+            //This code is used when the player chooses to use an item.
+            //If the player succesfully uses an item, the AI attacks once. 
+            //Otherwise, the player is taken back to the actions screen.
+
+            if (Overworld.player.UseItemsCombat())                
                 AIAttack();
 
             else
@@ -258,6 +264,10 @@ namespace PokemonTextEdition
             else
                 Actions();           
         }
+
+        #endregion
+
+        #region Combat
 
         void Fight()
         {
@@ -340,21 +350,21 @@ namespace PokemonTextEdition
             int enemySpeed = enemyPokemon.speed;
 
             if (playerPokemon.status == "paralysis")
-                playerSpeed = (int)Math.Round((double)playerSpeed * 0.25);
+                playerSpeed = (int)Math.Round((float)playerSpeed * 0.25f);
 
             if (enemyPokemon.status == "paralysis")
-                enemySpeed = (int)Math.Round((double)enemySpeed * 0.25);
+                enemySpeed = (int)Math.Round((float)enemySpeed * 0.25f);
 
             //If the player's Pokemon is faster or its move had higher priority, it goes first. 
             if (playerSpeed >= enemySpeed && playerMove.Priority >= enemyMove.Priority)
             {
                 Program.Log("The player's Pokemon is faster, so it attacks first.", 0);
 
-                PreBattle("player");
+                PreCombat("player");
 
                 //If the fight is not over and the enemy Pokemon has not fainted, it attacks.
                 if (!fightOver && enemyPokemon == defendingPokemon)
-                    PreBattle("AI");
+                    PreCombat("AI");
             }
 
             //Otherwise, the AI's Pokemon goes first.
@@ -362,11 +372,11 @@ namespace PokemonTextEdition
             {
                 Program.Log("The AI's Pokemon is faster, so it attacks first.", 0);
 
-                PreBattle("AI");
+                PreCombat("AI");
 
                 //If the fight is not over and the player's Pokemon has not fainted, it attacks.
                 if (!fightOver && playerPokemon == defendingPokemon)
-                    PreBattle("player");
+                    PreCombat("player");
             }
 
             //Then, the end of turn effects are resolved, and if the fight is not over, the player is taken back to the Actions menu.   
@@ -385,9 +395,9 @@ namespace PokemonTextEdition
             }
         }
 
-        void PreBattle(string attacker)
+        void PreCombat(string attacker)
         {
-            //Quick pre-battle calculations and helpful message adjustments.
+            //Quick pre-combat calculations and helpful message adjustments.
 
             Program.Log("The " + attacker + " attacks.", 1);
 
@@ -434,9 +444,9 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    double typeMod = TypeChart.Check(currentMove, defendingPokemon.type, defendingPokemon.type2);
+                    float typeMod = TypeChart.Check(currentMove.Type, defendingPokemon.type, defendingPokemon.type2);
 
-                    if (typeMod == 0.0)
+                    if (typeMod == 0)
                     {
                         Console.WriteLine("{0} was immune to the attack!", defenderName);
                     }
@@ -540,37 +550,38 @@ namespace PokemonTextEdition
             }
         }
 
-        void Damage(string attacker, double mod)
+        void Damage(string attacker, float mod)
         {
             //This code that handles damage calculations.
 
-            double damage = 0; //The total damage inflicted to the defending Pokemon after all calculations are done. 
+            float damage = 0; //The total damage inflicted to the defending Pokemon after all calculations are done. 
             int previousHP = defendingPokemon.currentHP; //This is used to accurately calculate how much damage the defending Pokemon took. 
 
-            double statusModifier = 1; //A modifier depending on the attacking Pokemon's status.
-            double multiplier = 1; //An all-purpose multiplier for the final damage calculation.
-
-            //This represents the relational modifier between the attack's type and the defending Pokemon's type(s).
-            //The TypeChart.Check method is invoked to produce a number that will get plugged directly into the damage formula.
-            double typeMod = mod;
+            float multiplier = 1; //An all-purpose multiplier for the final damage calculation.
+            float typeMod = mod;  //The relational modifier between the attack's type and the defending Pokemon's type(s).    
 
             int numberOfHits = 1, hits = 1; //The number of times an attack will strike, for multi-hit attacks.
+
+            //This string is used for logging, in order to determine whether moves do the correct amount of damage.
+            string damageText = "";
 
             Program.Log(attackerName + " attacks " + defendingPokemon.name + " (" + defendingPokemon.currentHP + "/" + defendingPokemon.maxHP + " HP) with "
                         + currentMove.Name + " (typeMod: " + typeMod.ToString() + ")", 1);
 
             //The next part prints a message explaining the result of the TypeChart calculation to the player.
-            if (typeMod == 2.0 || typeMod == 4.0)
+            if (typeMod == 2 || typeMod == 4)
                 Console.WriteLine("It's super effective!");
 
-            else if (typeMod == 0.5 || typeMod == 0.25)
+            else if (typeMod == 0.5f || typeMod == 0.25f)
                 Console.WriteLine("It's not very effective!");
 
             //Multi-hit attack calculation.
             if (currentMove.EffectID == 13)
             {
+                //If the attack is a 2-hit attack, it will hit twice.
+
                 if (currentMove.EffectN == 2)
-                    numberOfHits = 2; //If the attack is a 2-hit attack, it will hit twice.
+                    numberOfHits = 2; 
 
                 else
                 {
@@ -602,14 +613,15 @@ namespace PokemonTextEdition
             else
             {
                 do //This is a do-while loop to facilitate for the multiple hits scenario.
-                {                   
-
+                {    
                     //Same-Type Attack Bonus check. If the Pokemon's attack is the same type as the Pokemon itself, it receives a 50% damage boost.
                     if (attackingPokemon.type == currentMove.Type || attackingPokemon.type2 == currentMove.Type)
                     {
                         Program.Log("The attack has STAB.", 0);
 
-                        multiplier *= 1.5;
+                        damageText += " * 1.5 (STAB)"; 
+
+                        multiplier *= 1.5f;
                     }
 
                     int critical = rng.Next(1, 101);
@@ -617,10 +629,13 @@ namespace PokemonTextEdition
                     //Critical hit calculator. I've set it to 10% chance and 20% extra damage for a crit as I dislike RNG.
                     if (critical < 11 || currentMove.EffectID == 9 && critical < 21)
                     {
-                        Program.Log("The attack was a critical hit.", 0);
+                        Program.Log("The attack was a critical hit.", 0);                        
 
                         Console.WriteLine("A critical hit!");
-                        multiplier *= 1.2;
+
+                        damageText += " * 1.2 (crit)"; 
+
+                        multiplier *= 1.2f;
                     }
 
                     //This code simply makes wild Pokemon do 20% less damage. But one day, they'll turn against us!
@@ -628,35 +643,41 @@ namespace PokemonTextEdition
                     {
                         Program.Log("Encounter type is 'wild', so the AI's attack deals 20% less damage.", 0);
 
-                        multiplier *= 0.8;
-                    }
+                        damageText += " * 0.8 (wild)"; 
 
-                    //The overall multiplier is then calculated.
-                    multiplier *= typeMod;
+                        multiplier *= 0.8f;
+                    }                    
 
                     //If the attacking Pokemon is burned, the status modifier for physical attacks is set to 0.5.
                     if (attackingPokemon.status == "burn" && currentMove.Attribute == "Physical")
                     {
-                        Program.Log(attackingPokemon.name + " was burned, so statusMod = 0.5.", 0);
-                        statusModifier = 0.5;
+                        Program.Log(attackingPokemon.name + " is burned, so its attack stat is halved.", 0);
+
+                        damageText += " * 0.5 (burn)"; 
+                        
+                        multiplier *= 0.5f;
                     }
 
-                    //And this is where the damage is actually calculated. The multiplier only supports STAB and type related multipliers for now.
+                    //The amount of damage dealt by the attack gets calculated here.
                     //Attack & defense or special attack & special defense are selected according to the move's attribute.            
                     if (currentMove.Attribute == "Physical")
                     {
-                        damage += ((2.0 * (double)attackingPokemon.level + 10.0) / 250.0 * ((double)attackingPokemon.attack * statusModifier) /
-                                            (double)defendingPokemon.defense * ((double)currentMove.Damage * sameMoveDamageBonus) + 2.0) * multiplier;
+                        damage += (2 * attackingPokemon.level + 10) / 250f * attackingPokemon.attack / defendingPokemon.defense * currentMove.Damage * sameMoveDamageBonus + 2;
                     }
                     else if (currentMove.Attribute == "Special")
                     {
-                        damage += ((2.0 * (double)attackingPokemon.level + 10.0) / 250.0 * (double)attackingPokemon.specialAttack /
-                                            (double)defendingPokemon.specialDefense * ((double)currentMove.Damage * sameMoveDamageBonus) + 2.0) * multiplier;
+                        damage += (2 * attackingPokemon.level + 10) / 250f * attackingPokemon.specialAttack / defendingPokemon.specialDefense * currentMove.Damage * sameMoveDamageBonus + 2;
                     }
 
                     //The minimum damage an attack can do is 1 so if the damage would be less than 1, damage becomes 1.
                     if (damage < 1)
                         damage = 1;
+
+                    damageText = damage + " (base damage) * " + typeMod + " (typeMod)" + damageText;
+
+                    //The overall multiplier is then calculated and damage gets multiplied by that amount.
+                    multiplier *= typeMod;
+                    damage *= multiplier;
 
                     numberOfHits--;
                 }
@@ -666,10 +687,13 @@ namespace PokemonTextEdition
             if (currentMove.EffectID == 13)
                 Console.WriteLine("The attack hit {0} times!", hits);
 
+            Program.Log(defenderName + " takes " + damage + " damage.", 1);
+            Program.Log(damageText, 1);
+
             //After the damage is calculated, it gets subtracted from the defending Pokemon's HP after being rounded down to the nearest integer.
             defendingPokemon.currentHP -= (int)(Math.Floor(damage));
 
-            Program.Log(defenderName + " took " + (previousHP - defendingPokemon.currentHP).ToString() + " damage.", 1);
+            //Program.Log(defenderName + " took " + (previousHP - defendingPokemon.currentHP).ToString() + " damage.", 1);
 
             //Finally, if the move has a secondary effect, it gets resolved.
             if (currentMove.SecondaryEffect)
@@ -704,7 +728,6 @@ namespace PokemonTextEdition
             {
                 Program.Log("No Pokemon has fainted, so the game prints " + playerPokemon.name + "'s remaining HP.", 1);
                 Console.WriteLine("{0}'s remaining HP: {1}", playerPokemon.name, playerPokemon.currentHP);
-
             }
         }
 
@@ -914,6 +937,10 @@ namespace PokemonTextEdition
             }             
         }
 
+        #endregion
+
+        #region Faint Checks & Experience
+
         void FaintCheck()
         {
             //This method checks whether any Pokemon have fainted. If so, it goes to the respective Faint() screen.
@@ -1018,8 +1045,56 @@ namespace PokemonTextEdition
 
             //Otherwise, if the AI has no more Pokemon, or if the battle was with a wild Pokemon, the player wins.
             else
-                Victory();            
+                Victory();
         }
+
+        void Experience(Pokemon p)
+        {
+            //Experience calculation and award code. Right now there's a flat 300 experience threshold per level, soon to change.   
+
+            double multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
+
+            if (encounterType == "trainer")
+                multiplier = 1.30;
+
+            /* The amount of experience actually awarded for defeating another Pokemon.
+             * This is actually an expression of percentage for the current level.
+             * I.E., if an enemy Pokemon would yield 1.5 expYield experience, it would award 
+             * the current Pokemon 450 exp using the 300 exp / level formula, so 1.5 level.
+             * In a system with incremental experience thresholds per level, it would still be
+             * 450 exp, which would amount to less than 1.5 level this time around.
+            */
+            double expYield;
+
+            if (p.level <= enemyPokemon.level)
+                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.33) + 0.45;
+
+            else
+                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.05) + 0.45;
+
+            //Program.Log("Exp yield was " + expYield.ToString(), 1);
+            //The above log code helped me test exp yield, keeping it here in case it comes in handy.
+
+            //If expYield would amount to less than 10% of a level (0.1), it instead becomes 0.1.
+            if (expYield < 0.1)
+                expYield = 0.1;
+
+            p.experience += Convert.ToInt32(expYield * 300.0 * multiplier / 1.3);
+
+            Program.Log(p.name + " received " + Convert.ToInt32(expYield * 300.0 * multiplier / 1.4) + " experience.", 1);
+
+            //This is a while loop to facilitate for the case that a Pokemon gains more than 1 level at a time.
+            while (p.experience >= 300)
+            {
+                Program.Log(p.name + " levelled up.", 0);
+
+                p.LevelUp();
+            }
+        }
+
+        #endregion
+
+        #region Victory & Defeat
 
         void Victory()
         {
@@ -1078,49 +1153,9 @@ namespace PokemonTextEdition
             }
         }
 
-        void Experience(Pokemon p)
-        {
-            //Experience calculation and award code. Right now there's a flat 300 experience threshold per level, soon to change.   
+        #endregion
 
-            double multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
-
-            if (encounterType == "trainer")
-                multiplier = 1.30;
-
-            /* The amount of experience actually awarded for defeating another Pokemon.
-             * This is actually an expression of percentage for the current level.
-             * I.E., if an enemy Pokemon would yield 1.5 expYield experience, it would award 
-             * the current Pokemon 450 exp using the 300 exp / level formula, so 1.5 level.
-             * In a system with incremental experience thresholds per level, it would still be
-             * 450 exp, which would amount to less than 1.5 level this time around.
-            */
-            double expYield;
-
-            if (p.level <= enemyPokemon.level)
-                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.33) + 0.45;
-
-            else
-                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.05) + 0.45;
-
-            //Program.Log("Exp yield was " + expYield.ToString(), 1);
-            //The above log code helped me test exp yield, keeping it here in case it comes in handy.
-
-            //If expYield would amount to less than 10% of a level (0.1), it instead becomes 0.1.
-            if (expYield < 0.1)
-                expYield = 0.1;
-
-            p.experience += Convert.ToInt32(expYield * 300.0 * multiplier / 1.3);
-
-            Program.Log(p.name + " received " + Convert.ToInt32(expYield * 300.0 * multiplier / 1.4) + " experience.", 1);
-
-            //This is a while loop to facilitate for the case that a Pokemon gains more than 1 level at a time.
-            while (p.experience >= 300)
-            {
-                Program.Log(p.name + " levelled up.", 0);
-
-                p.LevelUp();
-            }
-        }
+        #region Special Actions
 
         void Run()
         {
@@ -1251,12 +1286,16 @@ namespace PokemonTextEdition
             }
         }
 
+        #endregion
+
+        #region Supplementary Methods
+
         void AIAttack()
         {
             //This method gets called up when the AI alone should attack.
 
             AI(); //The AI selects an attack,
-            PreBattle("AI"); // then uses it.
+            PreCombat("AI"); // then uses it.
 
             if (!fightOver)
             {
@@ -1271,6 +1310,14 @@ namespace PokemonTextEdition
                     Actions();
                 }
             }
+        }
+
+        void AddToParticipants(Pokemon p)
+        {
+            //This method adds a Pokemon to the "Participants" list, for the purpose of gaining experience.
+
+            if (!participants.Contains(p))
+                participants.Add(p);
         }
 
         void CancelMoveLock(Pokemon pokemon)
@@ -1304,5 +1351,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("{0} cleared all effects off the field using Rapid Spin!", attackerName);
         }
+
+        #endregion
     }
 }

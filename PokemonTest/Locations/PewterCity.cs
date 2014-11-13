@@ -29,7 +29,7 @@ namespace PokemonTextEdition.Locations
 
             Description = "the city between rugged mountains";
             LongDescription = "This quiet city atop the mountainside offers a much needed rest for trainers\nwho just crossed the Viridian Forest. Rest not for too long, however --\nyour first battle with a Gym Leader awaits you here, so be prepared!";
-            Connections = "Route 2 to the south and Route 3 to the east";
+            ConnectionsMessage = "On the southern outskirts of this city lies the northern side of Route 2, and\nto the east starts the rocky trail of Route 3.";
             HelpMessage = "\"south\" or \"go south\" - moves you to Route 2.\n\"east\" or \"go east\" - moves you to Route 3.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.\n\"gym\" - takes you to the Pewter City gym.";
         }
 
@@ -46,8 +46,8 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("");
 
                 Console.WriteLine("\"Oi there! The road east is dangerous and many trainers who underestimate it");
-                Console.WriteLine("quickly find themselves overwhelmed! I suggest you at least become strong");
-                Console.WriteLine(" enough to beat Brock at the Pewter Gym before venturing this way.\"");
+                Console.WriteLine(" quickly find themselves overwhelmed! I suggest you at least become strong");
+                Console.WriteLine(" enough to defeat Brock at the Pewter Gym before venturing this way.\"");
 
                 Console.WriteLine("The traveler looks like he knows what he's talking about. You heed his advice");
                 Console.WriteLine("and head back to Pewter City -- there is a gym waiting to be challenged!");

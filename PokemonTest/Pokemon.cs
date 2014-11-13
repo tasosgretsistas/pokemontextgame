@@ -8,6 +8,8 @@ namespace PokemonTextEdition
     [Serializable]
     public class Pokemon
     {
+        #region Declarations
+
         //The Pokemon's primary attributes.
         public string name, type, type2;
 
@@ -16,8 +18,7 @@ namespace PokemonTextEdition
         public int pokedexNumber;
 
         //This determines how difficult a Pokemon is to catch. (NYI)
-        public double catchRate;
-
+        public float catchRate;
 
         //The Pokemon's experience and level - currently completely linear.
         public int level, experience;
@@ -43,7 +44,7 @@ namespace PokemonTextEdition
         public string status;
 
         //Temporary combat effects a Pokemon might be afflicted with.
-        
+
         public bool moveLocked = false; //Determines if the Pokemon is locked into a move.   
         public bool leechSeed = false; //Determines if the Pokemon is afflicted by Leech Seed.
         public int sleepCounter = 0; //Determines how long a Pokemon will be asleep for.
@@ -91,6 +92,10 @@ namespace PokemonTextEdition
             set { if (value > 31) speedIV = 31; else speedIV = value; }
         }
 
+        #endregion
+
+        #region Constructors
+
         public Pokemon()
         {
             name = "Blank";
@@ -113,8 +118,10 @@ namespace PokemonTextEdition
         /// <param name="pBaseSpe">The Pokemon's base Speed stat, used for calculating current Speed.</param>
         /// <param name="pEvolution">The Pokemon that this Pokemon evolves into.</param>
         /// <param name="pEvolutionLevel">The level at which this Pokemon evolves.</param>
-        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, double pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe, string pEvolution, int pEvolutionLevel)
+        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, float pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe, string pEvolution, int pEvolutionLevel)
         {
+            //Main constructor.
+
             name = pName;
 
             type = pType;
@@ -155,8 +162,10 @@ namespace PokemonTextEdition
         /// <param name="pBaseSpe">The Pokemon's base Speed stat, used for calculating current Speed.</param>
         /// <param name="pEvolution">The Pokemon that this Pokemon evolves into.</param>
         /// <param name="pEvolutionType">The particular type of evolution for this Pokemon. I.E. Water Stone, trade, happiness</param>
-        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, double pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe, string pEvolution, string pEvolutionType)
+        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, float pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe, string pEvolution, string pEvolutionType)
         {
+            //Constructor for Pokemon with irregular evolution.
+
             name = pName;
 
             type = pType;
@@ -195,8 +204,10 @@ namespace PokemonTextEdition
         /// <param name="pBaseSpa">The Pokemon's base Special Attack stat, used for calculating current Special Attack.</param>
         /// <param name="pBaseSpd">The Pokemon's base Special Defense stat, used for calculating current Special Defense.</param>
         /// <param name="pBaseSpe">The Pokemon's base Speed stat, used for calculating current Speed.</param>
-        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, double pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe)
+        public Pokemon(string pName, string pType, string pType2, string pSpecies, int pNumber, float pCatchRate, int pBaseHP, int pBaseAtk, int pBaseDef, int pBaseSpa, int pBaseSpd, int pBaseSpe)
         {
+            //Constructor for Pokemon that do not evolve.
+
             name = pName;
 
             type = pType;
@@ -219,6 +230,10 @@ namespace PokemonTextEdition
 
             status = "";
         }
+
+        #endregion
+
+        #region Displaying Information
 
         public string TypeMessage()
         //This method simply returns the Pokemon's type formatted based on whether it is dual-typed.
@@ -282,6 +297,10 @@ namespace PokemonTextEdition
             }
         }
 
+        #endregion
+
+        #region Supplementary Methods
+
         public void Faint()
         {
             //This code runs when a Pokemon would faint, and it basically restores all of a Pokemon's temporary and non-temporary effects back to default.
@@ -308,6 +327,46 @@ namespace PokemonTextEdition
             speed = (((speedIV + (2 * baseSpeed)) * level) / 100) + 5;
         }
 
+        public Moves SelectMove(bool mandatorySelection)
+        {
+            //This code is used when the player is asked to select one of a Pokemon's moves.
+
+            //First, all of the moves that the Pokemon knows are listed.
+            for (int i = 0; i < this.knownMoves.Count; i++)
+            {
+                Console.WriteLine("{0} - {1}", i + 1, this.knownMoves.ElementAt(i).Name);
+            }
+
+            string input = Console.ReadLine();
+            int index;
+            bool validInput = Int32.TryParse(input, out index);
+
+            //First, input is taken from the player. If the input is a number corresponding to a move in the Pokemon's knownMoves list, it gets selected.
+            if (validInput && index > 0 && index < (this.knownMoves.Count + 1))
+                return this.knownMoves.ElementAt(index - 1);
+
+            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
+            else if (input == "" && !mandatorySelection)
+            {
+                Program.Log("The player chose to cancel the operation.", 0);
+
+                return new Moves();
+            }
+
+            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
+            else
+            {
+                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
+                Console.WriteLine("\nInvalid input.\n");
+
+                return new Moves();
+            }
+        }
+
+        #endregion
+
+        #region Level Up, Evolution & New Moves
+
         public void LevelUp()
         //This code handles levelling up. It is currently completely linear, as the level-up threshold is set to 300 for all levels.
         {
@@ -331,13 +390,13 @@ namespace PokemonTextEdition
                 //If the difference between the Pokemon's new max HP and its old max HP added to its current HP is smaller than its max HP, it gets healed for the difference.
                 if (maxHP > currentHP + differenceHP)
                     currentHP += differenceHP;
-                
+
                 //Else it gets simply healed to full.
                 else
                     currentHP = maxHP;
             }
 
-            if (CheckNewMoves())
+            if (NewMovesAvailable())
             {
                 Console.WriteLine("");
                 LearnNewMoves();
@@ -422,7 +481,7 @@ namespace PokemonTextEdition
                     Console.Write("Congratulations! Your {0} evolved into {1}!", oldPokemon, name);
                     Console.WriteLine("");
 
-                    if (CheckNewMoves())
+                    if (NewMovesAvailable())
                     {
                         Console.WriteLine("");
                         LearnNewMoves();
@@ -432,43 +491,7 @@ namespace PokemonTextEdition
             }
         }
 
-        public Moves SelectMove(bool mandatory)
-        {
-            //This code is used when the player is asked to select one of a Pokemon's moves.
-
-            //First, all of the moves that the Pokemon knows are listed.
-            for (int i = 0; i < this.knownMoves.Count; i++)
-            {
-                Console.WriteLine("{0} - {1}", i + 1, this.knownMoves.ElementAt(i).Name);
-            }
-
-            string input = Console.ReadLine();
-            int index;
-            bool validInput = Int32.TryParse(input, out index);
-
-            //First, input is taken from the player. If the input is a number corresponding to a move in the Pokemon's knownMoves list, it gets selected.
-            if (validInput && index > 0 && index < (this.knownMoves.Count + 1))          
-                return this.knownMoves.ElementAt(index - 1);            
-
-            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
-            else if (input == "" && !mandatory)
-            {
-                Program.Log("The player chose to cancel the operation.", 0);
-
-                return new Moves();
-            }
-
-            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
-            else
-            {
-                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
-                Console.WriteLine("\nInvalid input.\n");
-
-                return new Moves();
-            }
-        }
-
-        public bool CheckNewMoves()
+        public bool NewMovesAvailable()
         {
             if (availableMoves.ContainsValue(level))
             {
@@ -480,14 +503,15 @@ namespace PokemonTextEdition
         }
 
         public void LearnNewMoves()
-        //This code checks if the Pokemon learns any new moves at its level.
         {
+            //This code handles learning new moves.
+
             foreach (KeyValuePair<Moves, int> move in availableMoves)
             {
-                //First, the game checks whether any move in the Pokemon's available moves list matches its current level and if the Pokemon doesn't already know that move.
-                if (move.Value == level && !knownMoves.Exists(m => m.Name == move.Key.Name))
+                //First, the game checks whether the Pokemon already knows the move being learned.
+                if (knownMoves.Exists(m => m.Name == move.Key.Name))
                 {
-                    //If so, and if the Pokemon currently knows less than 4 moves, it learns the new move.
+                    //If it doesn't, and if the Pokemon currently knows less than 4 moves, it learns the new move.
                     if (knownMoves.Count < 4)
                     {
                         knownMoves.Add(move.Key);
@@ -570,5 +594,7 @@ namespace PokemonTextEdition
                 }
             }
         }
+
+        #endregion
     }
 }
