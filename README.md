@@ -1,6 +1,6 @@
 Pokemon - Text Edition
 ----------------------
-Version 0.3 [BETA] - September 2014, by Tasos Gretsistas
+Version 0.3 [BETA] - November 2014, by Tasos Gretsistas
 
 www.facebook.com/shadowtasos
 
@@ -27,6 +27,8 @@ v0.3 - September 2014
 - Pokemon can now evolve, just like in the original games. Pokemon that normally evolve via trading will evolve at a set level instead.
 
 - You can now use items, both during and outside of combat. Relevant commands have been added.
+
+- You can now display your player information, such as money on hand and number of Pokemon caught. The command for this is "player" and is only available outside of battle. No identity crisis will shake us now.
 
 - The introduction has been updated. You can now select a name for yourself and the rival, and there is also a helpful introduction on how to catch wild Pokemon and heal your Pokemon.
  
