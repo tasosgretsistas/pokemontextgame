@@ -62,7 +62,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Gym()
         {
-            if (!brock.Defeated())
+            if (!brock.HasBeenDefeated)
             {
                 Console.WriteLine("You're standing before a 5-meter tall door - the entrance to the Pewter Gym.\nYou can't help but feel a bit uneasy at the thought of what challenges await.\n");
 
@@ -76,21 +76,21 @@ namespace PokemonTextEdition.Locations
                     case "yes":
                     case "y":
 
-                        if (!fred.Defeated())
+                        if (!fred.HasBeenDefeated)
                         {
                             fred.Encounter();
 
                             Console.WriteLine("\nYou decide to take a short break after that difficult fight.\n");
                         }
 
-                        else if (!dave.Defeated())
+                        else if (!dave.HasBeenDefeated)
                         {
                             dave.Encounter();
 
                             Console.WriteLine("\nYou decide to take a short break after that difficult fight.\n");
                         }
 
-                        else if (!brock.Defeated())
+                        else if (!brock.HasBeenDefeated)
                         {
                             brock.Encounter();
 

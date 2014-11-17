@@ -73,7 +73,9 @@ namespace PokemonTextEdition
             enemyTrainer = t;
             encounterType = type;
 
-            Console.WriteLine("{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.DisplayName, enemyPokemon.level, enemyPokemon.name);
+            Console.WriteLine("{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.DisplayName, enemyPokemon.Level, enemyPokemon.Name);
+
+            Overworld.player.AddToSeen(enemyPokemon.Name);
 
             Actions();
         }
@@ -90,38 +92,43 @@ namespace PokemonTextEdition
             enemyPokemon = e;
             encounterType = "wild";
 
-            Console.WriteLine("A wild level {0} {1} appeared!\n", e.level, e.name);
+            Console.WriteLine("A wild level {0} {1} appeared!\n", e.Level, e.Name);
+
+            Overworld.player.AddToSeen(e.Name);
 
             Actions();
         }
 
         void PokemonSelection()
         {
-            //This method selects a starting Pokemon for the trainer by looping over 
-            //all Pokemon in the player's party until it finds one that's not fainted.
+            //This method selects a starting Pokemon for the trainer. First, it checks whether there are non-fainted Pokemon
+            //in the player's party. If so, it loops over the entire party until it finds the first Pokemon that's not fainted.
 
-            for (int i = 0; i < Overworld.player.party.Count; i++)
+            if (Overworld.player.party.Exists(p => !p.Fainted))
             {
-                if (Overworld.player.party.ElementAt(i).currentHP != 0)
+                for (int i = 0; i < Overworld.player.party.Count; i++)
                 {
-                    playerPokemon = Overworld.player.party.ElementAt(i);
+                    if (!Overworld.player.party.ElementAt(i).Fainted)
+                    {
+                        playerPokemon = Overworld.player.party.ElementAt(i);
 
-                    AddToParticipants(playerPokemon);
+                        AddToParticipants(playerPokemon);
 
-                    break;
+                        break;
+                    }
                 }
             }
         }
 
         #endregion
-        
+
         #region Basic Actions
 
         void Actions()
         {
             //This is kind of a "main menu" screen for battles, from which the player picks an action.
 
-            Program.Log("The player is taken to the Actions menu.", 1);
+            Program.Log("The player is taken to the Actions menu.", 0);
 
             Console.WriteLine("What will you do?\n(Available commands: (f)ight, (s)tatus, (i)item, s(w)itch, (c)atch, (r)un)");
 
@@ -193,9 +200,9 @@ namespace PokemonTextEdition
 
             if (encounterType == "trainer")
                 Console.Write("Your opponent's Pokemon: ");
-            
+
             else if (encounterType == "wild")
-                Console.Write("The wild Pokemon: ");            
+                Console.Write("The wild Pokemon: ");
 
             enemyPokemon.BriefStatus();
 
@@ -210,7 +217,7 @@ namespace PokemonTextEdition
             //If the player succesfully uses an item, the AI attacks once. 
             //Otherwise, the player is taken back to the actions screen.
 
-            if (Overworld.player.UseItemsCombat())                
+            if (Overworld.player.UseItemsCombat())
                 AIAttack();
 
             else
@@ -221,17 +228,22 @@ namespace PokemonTextEdition
         {
             //A screen for switching the active Pokemon.
 
-            Program.Log("The player chooses to switch Pokemon.", 1);
+            Program.Log("The player chooses to switch Pokemon.", 0);
 
             Console.WriteLine("Send out which Pokemon?\n(Valid input: 1-{0}, or press Enter to return.)\n", Overworld.player.party.Count);
 
             Pokemon pokemon = Overworld.player.SelectPokemon(false);
 
+            bool validSelection = true;
+
+            if (pokemon.Name == "Blank")
+                validSelection = false;
+
             //If the Pokemon the user selected is healthy and is not already the active Pokemon, it becomes the active Pokemon.
             //The AI also gets to attack once if the player succesfully changes Pokemon.
-            if (pokemon.name != "Blank" && pokemon != playerPokemon && pokemon.currentHP > 0)
+            if (validSelection && pokemon != playerPokemon && !pokemon.Fainted)
             {
-                Program.Log("The player switches " + playerPokemon.name + " out for " + pokemon.name + ". The AI will now attack.", 1);
+                Program.Log("The player switches " + playerPokemon.Name + " out for " + pokemon.Name + ". The AI will now attack.", 1);
 
                 CancelTemporaryEffects(playerPokemon);
 
@@ -239,13 +251,13 @@ namespace PokemonTextEdition
 
                 AddToParticipants(playerPokemon);
 
-                Console.WriteLine("\n{0} was sent out!", playerPokemon.name);
+                Console.WriteLine("\n{0} was sent out!", playerPokemon.Name);
 
                 //The AI will attack once following the player's switch.
                 AIAttack();
             }
 
-            else if (pokemon.name != "Blank" && pokemon.currentHP <= 0)
+            else if (pokemon.Name != "Blank" && !pokemon.Fainted)
             {
                 Program.Log("The player chose to switch to a fainted Pokemon. Returning to Actions.", 0);
                 Console.WriteLine("\nThat Pokemon has fainted!\n");
@@ -253,7 +265,7 @@ namespace PokemonTextEdition
                 Actions();
             }
 
-            else if (pokemon.name != "Blank" && pokemon == playerPokemon)
+            else if (pokemon.Name != "Blank" && pokemon == playerPokemon)
             {
                 Program.Log("The player chose to switch to the Pokemon that's already active. Returning to Actions.", 0);
                 Console.WriteLine("\nThat Pokemon is already the active Pokemon!\n");
@@ -262,7 +274,7 @@ namespace PokemonTextEdition
             }
 
             else
-                Actions();           
+                Actions();
         }
 
         #endregion
@@ -343,17 +355,17 @@ namespace PokemonTextEdition
         {
             //Speed priority checking code. This method essentially determines how the turn will play out.
 
-            Program.Log("The game goes into Speed Priority calculation.", 1);
+            Program.Log("The game goes into Speed Priority calculation.", 0);
 
             //Speed adjustments in case of paralysis.
-            int playerSpeed = playerPokemon.speed;
-            int enemySpeed = enemyPokemon.speed;
+            int playerSpeed = playerPokemon.Speed;
+            int enemySpeed = enemyPokemon.Speed;
 
-            if (playerPokemon.status == "paralysis")
-                playerSpeed = (int)Math.Round((float)playerSpeed * 0.25f);
+            if (playerPokemon.Status == "paralysis")
+                playerSpeed = (int)(playerSpeed * 0.25f);
 
-            if (enemyPokemon.status == "paralysis")
-                enemySpeed = (int)Math.Round((float)enemySpeed * 0.25f);
+            if (enemyPokemon.Status == "paralysis")
+                enemySpeed = (int)(enemySpeed * 0.25f);
 
             //If the player's Pokemon is faster or its move had higher priority, it goes first. 
             if (playerSpeed >= enemySpeed && playerMove.Priority >= enemyMove.Priority)
@@ -399,15 +411,15 @@ namespace PokemonTextEdition
         {
             //Quick pre-combat calculations and helpful message adjustments.
 
-            Program.Log("The " + attacker + " attacks.", 1);
+            Program.Log("The " + attacker + " attacks.", 0);
 
             if (attacker == "player")
             {
                 attackingPokemon = playerPokemon;
                 defendingPokemon = enemyPokemon;
                 currentMove = playerMove;
-                attackerName = playerPokemon.name;
-                defenderName = "The enemy " + enemyPokemon.name;
+                attackerName = playerPokemon.Name;
+                defenderName = "The enemy " + enemyPokemon.Name;
 
                 //If the selected move does double damage after being used consecutively and was used last turn, sameMoveDamageBonus becomes 2.
                 if (playerMove == previousPlayerMove && playerMove.EffectID == 4)
@@ -423,8 +435,8 @@ namespace PokemonTextEdition
                 attackingPokemon = enemyPokemon;
                 defendingPokemon = playerPokemon;
                 currentMove = enemyMove;
-                attackerName = "The enemy " + enemyPokemon.name;
-                defenderName = playerPokemon.name;
+                attackerName = "The enemy " + enemyPokemon.Name;
+                defenderName = playerPokemon.Name;
 
                 //If the selected move does double damage after being used consecutively and was used last turn, sameMoveDamageBonus becomes 2.
                 if (enemyMove == previousEnemyMove && enemyMove.EffectID == 4)
@@ -435,7 +447,7 @@ namespace PokemonTextEdition
                 previousEnemyMove = enemyMove;
             }
 
-            if (attackingPokemon.status == "paralysis" && !Paralyzed() || attackingPokemon.status == "sleep" && !Asleep() || attackingPokemon.status == "" || attackingPokemon.status == "poison")
+            if (attackingPokemon.Status == "paralysis" && !Paralyzed() || attackingPokemon.Status == "sleep" && !Asleep() || attackingPokemon.Status == "" || attackingPokemon.Status == "poison")
             {
                 Console.WriteLine("\n{0} used {1}!", attackerName, currentMove.Name);
 
@@ -444,7 +456,7 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    float typeMod = TypeChart.Check(currentMove.Type, defendingPokemon.type, defendingPokemon.type2);
+                    float typeMod = TypeChart.Check(currentMove.Type, defendingPokemon.Type1, defendingPokemon.Type2);
 
                     if (typeMod == 0)
                     {
@@ -456,7 +468,7 @@ namespace PokemonTextEdition
                         //If a player uses a move that locks you into a move, this sets the moveLocked flag to true.
                         if (currentMove.EffectID == 4)
                         {
-                            Program.Log(attackingPokemon.name + " used " + currentMove + ", which move-locked it.", 0);
+                            Program.Log(attackingPokemon.Name + " used " + currentMove + ", which move-locked it.", 0);
                             attackingPokemon.moveLocked = true;
                         }
 
@@ -493,7 +505,7 @@ namespace PokemonTextEdition
             //Otherwise, the attack misses and the Pokemon is no longer move-locked, if it was.
             else
             {
-                Program.Log("The attack missed.", 0);
+                Program.Log("The attack missed.", 1);
                 Console.WriteLine("The attack missed!");
 
                 CancelMoveLock(attackingPokemon);
@@ -515,7 +527,7 @@ namespace PokemonTextEdition
             //Otherwise, the attack misses and the Pokemon is no longer move-locked, if it was.
             else
             {
-                Program.Log(attackerName + " was paralyzed and didn't attack.", 0);
+                Program.Log(attackerName + " was paralyzed and didn't attack.", 1);
                 Console.WriteLine("\n{0} is paralyzed! It can't move!", attackerName);
 
                 CancelMoveLock(attackingPokemon);
@@ -531,17 +543,17 @@ namespace PokemonTextEdition
             //If the Pokemon was asleep and its sleep counter has hit 0, it wakes up.
             if (attackingPokemon.sleepCounter == 0)
             {
-                Program.Log(attackerName + " woke up.", 0);
+                Program.Log(attackerName + " woke up.", 1);
                 Console.WriteLine("\n{0} woke up!", attackerName);
 
-                attackingPokemon.status = "";
+                attackingPokemon.Status = "";
 
                 return false;
             }
 
             else
             {
-                Program.Log(attackerName + " didn't attack due to sleep. Remaining sleep turns: " + attackingPokemon.sleepCounter, 0);
+                Program.Log(attackerName + " didn't attack due to sleep. Remaining sleep turns: " + attackingPokemon.sleepCounter, 1);
                 Console.WriteLine("\n{0} is fast asleep.", attackerName);
 
                 attackingPokemon.sleepCounter--;
@@ -555,7 +567,7 @@ namespace PokemonTextEdition
             //This code that handles damage calculations.
 
             float damage = 0; //The total damage inflicted to the defending Pokemon after all calculations are done. 
-            int previousHP = defendingPokemon.currentHP; //This is used to accurately calculate how much damage the defending Pokemon took. 
+            int previousHP = defendingPokemon.CurrentHP; //This is used to accurately calculate how much damage the defending Pokemon took. 
 
             float multiplier = 1; //An all-purpose multiplier for the final damage calculation.
             float typeMod = mod;  //The relational modifier between the attack's type and the defending Pokemon's type(s).    
@@ -565,8 +577,8 @@ namespace PokemonTextEdition
             //This string is used for logging, in order to determine whether moves do the correct amount of damage.
             string damageText = "";
 
-            Program.Log(attackerName + " attacks " + defendingPokemon.name + " (" + defendingPokemon.currentHP + "/" + defendingPokemon.maxHP + " HP) with "
-                        + currentMove.Name + " (typeMod: " + typeMod.ToString() + ")", 1);
+            Program.Log(attackerName + " attacks " + defendingPokemon.Name + " (" + defendingPokemon.CurrentHP + "/" + defendingPokemon.MaxHP + " HP) with "
+                        + currentMove.Name, 1);
 
             //The next part prints a message explaining the result of the TypeChart calculation to the player.
             if (typeMod == 2 || typeMod == 4)
@@ -581,7 +593,7 @@ namespace PokemonTextEdition
                 //If the attack is a 2-hit attack, it will hit twice.
 
                 if (currentMove.EffectN == 2)
-                    numberOfHits = 2; 
+                    numberOfHits = 2;
 
                 else
                 {
@@ -613,13 +625,11 @@ namespace PokemonTextEdition
             else
             {
                 do //This is a do-while loop to facilitate for the multiple hits scenario.
-                {    
+                {
                     //Same-Type Attack Bonus check. If the Pokemon's attack is the same type as the Pokemon itself, it receives a 50% damage boost.
-                    if (attackingPokemon.type == currentMove.Type || attackingPokemon.type2 == currentMove.Type)
+                    if (attackingPokemon.TypeCheck(currentMove.Type))
                     {
-                        Program.Log("The attack has STAB.", 0);
-
-                        damageText += " * 1.5 (STAB)"; 
+                        damageText += " * 1.5 (STAB)";
 
                         multiplier *= 1.5f;
                     }
@@ -629,11 +639,11 @@ namespace PokemonTextEdition
                     //Critical hit calculator. I've set it to 10% chance and 20% extra damage for a crit as I dislike RNG.
                     if (critical < 11 || currentMove.EffectID == 9 && critical < 21)
                     {
-                        Program.Log("The attack was a critical hit.", 0);                        
+                        Program.Log("The attack was a critical hit.", 0);
 
                         Console.WriteLine("A critical hit!");
 
-                        damageText += " * 1.2 (crit)"; 
+                        damageText += " * 1.2 (crit)";
 
                         multiplier *= 1.2f;
                     }
@@ -641,20 +651,16 @@ namespace PokemonTextEdition
                     //This code simply makes wild Pokemon do 20% less damage. But one day, they'll turn against us!
                     if (attacker == "AI" && encounterType == "wild")
                     {
-                        Program.Log("Encounter type is 'wild', so the AI's attack deals 20% less damage.", 0);
-
-                        damageText += " * 0.8 (wild)"; 
+                        damageText += " * 0.8 (wild)";
 
                         multiplier *= 0.8f;
-                    }                    
+                    }
 
                     //If the attacking Pokemon is burned, the status modifier for physical attacks is set to 0.5.
-                    if (attackingPokemon.status == "burn" && currentMove.Attribute == "Physical")
+                    if (attackingPokemon.Status == "burn" && currentMove.Attribute == "Physical")
                     {
-                        Program.Log(attackingPokemon.name + " is burned, so its attack stat is halved.", 0);
+                        damageText += " * 0.5 (burn)";
 
-                        damageText += " * 0.5 (burn)"; 
-                        
                         multiplier *= 0.5f;
                     }
 
@@ -662,11 +668,11 @@ namespace PokemonTextEdition
                     //Attack & defense or special attack & special defense are selected according to the move's attribute.            
                     if (currentMove.Attribute == "Physical")
                     {
-                        damage += (2 * attackingPokemon.level + 10) / 250f * attackingPokemon.attack / defendingPokemon.defense * currentMove.Damage * sameMoveDamageBonus + 2;
+                        damage += (2 * attackingPokemon.Level + 10) / 250f * attackingPokemon.Attack / defendingPokemon.Defense * currentMove.Damage * sameMoveDamageBonus + 2;
                     }
                     else if (currentMove.Attribute == "Special")
                     {
-                        damage += (2 * attackingPokemon.level + 10) / 250f * attackingPokemon.specialAttack / defendingPokemon.specialDefense * currentMove.Damage * sameMoveDamageBonus + 2;
+                        damage += (2 * attackingPokemon.Level + 10) / 250f * attackingPokemon.SpecialAttack / defendingPokemon.SpecialDefense * currentMove.Damage * sameMoveDamageBonus + 2;
                     }
 
                     //The minimum damage an attack can do is 1 so if the damage would be less than 1, damage becomes 1.
@@ -691,7 +697,7 @@ namespace PokemonTextEdition
             Program.Log(damageText, 1);
 
             //After the damage is calculated, it gets subtracted from the defending Pokemon's HP after being rounded down to the nearest integer.
-            defendingPokemon.currentHP -= (int)(Math.Floor(damage));
+            defendingPokemon.CurrentHP -= (int)damage;
 
             //Program.Log(defenderName + " took " + (previousHP - defendingPokemon.currentHP).ToString() + " damage.", 1);
 
@@ -708,10 +714,10 @@ namespace PokemonTextEdition
             {
                 int recoil = (int)Math.Floor(damage * currentMove.EffectN);
 
-                Program.Log(attackerName + " suffers " + recoil.ToString() + " damage in recoil.", 0);
+                Program.Log(attackerName + " suffers " + recoil.ToString() + " damage in recoil.", 1);
                 Console.WriteLine("\n{0} is damaged by recoil!", attackerName);
 
-                attackingPokemon.currentHP -= recoil;
+                attackingPokemon.CurrentHP -= recoil;
             }
 
             FaintCheck();
@@ -720,14 +726,14 @@ namespace PokemonTextEdition
 
             if (!fightOver && attacker == "player" && enemyPokemon == defendingPokemon)
             {
-                Program.Log("No Pokemon has fainted, so the game prints " + enemyPokemon.name + "'s remaining HP.", 1);
-                Console.WriteLine("Enemy {0}'s remaining HP: {1}%", enemyPokemon.name, enemyPokemon.PercentLife());
+                Program.Log("No Pokemon has fainted, so the game prints " + enemyPokemon.Name + "'s remaining HP.", 0);
+                Console.WriteLine("Enemy {0}'s remaining HP: {1}%", enemyPokemon.Name, enemyPokemon.PercentLife());
             }
 
             if (!fightOver && attacker == "AI" && playerPokemon == defendingPokemon)
             {
-                Program.Log("No Pokemon has fainted, so the game prints " + playerPokemon.name + "'s remaining HP.", 1);
-                Console.WriteLine("{0}'s remaining HP: {1}", playerPokemon.name, playerPokemon.currentHP);
+                Program.Log("No Pokemon has fainted, so the game prints " + playerPokemon.Name + "'s remaining HP.", 0);
+                Console.WriteLine("{0}'s remaining HP: {1}", playerPokemon.Name, playerPokemon.CurrentHP);
             }
         }
 
@@ -747,12 +753,12 @@ namespace PokemonTextEdition
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.status == "" && defendingPokemon.type != "Fire")
+                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Fire"))
                         {
-                            Program.Log(defenderName + " gets burnt by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 0);
+                            Program.Log(defenderName + " gets burnt by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got burnt by the attack!", defenderName);
-                            defendingPokemon.status = "burn";
+                            defendingPokemon.Status = "burn";
                         }
                     }
 
@@ -762,12 +768,12 @@ namespace PokemonTextEdition
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.status == "" && defendingPokemon.type != "Electric")
+                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Electric"))
                         {
-                            Program.Log(defenderName + " gets paralyzed by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 0);
+                            Program.Log(defenderName + " gets paralyzed by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got paralyzed by the attack!", defenderName);
-                            defendingPokemon.status = "paralysis";
+                            defendingPokemon.Status = "paralysis";
                         }
                     }
 
@@ -777,12 +783,12 @@ namespace PokemonTextEdition
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.status == "" && defendingPokemon.type != "Poison")
+                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Poison"))
                         {
-                            Program.Log(defenderName + " gets poisoned by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 0);
+                            Program.Log(defenderName + " gets poisoned by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got poisoned by the attack!", defenderName);
-                            defendingPokemon.status = "poison";
+                            defendingPokemon.Status = "poison";
                         }
                     }
 
@@ -790,9 +796,9 @@ namespace PokemonTextEdition
 
                 case 5: //Effect ID 5: Leech Seed.
 
-                    if (defendingPokemon.type != "Grass" && !defendingPokemon.leechSeed)
+                    if (!defendingPokemon.leechSeed && !defendingPokemon.TypeCheck("Grass"))
                     {
-                        Program.Log(defenderName + " gets afflicted by Leech Seed.", 0);
+                        Program.Log(defenderName + " gets afflicted by Leech Seed.", 1);
 
                         Console.WriteLine("{0} got seeded!", defenderName);
 
@@ -806,13 +812,13 @@ namespace PokemonTextEdition
 
                 case 6: //Effect ID 6: Poison.
 
-                    if (defendingPokemon.status == "" && defendingPokemon.type != "Poison")
+                    if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Poison"))
                     {
-                        Program.Log(defenderName + " gets poisoned by " + currentMove.Name + ".", 0);
+                        Program.Log(defenderName + " gets poisoned by " + currentMove.Name + ".", 1);
 
                         Console.WriteLine("{0} got poisoned by the attack!", defenderName);
 
-                        defendingPokemon.status = "poison";
+                        defendingPokemon.Status = "poison";
                     }
 
                     else
@@ -822,7 +828,7 @@ namespace PokemonTextEdition
 
                 case 7: //Effect ID 7: Sleep.
 
-                    if (defendingPokemon.status == "")
+                    if (defendingPokemon.Status == "")
                     {
                         int sleepRNG = rng.Next(1, 101);
 
@@ -835,11 +841,11 @@ namespace PokemonTextEdition
                         else
                             defendingPokemon.sleepCounter = 2;
 
-                        Program.Log(defenderName + " gets slept by " + currentMove.Name + ". Duration: " + defendingPokemon.sleepCounter.ToString() + " turns.", 0);
+                        Program.Log(defenderName + " gets slept by " + currentMove.Name + " for " + defendingPokemon.sleepCounter.ToString() + " turns.", 1);
 
                         Console.WriteLine("{0} fell asleep!", defenderName);
 
-                        defendingPokemon.status = "sleep";
+                        defendingPokemon.Status = "sleep";
                     }
 
                     else
@@ -857,7 +863,7 @@ namespace PokemonTextEdition
 
                     if (attacker == "player" && previousPlayerMove.EffectID != 12 || attacker == "AI" && previousEnemyMove.EffectID != 12)
                     {
-                        Program.Log(attackerName + " is protected for this turn.", 0);
+                        Program.Log(attackerName + " is protected for this turn.", 1);
 
                         Console.WriteLine("{0} protected itself!", attackerName);
 
@@ -877,64 +883,110 @@ namespace PokemonTextEdition
         {
             //The effects that take place at the end of the turn are resolved in this method.
 
-            Program.Log("End of turn resolution takes place.", 1);
+            Program.Log("End of turn resolution takes place.", 0);
 
+            //Both Pokemon lose the Protect status, as it only lasts 1 turn.
             playerPokemon.protect = false;
             enemyPokemon.protect = false;
 
-            if (enemyPokemon.status == "burn" || enemyPokemon.status == "poison")
+            if (enemyPokemon.Status == "burn" || enemyPokemon.Status == "poison")
             {
-                int residualDamage = (int)(Math.Round(((double)(enemyPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
+                //Residual damage due to status effects.
 
-                enemyPokemon.currentHP -= residualDamage;
+                //First, the damage that would be dealt is calculated.
+                int residualDamage = (int)Math.Round(((enemyPokemon.MaxHP / 8.0)), 0, MidpointRounding.AwayFromZero);
+                int totalResidualDamage = residualDamage; //Used for the scenario that a Pokemon takes more than its HP worth of damage.
 
-                Program.Log(enemyPokemon.name + " is " + enemyPokemon.status + "ed, so it loses HP.", 0);
+                //If the damage would exceed the Pokemon's remaining HP, it becomes equal to the remaining HP.
+                if (residualDamage > enemyPokemon.CurrentHP)
+                    residualDamage = enemyPokemon.CurrentHP;
 
-                Console.WriteLine("\nThe enemy {0} lost some life to its {1}!", enemyPokemon.name, enemyPokemon.status);
+                //Finally, that much life is detracted from the Pokemon and a relevant message is displayed. (TODO: Change to the Damage() method).
+                enemyPokemon.CurrentHP -= residualDamage;
+
+                Program.Log(enemyPokemon.Name + " is " + enemyPokemon.Status + "ed, so it loses " + residualDamage + " HP." + Overkill(totalResidualDamage, enemyPokemon.CurrentHP), 1);
+
+                Console.WriteLine("\nThe enemy {0} lost some life to its {1}!", enemyPokemon.Name, enemyPokemon.Status);
 
                 FaintCheck();
             }
 
             if (enemyPokemon.leechSeed)
             {
-                int seedDamage = (int)(Math.Round(((double)(enemyPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
+                //Damage and healing due to Leech Seed.
 
-                playerPokemon.currentHP += seedDamage;
-                enemyPokemon.currentHP -= seedDamage;
+                //First, the damage that would be dealt (and subsequently, life healed) is calculated.
+                int seedDamage = (int)Math.Round((enemyPokemon.MaxHP / 8.0), 0, MidpointRounding.AwayFromZero);
+                int totalSeedDamage = seedDamage; //Used for the scenario that a Pokemon takes more than its HP worth of damage.
 
-                Program.Log(enemyPokemon.name + " is affected by Leech Seed, so it loses HP.", 0);
+                //If the damage would exceed the Pokemon's remaining HP, it becomes equal to the remaining HP.
+                if (seedDamage > enemyPokemon.CurrentHP)
+                    seedDamage = enemyPokemon.CurrentHP;
 
-                Console.WriteLine("\n{0}'s life was drained by Leech Seed!", enemyPokemon.name);
+                //Then, that much life is detracted from the Pokemon and a relevant message is displayed. (TODO: Change to the Damage() method).
+                enemyPokemon.CurrentHP -= seedDamage;
+
+                //Following this, the life that the other Pokemon would heal is calculated.
+                int healedHP = seedDamage;
+
+                //If the amount healed would exceed the Pokemon's maximum life, it becomes the difference between max life and current life.
+                if (playerPokemon.CurrentHP + healedHP > playerPokemon.MaxHP)
+                    healedHP = playerPokemon.MaxHP - playerPokemon.CurrentHP;
+
+                //Finally, that much life is healed and relevant messages are displayed.
+                playerPokemon.CurrentHP += healedHP;
+
+                Program.Log(enemyPokemon.Name + " is affected by Leech Seed, so it loses " + seedDamage + " HP." + Overkill(totalSeedDamage, enemyPokemon.CurrentHP), 1);
+                Program.Log(playerPokemon.Name + " heals " + healedHP + " points of damage due to Leech Seed.", 1);
+
+                Console.WriteLine("\n{0}'s life was drained by Leech Seed!", enemyPokemon.Name);
 
                 FaintCheck();
             }
 
-            if (playerPokemon.status == "burn" || playerPokemon.status == "poison")
+            //These are mirrors of the previous methods, but with the Pokemon reversed.
+
+            if (playerPokemon.Status == "burn" || playerPokemon.Status == "poison")
             {
-                int residualDamage = (int)(Math.Round(((double)(playerPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
+                int residualDamage = (int)Math.Round(((playerPokemon.MaxHP / 8.0)), 0, MidpointRounding.AwayFromZero);
+                int totalResidualDamage = residualDamage;
 
-                playerPokemon.currentHP -= residualDamage;
+                if (residualDamage > playerPokemon.CurrentHP)
+                    residualDamage = playerPokemon.CurrentHP;
 
-                Program.Log(playerPokemon.name + " is " + playerPokemon.status + "ed, so it loses HP.", 0);
+                enemyPokemon.CurrentHP -= residualDamage;
 
-                Console.WriteLine("\n{0} lost some life to its {1}!", playerPokemon.name, playerPokemon.status);
+                Program.Log(playerPokemon.Name + " is " + playerPokemon.Status + "ed, so it loses " + residualDamage + " HP." + Overkill(totalResidualDamage, playerPokemon.CurrentHP), 1);
+
+                Console.WriteLine("\n{0} lost some life to its {1}!", playerPokemon.Name, playerPokemon.Status);
 
                 FaintCheck();
-            }               
+            }
 
             if (playerPokemon.leechSeed)
             {
-                int seedDamage = (int)(Math.Round(((double)(playerPokemon.maxHP / 8.0)), 0, MidpointRounding.AwayFromZero));
+                int seedDamage = (int)Math.Round((playerPokemon.MaxHP / 8.0), 0, MidpointRounding.AwayFromZero);
+                int totalSeedDamage = seedDamage; //Used for the scenario that a Pokemon takes more than its HP worth of damage.
 
-                playerPokemon.currentHP -= seedDamage;
-                enemyPokemon.currentHP += seedDamage;
+                if (seedDamage > playerPokemon.CurrentHP)
+                    seedDamage = playerPokemon.CurrentHP;
 
-                Program.Log(playerPokemon.name + " is affected by Leech Seed, so it loses HP.", 0);
+                playerPokemon.CurrentHP -= seedDamage;
 
-                Console.WriteLine("\n{0}'s life was drained by Leech Seed!", playerPokemon.name);
+                int healedHP = seedDamage;
+
+                if (enemyPokemon.CurrentHP + healedHP > enemyPokemon.MaxHP)
+                    healedHP = enemyPokemon.MaxHP - enemyPokemon.CurrentHP;
+
+                enemyPokemon.CurrentHP += healedHP;
+
+                Program.Log(enemyPokemon.Name + " is affected by Leech Seed, so it loses " + seedDamage + " HP." + Overkill(totalSeedDamage, enemyPokemon.CurrentHP), 1);
+                Program.Log(enemyPokemon.Name + " heals " + healedHP + " points of damage due to Leech Seed.", 1);
+
+                Console.WriteLine("\n{0}'s life was drained by Leech Seed!", playerPokemon.Name);
 
                 FaintCheck();
-            }             
+            }
         }
 
         #endregion
@@ -946,26 +998,22 @@ namespace PokemonTextEdition
             //This method checks whether any Pokemon have fainted. If so, it goes to the respective Faint() screen.
             //It returns a string so that the program knows whose Pokemon fainted - the player's, or the AI's.
 
-            Program.Log("The game checks whether a Pokemon has fainted.", 1);
+            Program.Log("The game checks whether a Pokemon has fainted.", 0);
 
-            if (enemyPokemon.currentHP <= 0)
+            if (enemyPokemon.Fainted)
             {
                 Program.Log("The AI's Pokemon fainted.", 1);
 
-                Console.WriteLine("\nThe enemy {0} fainted!", enemyPokemon.name);
-
-                enemyPokemon.Faint();
+                Console.WriteLine("\nThe enemy {0} fainted!", enemyPokemon.Name);
 
                 AIFaint();
             }
 
-            else if (playerPokemon.currentHP <= 0)
+            else if (playerPokemon.Fainted)
             {
                 Program.Log("The player's Pokemon fainted.", 1);
 
-                Console.WriteLine("\n{0} fainted!", playerPokemon.name);
-
-                playerPokemon.Faint();
+                Console.WriteLine("\n{0} fainted!", playerPokemon.Name);
 
                 PlayerFaint();
             }
@@ -976,7 +1024,7 @@ namespace PokemonTextEdition
             //Code that triggers when the player's Pokemon faints.        
 
             //First, the game checks if there are any Pokemon in the player's party that are still healthy.
-            if (Overworld.player.party.Exists(pokemon => pokemon.currentHP != 0))
+            if (Overworld.player.party.Exists(pokemon => !pokemon.Fainted))
             {
                 Program.Log("The player has remaining healthy Pokemon.", 0);
 
@@ -986,9 +1034,9 @@ namespace PokemonTextEdition
 
 
                 //If the Pokemon the user selected is alive, it becomes the active Pokemon.
-                if (pokemon.name != "Blank" && pokemon.currentHP > 0)
+                if (pokemon.Name != "Blank" && !pokemon.Fainted)
                 {
-                    Program.Log("The player switches " + playerPokemon.name + " out for " + pokemon.name + ".", 1);
+                    Program.Log("The player switches " + playerPokemon.Name + " out for " + pokemon.Name + ".", 1);
 
                     participants.Remove(playerPokemon);
 
@@ -996,7 +1044,7 @@ namespace PokemonTextEdition
 
                     AddToParticipants(playerPokemon);
 
-                    Console.WriteLine("\n{0} was sent out!", playerPokemon.name);
+                    Console.WriteLine("\n{0} was sent out!", playerPokemon.Name);
                 }
 
                 else
@@ -1011,7 +1059,7 @@ namespace PokemonTextEdition
             //Otherwise, if the player has no remaining healthy Pokemon, he is taken to the defeat screen.
             else
             {
-                Program.Log("The player has no remaining healthy Pokemon.", 0);
+                Program.Log("The player has no remaining healthy Pokemon.", 1);
 
                 Defeat();
             }
@@ -1024,21 +1072,23 @@ namespace PokemonTextEdition
             //First, experience is awarded to all of the player's Pokemon that participated in the battle.
             foreach (Pokemon p in participants)
             {
-                if (p.currentHP > 0 && p.level < 101)
+                if (!p.Fainted && p.Level < 101)
                     Experience(p);
             }
 
             //If the AI has any remaining healthy Pokemon, it sends out its next Pokemon, based on the aiCurrentPokemonIndex index number.     
-            if (encounterType == "trainer" && enemyTrainer.party.Exists(pokemon => pokemon.currentHP != 0))
+            if (encounterType == "trainer" && enemyTrainer.party.Exists(pokemon => !pokemon.Fainted))
             {
                 aiCurrentPokemonIndex++;
                 enemyPokemon = enemyTrainer.party.ElementAt(aiCurrentPokemonIndex);
 
-                Console.WriteLine("\n{0} sent out a level {1} {2}!\n", enemyTrainer.Name, enemyPokemon.level, enemyPokemon.name);
-                Program.Log("The AI has more Pokemon, so it sends out " + enemyPokemon.name + ".", 1);
+                Console.WriteLine("\n{0} sent out a level {1} {2}!\n", enemyTrainer.Name, enemyPokemon.Level, enemyPokemon.Name);
+                Program.Log("The AI has more Pokemon, so it sends out " + enemyPokemon.Name + ".", 1);
 
                 participants.Clear();
                 AddToParticipants(playerPokemon);
+
+                Overworld.player.AddToSeen(enemyPokemon.Name);
 
                 Actions();
             }
@@ -1052,10 +1102,10 @@ namespace PokemonTextEdition
         {
             //Experience calculation and award code. Right now there's a flat 300 experience threshold per level, soon to change.   
 
-            double multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
+            float multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
 
             if (encounterType == "trainer")
-                multiplier = 1.30;
+                multiplier = 1.3f;
 
             /* The amount of experience actually awarded for defeating another Pokemon.
              * This is actually an expression of percentage for the current level.
@@ -1064,32 +1114,29 @@ namespace PokemonTextEdition
              * In a system with incremental experience thresholds per level, it would still be
              * 450 exp, which would amount to less than 1.5 level this time around.
             */
-            double expYield;
 
-            if (p.level <= enemyPokemon.level)
-                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.33) + 0.45;
+            float expYield;
+
+            if (p.Level <= enemyPokemon.Level)
+                expYield = ((enemyPokemon.Level - p.Level) * 0.33f) + 0.45f;
 
             else
-                expYield = (((double)enemyPokemon.level - (double)p.level) * 0.05) + 0.45;
+                expYield = ((enemyPokemon.Level - p.Level) * 0.05f) + 0.45f;
 
             //Program.Log("Exp yield was " + expYield.ToString(), 1);
             //The above log code helped me test exp yield, keeping it here in case it comes in handy.
 
             //If expYield would amount to less than 10% of a level (0.1), it instead becomes 0.1.
-            if (expYield < 0.1)
-                expYield = 0.1;
+            if (expYield < 0.1f)
+                expYield = 0.1f;
 
-            p.experience += Convert.ToInt32(expYield * 300.0 * multiplier / 1.3);
+            p.Experience += (int)(expYield * 300 * multiplier / 1.3f);
 
-            Program.Log(p.name + " received " + Convert.ToInt32(expYield * 300.0 * multiplier / 1.4) + " experience.", 1);
+            Program.Log(p.Name + " received " + p.Experience + " experience.", 1);
 
             //This is a while loop to facilitate for the case that a Pokemon gains more than 1 level at a time.
-            while (p.experience >= 300)
-            {
-                Program.Log(p.name + " levelled up.", 0);
-
+            while (p.Experience >= 300)
                 p.LevelUp();
-            }
         }
 
         #endregion
@@ -1100,10 +1147,10 @@ namespace PokemonTextEdition
         {
             //The "You win!" code. 
 
-            Console.WriteLine("\nCongratulations! You won!\n");
-
             fightOver = true;
             Program.Log("The AI has no more Pokemon, so the player wins. fightOver is now true.", 1);
+
+            Console.WriteLine("\nCongratulations! You won!\n");
 
             //If the player was battling a trainer, he is awarded money. Then, the trainer's defeat speech plays.
             if (encounterType == "trainer")
@@ -1121,36 +1168,25 @@ namespace PokemonTextEdition
         void Defeat()
         {
             //The "You lose!" code - pretty much identical to the victory code, should probably make it a bit nicer.
+            fightOver = true;
+            Program.Log("The player has lost, so fightOver is now true.", 1);
 
             Console.WriteLine("\nOh no! All of your Pokemon have fainted!");
 
-            fightOver = true;
-            Program.Log("The player has lost, so fightOver is now true.", 1);
-            Program.Log("The player will lose a small amount of money and then be taken back to the last Pokemon Center he visited.", 0);
+            int moneyLoss = (int)(Math.Floor(Overworld.player.Money * 0.05));
 
-            int moneyLoss = (int)(Math.Floor((double)Overworld.player.Money * 0.05));
+            Program.Log("The player lost $" + moneyLoss + " for blacking out. ($" + (Overworld.player.Money - moneyLoss) + " left)", 1);
+
+            Overworld.player.Money -= moneyLoss;
 
             Console.WriteLine("You have lost ${0} for blacking out.", moneyLoss);
-            Overworld.player.Money -= moneyLoss;
 
             //If the player was battling a trainer, the trainer's victory speech plays.
             if (encounterType == "trainer")
-            {
-                Program.Log("The player was battling a trainer. The trainer's victory speech plays.", 0);
-
                 enemyTrainer.Victory();
-            }
 
             else if (encounterType == "wild")
-            {
-                Console.WriteLine("You will now be taken to the last city you rested at.");
-
-                Story.AnyKey();
-
-                Overworld.player.PartyHeal();
-
-                Overworld.LoadLocation(Overworld.player.LastHealLocation);
-            }
+                Overworld.player.BlackOut();
         }
 
         #endregion
@@ -1161,14 +1197,14 @@ namespace PokemonTextEdition
         {
             //Code for escaping from battle.
 
-            Program.Log("The player chose to run away.", 1);
+            Program.Log("The player chose to run away.", 0);
 
             //First, the game examines whether it is currently in a wild fight. If so, the operation continues.
             if (encounterType == "wild")
             {
                 CancelMoveLock(playerPokemon);
 
-                int escapeFactor = (((playerPokemon.speed * 32) / (enemyPokemon.speed / 4)) + 30) * escapeAttempts; ;
+                int escapeFactor = (((playerPokemon.Speed * 32) / (enemyPokemon.Speed / 4)) + 30) * escapeAttempts; ;
                 int chanceToEscape = rng.Next(0, 256);
 
                 //To explain all this - the player's escape factor is calculated using the above equation, that takes into account
@@ -1217,7 +1253,7 @@ namespace PokemonTextEdition
             //Code for catching Pokemon wild Pokemon.
 
             //First, the program examines whether it is currently in a wild fight. If not, an error is shown and the player is taken back to the menu.
-            Program.Log("The player chose to attempt to catch the Pokemon.", 1);
+            Program.Log("The player chose to attempt to catch the Pokemon.", 0);
 
             if (encounterType == "wild")
             {
@@ -1228,15 +1264,15 @@ namespace PokemonTextEdition
 
                     Overworld.player.items.Find(i => i.Type == "pokeball").Remove(1, "throw");
 
-                    Console.WriteLine("Threw a Poke Ball ({1} left) at the wild {0}! 1, 2, 3...\n", enemyPokemon.name, ItemsList.pokeball.Count);
+                    Console.WriteLine("Threw a Poke Ball ({1} left) at the wild {0}! 1, 2, 3...\n", enemyPokemon.Name, ItemsList.pokeball.Count);
 
-                    double life = enemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
-                    int ballBonus = 1; //Each specific PokeBall's catch rate multiplier. (NYI)
+                    float life = (float)enemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
+                    float ballBonus = 1; //Each specific PokeBall's catch rate multiplier. (NYI)
 
                     //First, the chance to catch the Pokemon is calculated, using its current HP %, its individual catch rate, and the bonus multiplier from the PokeBall used.
                     //The result is a number ranging from 13 to 79, times ballBonus and divided by pokemon.CatchRate. This number expresses the % chance to catch the Pokemon.
-                    double catchRate = ((100 - life) + ((life - 60) / 3)) * ballBonus / enemyPokemon.catchRate;
-                    double chance = rng.Next(1, 101);
+                    float catchRate = ((100 - life) + ((life - 60) / 3)) * ballBonus / enemyPokemon.CatchRate;
+                    int chance = rng.Next(1, 101);
 
                     //If the randomly generated number is smaller than the calculated catch rate, the Pokemon is caught.
                     if (catchRate > chance)
@@ -1244,9 +1280,9 @@ namespace PokemonTextEdition
                         Program.Log("The player successfully caught the Pokemon. (Seed = " + chance.ToString() + ", Rate = " + catchRate.ToString() + ")" +
                                     " fightOver = true, and the player should now return to the overworld.", 1);
 
-                        Console.WriteLine("Gotcha! The wild {0} was caught!", enemyPokemon.name);
+                        Console.WriteLine("Gotcha! The wild {0} was caught!", enemyPokemon.Name);
 
-                        Overworld.player.AddPokemon(enemyPokemon, "catch");
+                        Overworld.player.AddPokemon(enemyPokemon, true);
 
                         Console.WriteLine("");
 
@@ -1262,7 +1298,7 @@ namespace PokemonTextEdition
                     {
                         Program.Log("The player was unsuccesful at capturing, so the AI will now attack.", 1);
 
-                        Console.WriteLine("Oh no! The wild {0} broke free!", enemyPokemon.name);
+                        Console.WriteLine("Oh no! The wild {0} broke free!", enemyPokemon.Name);
 
                         AIAttack();
                     }
@@ -1270,7 +1306,7 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    Program.Log("The player derped - no more PokeBalls. Returning to Actions.", 0);
+                    Program.Log("The had no remaining PokeBalls. Returning to Actions.", 0);
                     Console.WriteLine("You don't have any remaining PokeBalls to use!\n");
 
                     Actions();
@@ -1279,7 +1315,7 @@ namespace PokemonTextEdition
 
             else
             {
-                Program.Log("The player derped - trainer fight. Returning to Actions.", 0);
+                Program.Log("The player tried to throw a PokeBall during a trainer fight. Returning to Actions.", 0);
                 Console.WriteLine("You can't throw a PokeBall at a trainer's Pokemon!\n");
 
                 Actions();
@@ -1320,6 +1356,17 @@ namespace PokemonTextEdition
                 participants.Add(p);
         }
 
+        string Overkill(int damage, int currentHP)
+        {
+            //This method calculates whether damage dealt to a Pokemon would be overkill.
+
+            if (damage > currentHP)
+                return " (" + Math.Abs(currentHP - damage) + " overkill)";
+
+            else
+                return String.Empty;
+        }
+
         void CancelMoveLock(Pokemon pokemon)
         {
             //This cancels a Pokemon's move-lock.
@@ -1349,7 +1396,7 @@ namespace PokemonTextEdition
             if (pokemon.leechSeed)
                 pokemon.leechSeed = false;
 
-            Console.WriteLine("{0} cleared all effects off the field using Rapid Spin!", attackerName);
+            Console.WriteLine("{0} cleared all hazards off the field using Rapid Spin!", attackerName);
         }
 
         #endregion

@@ -17,31 +17,30 @@ namespace PokemonTextEdition
             //First, two Pokemon objects are declared - one for the "original" Pokemon, as retrieved from the PokemonList class, and one for the "result" Pokemon to be output.
             //The result Pokemon's parameters are simply copied from the original.
 
-            Pokemon original = PokemonList.allPokemon.Find(p => p.name == name);
+            Pokemon original = PokemonList.allPokemon.Find(p => p.Name == name);
 
-            Pokemon pokemon = new Pokemon(original.name, original.type, original.type2, original.pokedexSpecies, original.pokedexNumber, original.catchRate,
-                               original.baseHP, original.baseAttack, original.baseDefense, original.baseSpecialAttack, original.baseSpecialDefense, 
-                               original.baseSpeed, original.evolution, original.evolutionLevel);
+            Pokemon pokemon = new Pokemon(original.Name, original.Type1, original.Type2, original.PokedexSpecies, original.PokedexNumber, original.CatchRate,
+                               original.BaseHP, original.BaseAttack, original.BaseDefense, original.BaseSpecialAttack, original.BaseSpecialDefense, 
+                               original.BaseSpeed, original.EvolvesInto, original.EvolutionLevel);
 
             pokemon.availableMoves = MovesList.PokemonAvailableMoves(name); //Then, it acquires its available moves from the MoveList method in the MovesList class.
-            pokemon.level = level; //Its level is set to the given level afterwards so that its moves and stats can be set.
+            pokemon.Level = level; //Its level is set to the given level afterwards so that its moves and stats can be set.
 
+            //This loop basically adds every move that the Pokemon can learn to its knownMoves list.
             foreach (KeyValuePair<Moves, int> move in pokemon.availableMoves)
-            {
-                if (move.Value <= pokemon.level)
-                {
-                    //This loop basically adds every move that the Pokemon can learn to its knownMoves list.
+            {                
+                if (move.Value <= pokemon.Level)                    
                     pokemon.knownMoves.Add(move.Key);
-                }
             }
 
-            while (pokemon.knownMoves.Count > 4)
-            {
-                //If the Pokemon knows more than 4 moves, it loses its first move constantly until it knows 4.
+            //If the Pokemon knows more than 4 moves, it loses its first move constantly until it knows 4.
+            while (pokemon.knownMoves.Count > 4)                            
                 pokemon.knownMoves.RemoveAt(0);
-            }
-
             
+
+            //If something goes wrong and the Pokemon does not know any moves, it automatically learns Tackle.
+            if (pokemon.knownMoves.Count < 1)
+                pokemon.knownMoves.Add(MovesList.test2);
 
             return pokemon;
         }
@@ -70,8 +69,7 @@ namespace PokemonTextEdition
 
             //Finally, the Pokemon's stats become adjusted to its level with the StatAdjust() method.
             //Then, the Pokemon gets healed to full life, and is output back to the calling method.
-            pokemon.StatAdjust();
-            pokemon.currentHP = pokemon.maxHP;
+            pokemon.CurrentHP = pokemon.MaxHP;
 
             return pokemon;
         }
@@ -102,8 +100,7 @@ namespace PokemonTextEdition
             pokemon.SpecialDefenseIV = spd;
             pokemon.SpeedIV = spe;
 
-            pokemon.StatAdjust();
-            pokemon.currentHP = pokemon.maxHP;
+            pokemon.CurrentHP = pokemon.MaxHP;
 
             return pokemon;
         }
@@ -128,8 +125,7 @@ namespace PokemonTextEdition
             pokemon.SpecialDefenseIV = 31;
             pokemon.SpeedIV = 31;
 
-            pokemon.StatAdjust();
-            pokemon.currentHP = pokemon.maxHP;
+            pokemon.CurrentHP = pokemon.MaxHP;
 
             return pokemon;
         }

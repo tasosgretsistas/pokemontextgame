@@ -6,12 +6,11 @@ using System.Text;
 namespace PokemonTextEdition
 {
     class PokemonList
-    {
-
-        
-
+    {  
         //A list of all Pokemon. 
         //TODO: Optimize this.
+        #region All Pokemon
+
         public static List<Pokemon> allPokemon = new List<Pokemon>() 
         { 
                 new Pokemon("Bulbasaur", "Grass", "Poison", "Seed", 1, 1, 45, 49, 49, 65, 65, 45, "Ivysaur", 16),
@@ -47,34 +46,34 @@ namespace PokemonTextEdition
                 new Pokemon("Ekans", "Poison", "", "Snake", 23, 1, 35, 60, 44, 40, 54, 55, "Arbok", 22),
                 new Pokemon("Arbok", "Poison", "", "Cobra", 24, 1, 60, 85, 69, 65, 79, 80),
 
-                new Pokemon("Pikachu", "Electric", "", "Mouse", 25, 1, 35, 55, 40, 50, 50, 90, "Raichu", "Thunderstone"),
+                new Pokemon("Pikachu", "Electric", "", "Mouse", 25, 1, 35, 55, 40, 50, 50, 90, "Raichu", "Thunderstone", 0),
                 new Pokemon("Raichu", "Electric", "", "Mouse", 26, 1, 60, 90, 55, 90, 80, 110),
 
                 new Pokemon("Sandshrew", "Ground", "", "Mouse", 27, 1, 50, 75, 85, 20, 30, 40, "Sandslash", 22),
                 new Pokemon("Sandslash", "Ground", "", "Mouse", 28, 1, 75, 100, 110, 45, 55, 65),
 
                 new Pokemon("Nidoran♀", "Poison", "", "Poison Pin", 29, 1, 55, 47, 52, 40, 40, 41, "Nidorina", 16),
-                new Pokemon("Nidorina", "Poison", "", "Poison Pin", 30, 1, 70, 62, 67, 55, 55, 56, "Nidoqueen", "Moon Stone"),
+                new Pokemon("Nidorina", "Poison", "", "Poison Pin", 30, 1, 70, 62, 67, 55, 55, 56, "Nidoqueen", "Moon Stone", 0),
                 new Pokemon("Nidoqueen", "Poison", "Ground", "Drill", 31, 1, 90, 92, 87, 75, 85, 76),
 
                 new Pokemon("Nidoran♂", "Poison", "", "Poison Pin", 32, 1, 46, 57, 40, 40, 40, 50, "Nidorino", 16),
-                new Pokemon("Nidorino", "Poison", "", "Poison Pin", 33, 1, 61, 72, 57, 55, 55, 65, "Nidoking", "Moon Stone"),
+                new Pokemon("Nidorino", "Poison", "", "Poison Pin", 33, 1, 61, 72, 57, 55, 55, 65, "Nidoking", "Moon Stone", 0),
                 new Pokemon("Nidoking", "Poison", "Ground", "Drill", 34, 1, 81, 102, 77, 85, 75, 85),
 
-                new Pokemon("Clefairy", "Fairy", "", "Fairy", 35, 1, 70, 45, 48, 60, 65, 35, "Clefable", "Moon Stone"),
+                new Pokemon("Clefairy", "Fairy", "", "Fairy", 35, 1, 70, 45, 48, 60, 65, 35, "Clefable", "Moon Stone", 0),
                 new Pokemon("Clefable", "Fairy", "", "Fairy", 36, 1, 95, 70, 73, 95, 90, 60),
 
-                new Pokemon("Vulpix", "Fire", "", "Fox", 37, 1, 38, 41, 40, 50, 65, 65, "Ninetales", "Fire Stone"),
+                new Pokemon("Vulpix", "Fire", "", "Fox", 37, 1, 38, 41, 40, 50, 65, 65, "Ninetales", "Fire Stone", 0),
                 new Pokemon("Ninetales", "Fire", "", "Fox", 38, 1, 73, 76, 75, 81, 100, 100),
 
-                new Pokemon("Jigglypuff", "Normal", "Fairy", "Balloon", 39, 1, 115, 45, 20, 45, 25, 20, "Wigglytuff", "Moon Stone"),
+                new Pokemon("Jigglypuff", "Normal", "Fairy", "Balloon", 39, 1, 115, 45, 20, 45, 25, 20, "Wigglytuff", "Moon Stone", 0),
                 new Pokemon("Wigglytuff", "Normal", "Fairy", "Balloon", 40, 1, 140, 70, 45, 85, 50, 45),
 
                 new Pokemon("Zubat", "Poison", "Flying", "Bat", 41, 1, 40, 45, 35, 30, 40, 55, "Golbat", 22),
                 new Pokemon("Golbat", "Poison", "Flying", "Bat", 42, 1, 75, 80, 70, 65, 75, 90),
 
                 new Pokemon("Oddish", "Grass", "Poison", "Weed", 43, 1, 45, 50, 55, 75, 65, 30, "Gloom", 21),
-                new Pokemon("Gloom", "Grass", "Poison", "Weed", 44, 1, 60, 65, 70, 85, 75, 40, "Vileplume", "Leaf Stone"),
+                new Pokemon("Gloom", "Grass", "Poison", "Weed", 44, 1, 60, 65, 70, 85, 75, 40, "Vileplume", "Leaf Stone", 0),
                 new Pokemon("Vileplume", "Grass", "Poison", "Flower", 45, 1, 75, 80, 85, 110, 90, 50),
 
                 new Pokemon("Paras", "Bug", "Grass", "Mushroom", 46, 1, 35, 70, 55, 45, 55, 25, "Parasect", 24),
@@ -95,11 +94,11 @@ namespace PokemonTextEdition
                 new Pokemon("Mankey", "Fighting", "", "Pig Monkey", 56, 1, 40, 80, 35, 35, 45, 70, "Primeape", 28),
                 new Pokemon("Primeape", "Fighting", "", "Pig Monkey", 57, 1, 65, 105, 60, 60, 70, 95),
 
-                new Pokemon("Growlithe", "Fire", "", "Puppy", 58, 1, 55, 70, 45, 70, 50, 60, "Arcanine", "Fire Stone"),
+                new Pokemon("Growlithe", "Fire", "", "Puppy", 58, 1, 55, 70, 45, 70, 50, 60, "Arcanine", "Fire Stone", 0),
                 new Pokemon("Arcanine", "Fire", "", "Legendary", 59, 1, 90, 110, 80, 100, 80, 95),
 
                 new Pokemon("Poliwag", "Water", "", "Tadpole", 60, 1, 40, 50, 40, 40, 40, 90, "Poliwhirl", 25),
-                new Pokemon("Poliwhirl", "Water", "", "Tadpole", 61, 1, 65, 65, 65, 50, 50, 90, "Poliwrath", "Water Stone"),
+                new Pokemon("Poliwhirl", "Water", "", "Tadpole", 61, 1, 65, 65, 65, 50, 50, 90, "Poliwrath", "Water Stone", 0),
                 new Pokemon("Poliwrath", "Water", "Fighting", "Tadpole", 62, 1, 90, 95, 95, 70, 90, 70),
 
                 new Pokemon("Abra", "Psychic", "", "Psi", 63, 1, 25, 20, 15, 105, 55, 90, "Kadabra", 16),
@@ -111,7 +110,7 @@ namespace PokemonTextEdition
                 new Pokemon("Machamp", "Fighting", "", "Superpower", 68, 1, 90, 130, 80, 65, 85, 55),
 
                 new Pokemon("Bellsprout", "Grass", "Poison", "Flower", 69, 1, 50, 75, 35, 70, 30, 40, "Weepinbell", 21),
-                new Pokemon("Weepinbell", "Grass", "Poison", "Flycatcher", 70, 1, 65, 90, 50, 85, 45, 55, "Victreebel", "Leaf Stone"),
+                new Pokemon("Weepinbell", "Grass", "Poison", "Flycatcher", 70, 1, 65, 90, 50, 85, 45, 55, "Victreebel", "Leaf Stone", 0),
                 new Pokemon("Victreebel", "Grass", "Poison", "Flycatcher", 71, 1, 80, 105, 65, 100, 70, 70),
 
                 new Pokemon("Tentacool", "Water", "Poison", "Jellyfish", 72, 1, 40, 40, 35, 50, 100, 70, "Tentacruel", 30),
@@ -141,7 +140,7 @@ namespace PokemonTextEdition
                 new Pokemon("Grimer", "Poison", "", "Sludge", 88, 1, 80, 80, 50, 40, 50, 25, "Muk", 38),
                 new Pokemon("Muk", "Poison", "", "Sludge", 89, 1, 105, 105, 75, 65, 100, 50),
 
-                new Pokemon("Shellder", "Water", "", "Bivalve", 90, 1, 30, 65, 100, 45, 25, 40, "Cloyster", "Water Stone"),
+                new Pokemon("Shellder", "Water", "", "Bivalve", 90, 1, 30, 65, 100, 45, 25, 40, "Cloyster", "Water Stone", 0),
                 new Pokemon("Cloyster", "Water", "Ice", "Bivalve", 91, 1, 50, 95, 180, 85, 45, 70),
 
                 new Pokemon("Gastly", "Ghost", "Poison", "Gas", 92, 1, 30, 35, 30, 100, 35, 80, "Haunter", 25),
@@ -159,7 +158,7 @@ namespace PokemonTextEdition
                 new Pokemon("Voltorb", "Electric", "", "Ball", 100, 1, 40, 30, 50, 55, 55, 100, "Electrode", 30),
                 new Pokemon("Electrode", "Electric", "", "Ball", 101, 1, 60, 50, 70, 80, 80, 140),
 
-                new Pokemon("Exeggcute", "Grass", "Psychic", "Egg", 102, 1, 60, 40, 80, 60, 45, 40, "Exeggutor", "Leaf Stone"),
+                new Pokemon("Exeggcute", "Grass", "Psychic", "Egg", 102, 1, 60, 40, 80, 60, 45, 40, "Exeggutor", "Leaf Stone", 0),
                 new Pokemon("Exeggutor", "Grass", "Psychic", "Coconut", 103, 1, 95, 95, 85, 125, 65, 55),
 
                 new Pokemon("Cubone", "Ground", "", "Lonely", 104, 1, 50, 50, 95, 40, 50, 35, "Marowak", 28),
@@ -189,7 +188,7 @@ namespace PokemonTextEdition
                 new Pokemon("Goldeen", "Water", "", "Goldfish", 118, 1, 45, 67, 60, 35, 50, 63, "Seaking", 33),
                 new Pokemon("Seaking", "Water", "", "Goldfish", 119, 1, 80, 92, 65, 65, 80, 68),
 
-                new Pokemon("Staryu", "Water", "", "Star Shape", 120, 1, 30, 45, 55, 70, 55, 85, "Starmie", "Water Stone"),
+                new Pokemon("Staryu", "Water", "", "Star Shape", 120, 1, 30, 45, 55, 70, 55, 85, "Starmie", "Water Stone", 0),
                 new Pokemon("Starmie", "Water", "Psychic", "Mysterious", 121, 1, 60, 75, 85, 100, 85, 115), 
 
                 new Pokemon("Mr. Mime", "Psychic", "Fairy", "Barrier", 122, 1, 40, 45, 65, 100, 120, 90), 
@@ -244,7 +243,10 @@ namespace PokemonTextEdition
                 new Pokemon("Mewtwo", "Psychic", "", "Genetic", 150, 1, 106, 110, 90, 154, 90, 130),
 
                 new Pokemon("Mew", "Psychic", "", "New Species", 151, 1, 100, 100, 100, 100, 100, 100)
+
             };
+
+        #endregion
 
         public static void DisplayBSTs()
         {
@@ -254,8 +256,8 @@ namespace PokemonTextEdition
 
             foreach (Pokemon p in allPokemon)
             {
-                int BST = p.baseHP + p.baseAttack + p.baseDefense + p.baseSpecialAttack + p.baseSpecialDefense + p.baseSpeed;
-                totals.Add(p.name, BST);
+                int BST = p.BaseHP + p.BaseAttack + p.BaseDefense + p.BaseSpecialAttack + p.BaseSpecialDefense + p.BaseSpeed;
+                totals.Add(p.Name, BST);
             }
 
             totals = totals.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
@@ -272,8 +274,8 @@ namespace PokemonTextEdition
 
             foreach (Pokemon p in allPokemon)
             {
-                if (p.evolution != "doesNotEvolve")
-                    Console.WriteLine("{0} evolves into {1}.", p.name, p.evolution);
+                if (p.Evolves)
+                    Console.WriteLine("{0} evolves into {1}.", p.Name, p.EvolvesInto);
             }
         }
 

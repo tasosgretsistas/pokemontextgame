@@ -31,7 +31,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Trainer()
         { 
-            if (nick.Defeated())      
+            if (nick.HasBeenDefeated)      
                 nickr.Encounter();            
 
             else  
@@ -77,7 +77,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("the direction of Pewter City. Few minutes later, you find yourself in the");
                 Console.WriteLine("middle of the forest, just as planned!");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
             else
@@ -93,10 +93,10 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("okay at least. You decide to be a bit more careful from now on, as you go");
                 Console.WriteLine("even deeper into this dangerous forest.");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
-            if (!nick.Defeated())
+            if (!nick.HasBeenDefeated)
             {
                 Console.WriteLine("");
 
@@ -132,7 +132,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("follow the signs around the forest until you are finally back at Route 2.");
             }
 
-            Story.AnyKey();
+            Program.AnyKey();
         }
     }
 }

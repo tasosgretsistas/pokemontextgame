@@ -30,28 +30,28 @@ namespace PokemonTextEdition.Items
 
             //If the Pokemon the user selected is alive and not at full life, it gets healed for the healAmount and this method returns "true" for operation success.
             //Otherwise, an appropriate error message is displayed and the method returns "false" for operation failure.
-            if (pokemon.name != "Blank")
+            if (pokemon.Name != "Blank")
             {
-                if (pokemon.currentHP > 0 && pokemon.currentHP < pokemon.maxHP)
+                if (pokemon.CurrentHP > 0 && pokemon.CurrentHP < pokemon.MaxHP)
                 {
-                    int previousHP = pokemon.currentHP;
+                    int previousHP = pokemon.CurrentHP;
 
-                    if (pokemon.maxHP > (previousHP + healAmount))
-                        pokemon.currentHP += healAmount;
+                    if (pokemon.MaxHP > (previousHP + healAmount))
+                        pokemon.CurrentHP += healAmount;
 
                     else
-                        pokemon.currentHP = pokemon.maxHP;
+                        pokemon.CurrentHP = pokemon.MaxHP;
 
-                    Console.WriteLine("\n{0} HP was restored to {1}.", (pokemon.currentHP - previousHP), pokemon.name);
+                    Console.WriteLine("\n{0} HP was restored to {1}.", (pokemon.CurrentHP - previousHP), pokemon.Name);
 
-                    Program.Log("The player uses a Potion on " + pokemon.name + ", restoring " + (pokemon.currentHP - previousHP) + "HP.", 1);
+                    Program.Log("The player uses a Potion on " + pokemon.Name + ", restoring " + (pokemon.CurrentHP - previousHP) + "HP.", 1);
 
                     Remove(1, "use");
 
                     return true;
                 }
 
-                else if (pokemon.currentHP <= 0)
+                else if (pokemon.CurrentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
                     Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);

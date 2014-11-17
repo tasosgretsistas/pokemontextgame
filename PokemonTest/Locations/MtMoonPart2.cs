@@ -77,7 +77,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("the cave's darker reaches. You steer clear off particularly dangerous-looking");
                 Console.WriteLine("paths and hallways as you navigate further into the cave.");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
             else
@@ -94,12 +94,12 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("and yell out a few curses. Wiping the sweat off your forehead, you swear to be");
                 Console.WriteLine("more careful from now on, for the sake of your Pokemon.");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
-            if (!simon.Defeated())
+            if (!simon.HasBeenDefeated)
             {
-                if (!lana.Defeated())
+                if (!lana.HasBeenDefeated)
                 {
                     Console.WriteLine("The light in the cave is ever dimming, and you eventually find yourself before");
                     Console.WriteLine("a round hole in the wall, big enough for you to walk through. Just as you are");
@@ -112,10 +112,10 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("You have definitely not seen that Pokemon before, and it looked really strong.");
                     Console.WriteLine("Your heart is pumping with excitement as you pick up your pace going onward.");
 
-                    Story.AnyKey();
+                    Program.AnyKey();
                 }
 
-                if (!simon.Defeated())
+                if (!simon.HasBeenDefeated)
                 {
                     Console.WriteLine("Visibility is constantly becoming lower as you go further into the hole in the");
                     Console.WriteLine("wall, so out of necessity you also begin to move slower. You keep shining your");
@@ -129,7 +129,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("still have the journey ahead to think about, so once more you start walking");
                     Console.WriteLine("towards the unknown with a confident stride.");
 
-                    Story.AnyKey();
+                    Program.AnyKey();
                 }
             }
         }

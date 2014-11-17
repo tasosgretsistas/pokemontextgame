@@ -56,6 +56,8 @@ namespace PokemonTextEdition
          *However, should he try to do so in a route area, that area's specific encounter code will trigger, starting a fight with a wild Pokemon specific to that area.
          */
 
+        #region Generic Location Functions
+
         public virtual void Encounter()
         {
             Console.WriteLine("There are no wild Pokemon in {0}.\n", Name);
@@ -86,7 +88,11 @@ namespace PokemonTextEdition
             Console.WriteLine("There's nothing due east of {0}.\n", Name);
         }
 
-        public virtual void Heal()
+        #endregion
+
+        #region Special Facilities
+
+        public virtual void Center()
         {
             //Simple code for healing the player's party.
             //If the player is inside a city, his Pokemon will get healed,  and the "lastHeal" tag which specifies what city the player last healed in will update. 
@@ -96,8 +102,8 @@ namespace PokemonTextEdition
             {
                 foreach (Pokemon p in Overworld.player.party)
                 {
-                    p.currentHP = p.maxHP;
-                    p.status = "";
+                    p.CurrentHP = p.MaxHP;
+                    p.Status = "";
                 }
                 Console.WriteLine("Your Pokemon are now fully healed!\n");
                 Overworld.player.LastHealLocation = this.Tag;
@@ -126,5 +132,7 @@ namespace PokemonTextEdition
         {
             Console.WriteLine("There is no Pokemon Gym in {0}.\n", Name);
         }
+
+        #endregion
     }
 }

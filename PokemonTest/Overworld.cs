@@ -113,7 +113,7 @@ namespace PokemonTextEdition
                 case "heal":
                 case "c":
 
-                    currentLocation.Heal();
+                    currentLocation.Center();
 
                     Options();
 
@@ -146,11 +146,22 @@ namespace PokemonTextEdition
                     currentLocation.Help();
 
                     Console.WriteLine("");
+                    Console.WriteLine("\"(p)layer\" - displays your player information, such as name and money on hand.");
                     Console.WriteLine("\"(s)tatus\" - displays the current status for each Pokemon in your party.");
                     Console.WriteLine("\"s(w)itch\" - allows you to change the order of the Pokemon in your party.");
                     Console.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
                     Console.WriteLine("\"s(a)ve\" - saves your progress in the game.");
                     Console.WriteLine("");
+
+                    Options();
+
+                    break;
+
+                case "Player":
+                case "player":
+                case "p":
+
+                    player.PlayerInfo();
 
                     Options();
 
@@ -198,31 +209,15 @@ namespace PokemonTextEdition
 
                 case "tellme":
 
-                    foreach(Pokemon p in player.party)
-                        p.PrintIVs();
-
-                    Console.WriteLine("");
+                    TellMe();
                     
                     Options();
 
                     break;
 
-                case "screwtherules":
+                case "screwtherules":                   
 
-                    Console.WriteLine("I have money!\n");
-
-                    foreach (Pokemon p in player.party)
-                    {
-                        p.HPIV = 31;
-                        p.AttackIV = 31;
-                        p.DefenseIV = 31;
-                        p.SpecialAttackIV = 31;
-                        p.SpecialDefenseIV = 31;
-                        p.SpeedIV = 31;
-                        p.StatAdjust();
-                    }
-
-                    Overworld.player.PartyHeal();
+                    ScrewTheRules();
 
                     Options();
 
@@ -237,5 +232,34 @@ namespace PokemonTextEdition
                     break;
             }
         }
+
+        #region Cheats
+
+        static void TellMe()
+        {
+            foreach (Pokemon p in player.party)
+                p.PrintIVs();
+
+            Console.WriteLine("");
+        }
+
+        static void ScrewTheRules()
+        {
+            Console.WriteLine("I have money!\n");
+
+            foreach (Pokemon p in player.party)
+            {
+                p.HPIV = 31;
+                p.AttackIV = 31;
+                p.DefenseIV = 31;
+                p.SpecialAttackIV = 31;
+                p.SpecialDefenseIV = 31;
+                p.SpeedIV = 31;
+            }
+
+            Overworld.player.PartyHeal();
+        }
+
+        #endregion
     }
 }

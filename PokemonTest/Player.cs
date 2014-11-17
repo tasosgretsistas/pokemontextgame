@@ -10,18 +10,27 @@ namespace PokemonTextEdition
     [Serializable]
     public class Player
     {
+        #region Properties & Constructors
+
         //A class that describes the player condition (Pokemon, money, badges, etc) as well as the player's progress in the game.
 
         //The player's name, as well as the player's rival.
+
         public string Name { get; set; }
+
         public string RivalName { get; set; }
 
         //The player's starting Pokemon. Determines the rival's Pokemon during various stages of the game.
         public string StartingPokemon { get; set; }
 
-        //The player's basic parameters.
-        public int Money { get; set; }
-        public List<string> badgeList = new List<string>();
+        //The player's current money on hand.
+        private int money;
+
+        public int Money
+        {
+            get { return money; }
+            set { if (value < 0 || money + value < 0) money = 0; else money = value; } //Money cannot ever be less than 0.
+        }
 
         //The player's current location. Used for saving/loading only.
         public string Location { get; set; }
@@ -29,97 +38,48 @@ namespace PokemonTextEdition
         //The last city in which the player healed. Used when the player runs out of Pokemon.
         public string LastHealLocation { get; set; }
 
-        //The various lists of Pokemon that a player might have.
+        //These two lists describe the Pokemon that the player currently owns.
         public List<Pokemon> party = new List<Pokemon>();
         public List<Pokemon> box = new List<Pokemon>();
-        public List<Pokemon> seenPokemon = new List<Pokemon>();
-        public List<Pokemon> caughtPokemon = new List<Pokemon>();
+
+        //These two lists describe the Pokemon that the player has encountered and captured.
+        public List<string> seenPokemon = new List<string>();
+        public List<string> caughtPokemon = new List<string>();
 
         //The player's list of items.
         public List<Item> items = new List<Item>();
+
+        //A list of badges the player has collected from defeating the various gym leaders.
+        public List<string> badgeList = new List<string>();
 
         //A list of all the trainers the player has defeated.
         public List<string> defeatedTrainers = new List<string>();
 
         public Player()
         {
-            Name = "Ash";
-            RivalName = "Gary";
+            Name = "Red";
+            RivalName = "Blue";
             StartingPokemon = "";
             LastHealLocation = "pallet";
             Money = 500;
         }
 
-        public bool PartyFull()
+        #endregion
+
+        #region General Methods
+
+        public void PlayerInfo()
         {
-            //This method quickly determines whether the player's party is full.
-            if (party.Count < 6)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+            //This method displays the status for each Pokemon in the player's party, separated by an empty line for every Pokemon.
+            Console.WriteLine("Your information: ");
+            Console.WriteLine("");
 
-        public bool BoxFull()
-        {
-            //This method quickly determines whether the player's box is full.
-            if (box.Count < 6)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Code for adding a Pokemon to the player's party, or box if his party is full.
-        /// </summary>
-        /// <param name="p">The new Pokemon.</param>
-        /// <param name="method">Method of acquisition. Examples: catch, gift, trade</param>
-        public void AddPokemon(Pokemon p, string method)
-        {
-            //This method handles adding a new Pokemon to the player's lists of Pokemon, depending on how many Pokemon each list already holds.
-
-            if (!PartyFull())
-            {
-                //If the player's party is not full, the new Pokemon is added to the party.                
-
-                Console.WriteLine("{0} was added to the party!", p.name);
-
-                party.Add(p);
-            }
-
-            else if (!BoxFull())
-            {
-                //Else, if the player's box is not full, it is sent to the box instead.
-
-                string extraText = "";
-
-                if (method == "catch")
-                    extraText = "the caught ";
-
-                Console.WriteLine("Your party is full, so {0}{1} was sent to the box.", extraText, p.name);
-
-                box.Add(p);
-            }
-
-            else
-            {
-                //If both the player's party and box are full, it is instead simply destroyed.
-
-                string extraText = "";
-
-                if (method == "catch")
-                    extraText = "the caught ";
-
-                Console.WriteLine("Both your party and box are full, so {0}{1} had to be released!", extraText, p.name);
-            }
-
+            Console.WriteLine("Name: " + Name);
+            Console.WriteLine("Badges: " + badgeList.Count);
+            Console.WriteLine("Money: $" + Money);
+            Console.WriteLine("Pokemon seen: " + seenPokemon.Count);
+            Console.WriteLine("Pokemon caught: " + caughtPokemon.Count);
+            Console.WriteLine("");
         }
 
         public void PartyStatus()
@@ -139,10 +99,212 @@ namespace PokemonTextEdition
         {
             foreach (Pokemon p in Overworld.player.party)
             {
-                p.currentHP = p.maxHP;
-                p.status = "";
+                p.CurrentHP = p.MaxHP;
+                p.Status = "";
             }
         }
+
+        public void BlackOut()
+        {
+            //Code that triggers when the player is defeated.
+
+            Program.Log("The player has been defeated, and is now returning to the last Pokemon Center he visited - " + LastHealLocation, 1);
+
+            Console.WriteLine("You will now be taken to the last city you rested at.");
+
+            Program.AnyKey();
+
+            PartyHeal();
+
+            Overworld.LoadLocation(LastHealLocation);
+        }
+
+        #endregion
+
+        #region Adding Pokemon
+
+        /// <summary>
+        /// Code for adding a Pokemon to the player's party, or box if his party is full. If both party and box are full, the Pokemon will be released.
+        /// </summary>
+        /// <param name="p">The new Pokemon.</param>
+        /// <param name="method">Method of acquisition. Examples: catch, gift, trade</param>
+        public void AddPokemon(Pokemon p, bool displayMessage)
+        {
+            //This method handles adding a new Pokemon to the player's lists of Pokemon, depending on how many Pokemon each list already holds.
+
+            //If the player's party is not full, the new Pokemon is added to the party. 
+            if (party.Count <= 6)
+            {
+                if (displayMessage)
+                    Console.WriteLine("{0} was added to the party!", p.Name);
+
+                AddToCaught(p.Name);
+
+                party.Add(p);
+            }
+
+            //Else, if the player's box is not full, it is sent to the box instead.
+            else if (box.Count <= 30)
+            {
+                if (displayMessage)
+                    Console.WriteLine("Your party is full, so {0} was sent to the box.", p.Name);
+
+                AddToCaught(p.Name);
+
+                box.Add(p);
+            }
+
+            //If both the player's party and box are full, it is instead simply destroyed.
+            else
+                Console.WriteLine("Both your party and box are full, so {0}{1} had to be released!", p.Name);
+        }
+
+        public void AddToSeen(string name)
+        {
+            if (!seenPokemon.Exists(n => n == name))
+                seenPokemon.Add(name);
+        }
+
+        public void AddToCaught(string name)
+        {
+            if (!seenPokemon.Exists(n => n == name))
+                seenPokemon.Add(name);
+
+            if (!caughtPokemon.Exists(n => n == name))
+                seenPokemon.Add(name);
+        }
+
+        #endregion
+
+        #region Selecting & Switching Pokemon
+
+        public Pokemon SelectPokemon(bool mandatorySelection)
+        {
+            //This code is used when the player is asked to select a Pokemon in his party.
+
+            //First, all of the Pokemon in the player's party are listed.
+            for (int i = 0; i < party.Count; i++)
+            {
+                Console.WriteLine("{0} - Level {1} {2}, {3}/{4} HP.", i + 1, party.ElementAt(i).Level, party.ElementAt(i).Name,
+                                                                        party.ElementAt(i).CurrentHP, party.ElementAt(i).MaxHP);
+            }
+
+            string input = Console.ReadLine();
+            int index;
+            bool validInput = Int32.TryParse(input, out index);
+
+            //First, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
+            if (validInput && index > 0 && index <= party.Count)
+            {
+                return party.ElementAt(index - 1);
+            }
+
+            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
+            else if (input == String.Empty && !mandatorySelection)
+            {
+                Program.Log("The player chose to cancel the operation.", 0);
+
+                return new Pokemon();
+            }
+
+            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
+            else
+            {
+                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
+                Console.WriteLine("Invalid input.\n");
+
+                return new Pokemon();
+            }
+        }
+
+        public void SwitchAround()
+        {
+            //This method is used to switch around the order of Pokemon in the player's party.
+
+            //Temporary Pokemon objects to handle the switching operation.
+            Pokemon pokemon1 = new Pokemon();
+            Pokemon pokemon2 = new Pokemon();
+
+            if (party.Count > 1)
+            {
+                //First, all of the player's Pokemon are listed.
+
+                Console.WriteLine("Please select a Pokemon to be switched with another. \n(Valid input: 1-{0} or press Enter to return)\n", party.Count);
+
+                for (int i = 0; i < party.Count; i++)
+                {
+                    Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).Name, party.ElementAt(i).CurrentHP, party.ElementAt(i).MaxHP);
+                }
+
+                string input = Console.ReadLine();
+                int selection1;
+                bool validInput = Int32.TryParse(input, out selection1);
+
+                if (input != "")
+                    Console.WriteLine("");
+
+                //Next, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
+                if (validInput && selection1 > 0 && selection1 < (party.Count + 1))
+                {
+                    //The selected Pokemon is temporarily removed from the party and the player's remaining Pokemon are listed.
+
+                    pokemon1 = party.ElementAt(selection1 - 1);
+                    party.RemoveAt(selection1 - 1);
+
+                    Console.WriteLine("Now please select the Pokemon it will be switched with. (Valid input: 1-{0})\n", party.Count);
+
+                    for (int i = 0; i < party.Count; i++)
+                    {
+                        Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).Name, party.ElementAt(i).CurrentHP, party.ElementAt(i).MaxHP);
+                    }
+
+                    string input2 = Console.ReadLine();
+                    int selection2;
+                    bool validInput2 = Int32.TryParse(input2, out selection2);
+
+                    if (input2 != "")
+                        Console.WriteLine("");
+
+                    //Input is taken from the player again. If the input is a number corresponding to one of the remaining Pokemon in the player's party, the operation carries on.
+                    if (validInput2 && selection2 > 0 && selection2 < (party.Count + 1))
+                    {
+                        //The second Pokemon is also temporarily removed from the player's party.
+
+                        pokemon2 = party.ElementAt(selection2 - 1);
+                        party.RemoveAt(selection2 - 1);
+
+                        //Then, 
+
+                        party.Insert((selection2 - 1), pokemon1);
+                        party.Insert((selection1 - 1), pokemon2);
+
+                        Console.WriteLine("Pokemon succesfully switched.\n");
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Invalid input.\n");
+                        party.Insert((selection1 - 1), pokemon1);
+                    }
+
+                }
+
+                else
+                {
+                    if (input != "")
+                        Console.WriteLine("Invalid input.\n");
+                }
+            }
+
+            else if (party.Count == 1)
+            {
+                Console.WriteLine("\nThere is only one Pokemon in your party!\n");
+            }
+        }
+
+        #endregion
+
+        #region Items
 
         public void ItemsMain()
         {
@@ -355,128 +517,7 @@ namespace PokemonTextEdition
             }
         }
 
-        public void SwitchAround()
-        {
-            //This method is used to switch around the order of Pokemon in the player's party.
+        #endregion
 
-            //Temporary Pokemon objects to handle the switching operation.
-            Pokemon pokemon1 = new Pokemon();
-            Pokemon pokemon2 = new Pokemon();
-
-            if (party.Count > 1)
-            {
-                //First, all of the player's Pokemon are listed.
-
-                Console.WriteLine("Please select a Pokemon to be switched with another. \n(Valid input: 1-{0} or press Enter to return)\n", party.Count);
-
-                for (int i = 0; i < party.Count; i++)
-                {
-                    Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).name, party.ElementAt(i).currentHP, party.ElementAt(i).maxHP);
-                }
-
-                string input = Console.ReadLine();
-                int selection1;
-                bool validInput = Int32.TryParse(input, out selection1);
-
-                if (input != "")
-                    Console.WriteLine("");
-
-                //Next, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
-                if (validInput && selection1 > 0 && selection1 < (party.Count + 1))
-                {
-                    //The selected Pokemon is temporarily removed from the party and the player's remaining Pokemon are listed.
-
-                    pokemon1 = party.ElementAt(selection1 - 1);
-                    party.RemoveAt(selection1 - 1);
-
-                    Console.WriteLine("Now please select the Pokemon it will be switched with. (Valid input: 1-{0})\n", party.Count);
-
-                    for (int i = 0; i < party.Count; i++)
-                    {
-                        Console.WriteLine("{0} - {1}, {2}/{3} HP.", i + 1, party.ElementAt(i).name, party.ElementAt(i).currentHP, party.ElementAt(i).maxHP);
-                    }
-
-                    string input2 = Console.ReadLine();
-                    int selection2;
-                    bool validInput2 = Int32.TryParse(input2, out selection2);
-
-                    if (input2 != "")
-                        Console.WriteLine("");
-
-                    //Input is taken from the player again. If the input is a number corresponding to one of the remaining Pokemon in the player's party, the operation carries on.
-                    if (validInput2 && selection2 > 0 && selection2 < (party.Count + 1))
-                    {
-                        //The second Pokemon is also temporarily removed from the player's party.
-
-                        pokemon2 = party.ElementAt(selection2 - 1);
-                        party.RemoveAt(selection2 - 1);
-
-                        //Then, 
-
-                        party.Insert((selection2 - 1), pokemon1);
-                        party.Insert((selection1 - 1), pokemon2);
-
-                        Console.WriteLine("Pokemon succesfully switched.\n");
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("Invalid input.\n");
-                        party.Insert((selection1 - 1), pokemon1);
-                    }
-
-                }
-
-                else
-                {
-                    if (input != "")
-                        Console.WriteLine("Invalid input.\n");
-                }
-            }
-
-            else if (party.Count == 1)
-            {
-                Console.WriteLine("\nThere is only one Pokemon in your party!\n");
-            }
-        }
-
-        public Pokemon SelectPokemon(bool mandatorySelection)
-        {
-            //This code is used when the player is asked to select a Pokemon in his party.
-
-            //First, all of the Pokemon in the player's party are listed.
-            for (int i = 0; i < party.Count; i++)
-            {
-                Console.WriteLine("{0} - Level {1} {2}, {3}/{4} HP.", i + 1, party.ElementAt(i).level, party.ElementAt(i).name,
-                                                                        party.ElementAt(i).currentHP, party.ElementAt(i).maxHP);
-            }
-
-            string input = Console.ReadLine();
-            int index;
-            bool validInput = Int32.TryParse(input, out index);
-
-            //First, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
-            if (validInput && index > 0 && index <= party.Count)
-            {
-                return party.ElementAt(index - 1);
-            }
-
-            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
-            else if (input == "" && !mandatorySelection)
-            {
-                Program.Log("The player chose to cancel the operation.", 0);
-
-                return new Pokemon();
-            }
-
-            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
-            else
-            {
-                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
-                Console.WriteLine("Invalid input.\n");
-
-                return new Pokemon();
-            }
-        }
     }
 }

@@ -12,10 +12,10 @@ namespace PokemonTextEdition
 
         #region Pokeballs
 
-        static public PokeBall pokeball = new PokeBall("PokeBall", "A tool for catching wild Pokemon.", false, 100, 1.0);
-        static public PokeBall greatball = new PokeBall("Great Ball", "A tool for catching wild Pokemon. Better than PokeBall.", false, 300, 1.5);
-        static public PokeBall ultraball = new PokeBall("Ultra Ball", "A tool for catching wild Pokemon. Better catch rate than Great Ball.", false, 600, 2.0);
-        static public PokeBall masterball = new PokeBall("Master Ball", "The ultimate tool for wild catching Pokemon. Never fails.", false, 0, -1.0);
+        static public PokeBall pokeball = new PokeBall("PokeBall", "A tool for catching wild Pokemon.", false, 100, 1f);
+        static public PokeBall greatball = new PokeBall("Great Ball", "A tool for catching wild Pokemon. Better than PokeBall.", false, 300, 1.5f);
+        static public PokeBall ultraball = new PokeBall("Ultra Ball", "A tool for catching wild Pokemon. Better catch rate than Great Ball.", false, 600, 2f);
+        static public PokeBall masterball = new PokeBall("Master Ball", "The ultimate tool for wild catching Pokemon. Never fails.", false, 0, -1.0f);
 
         #endregion
 

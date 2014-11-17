@@ -31,7 +31,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Trainer()
         {   
-            if (eric.Defeated())
+            if (eric.HasBeenDefeated)
                 ericr.Encounter();           
 
             else
@@ -71,7 +71,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("duck for wild Pokemon. Instead, you move through the less dense parts of");
                 Console.WriteLine("the forest until you find the path that leads to the northern side.");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
             else
@@ -86,10 +86,10 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("Both you and your food are safe - for now. You go back to reading the map,");
                 Console.WriteLine("which points you in the way north and once again back into the forest.");
 
-                Story.AnyKey();
+                Program.AnyKey();
             }
 
-            if (!eric.Defeated())
+            if (!eric.HasBeenDefeated)
             {
                 Console.WriteLine("On your way further north, you run into another kid with a net -- is it");
                 Console.WriteLine("a new fashion or something? Either way, you already know what this means!");
@@ -121,7 +121,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("view, and then the path that leads to the southern side of the forest.");
             }
 
-            Story.AnyKey();
+            Program.AnyKey();
         }
     }
 }

@@ -30,22 +30,22 @@ namespace PokemonTextEdition.Items
 
             //If the Pokemon the user selected is alive and is suffering from a status this item can cure, it gets healed for the healAmount and this method returns
             // "true" for operation success. Otherwise, an appropriate error message is displayed and the method returns "false" for operation failure.
-            if (pokemon.name != "Blank")
+            if (pokemon.Name != "Blank")
             {
-                if (pokemon.currentHP > 0 && pokemon.status == healType)
+                if (pokemon.CurrentHP > 0 && pokemon.Status == healType)
                 {
-                    pokemon.status = "";
+                    pokemon.Status = "";
 
-                    Console.WriteLine("\n{0} was cured of its {1}.", pokemon.name, healType);
+                    Console.WriteLine("\n{0} was cured of its {1}.", pokemon.Name, healType);
 
-                    Program.Log("The uses a " + Name + " on " + pokemon.name + ", curing it of its " + healType + ".", 1);
+                    Program.Log("The uses a " + Name + " on " + pokemon.Name + ", curing it of its " + healType + ".", 1);
 
                     Remove(1, "use");
 
                     return true;
                 }
 
-                else if (pokemon.currentHP <= 0)
+                else if (pokemon.CurrentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
                     Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);

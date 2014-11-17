@@ -57,6 +57,40 @@ namespace PokemonTextEdition
         }
         #endregion
 
+        #region Methods
+
+        public string Print()
+        {
+            string countMessage = Name;
+
+            if (Count > 1)
+                countMessage = Name + "s";
+
+            return Count + "x " + countMessage + " - " + Description;
+        }
+
+        public virtual bool Use()
+        {
+            Program.Log("The player tried to use a " + Name + " outside of combat.", 0);
+
+            Console.WriteLine("This item cannot be used outside of combat.\n");
+
+            return false;
+        }
+
+        public virtual bool UseCombat()
+        {
+            Program.Log("The player tried to use a " + Name + " during combat.", 0);
+
+            Console.WriteLine("This item cannot be used during combat.\n");
+
+            return false;
+        }
+
+        #endregion
+
+        #region Add & Remove
+
         public string AddRemoveQuantityFormat(int quantity)
         {
             //This method quickly formats the name of the item depending on the quantity to be added/removed.
@@ -118,34 +152,7 @@ namespace PokemonTextEdition
              */
         }
 
-        public virtual bool Use()
-        {
-            Program.Log("The player tried to use a " + Name + " outside of combat.", 0);
-
-            Console.WriteLine("This item cannot be used outside of combat.\n");
-
-            return false;
-        }
-
-        public virtual bool UseCombat()
-        {
-            Program.Log("The player tried to use a " + Name + " during combat.", 0);
-
-            Console.WriteLine("This item cannot be used during combat.\n");
-
-            return false;
-        }
-
-        public string Print()
-        {
-            string countMessage = Name;
-
-            if (Count > 1)
-                countMessage = Name + "s";
-
-            return Count + "x " + countMessage + " - " + Description;            
-        }
-
+        #endregion
 
     }
 }

@@ -24,7 +24,6 @@ namespace PokemonTextEdition
             }
         }
 
-
         public string Greeting { get; set; }  //The trainer's generic greeting.
         public string DefeatSpeech { get; set; }  //The trainer's generic message upon losing.
         public string VictorySpeech { get; set; } //The trainer's generic message upon winning.
@@ -33,9 +32,38 @@ namespace PokemonTextEdition
         //An "r" after the number identifies that the trainer has already been defeated once and the battle is a rematch.
         public string ID { get; set; }
 
-        public int Money { get; set; }  //The money the trainer awards.
+        public int Money { get; set; }  //The trainer's money yield upon defeat.
 
         public List<Pokemon> party = new List<Pokemon>(); //The trainer's party.
+
+        //Determines if the player has defeated the trainer by checking whether the player's defeatedTrainers list contains the trainer's ID.
+        public bool HasBeenDefeated
+        {
+            get
+            {
+                if (Overworld.player.defeatedTrainers.Contains(ID))
+                    return true;                
+
+                else
+                    return false;
+            }
+        }
+
+        public Trainer()
+        {
+            Name = "";
+            Greeting = "Hello!";
+            DefeatSpeech = "Oh no! I can't believe I lost!";
+            VictorySpeech = "Haha! Eat it!";
+
+            ID = "0";
+            Money = 0;
+        }
+
+        public Trainer(string n)
+        {
+            Name = n;
+        }
 
         /// <summary>
         /// The main constructor for initializing an enemy trainer NPC.
@@ -59,37 +87,6 @@ namespace PokemonTextEdition
             ID = tid;
         }
 
-        public Trainer(string n)
-        {
-            Name = n;
-        }
-
-        public Trainer()
-        {
-            Name = "";
-            Greeting = "Hello!";
-            DefeatSpeech = "Oh no! I can't believe I lost!";
-            VictorySpeech = "Haha! Eat it!";
-
-            ID = "0";
-            Money = 0; 
-        }
-
-        public bool Defeated()
-        {
-            //This method checks if the player has defeated a trainer by checking whether the player's defeatedTrainers list contains the trainer's ID.
-
-            if (Overworld.player.defeatedTrainers.Contains(ID))
-            {
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-        }
-
         public virtual void Encounter()
         {
             //Code for triggering an encounter with an enemy trainer.
@@ -97,8 +94,8 @@ namespace PokemonTextEdition
 
             foreach (Pokemon p in party)
             {
-                p.currentHP = p.maxHP;
-                p.status = "";
+                p.CurrentHP = p.MaxHP;
+                p.Status = "";
             }
 
             Console.WriteLine(Greeting);
@@ -123,13 +120,9 @@ namespace PokemonTextEdition
         public virtual void Victory()
         {            
             Console.WriteLine(VictorySpeech);
-            Console.WriteLine("\nYou will now be taken to the last city you rested at.");
+            Console.WriteLine("");
 
-            Story.AnyKey();
-
-            Overworld.player.PartyHeal();
-
-            Overworld.LoadLocation(Overworld.player.LastHealLocation);
+            Overworld.player.BlackOut();
         }
     }
 }

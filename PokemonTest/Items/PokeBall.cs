@@ -8,9 +8,9 @@ namespace PokemonTextEdition.Items
     [Serializable]
     class PokeBall : Item
     {
-        public double catchRate;
+        public float catchRate;
 
-        public PokeBall(string iName, string iDescription, bool iMultiple, int iValue, double iRate)
+        public PokeBall(string iName, string iDescription, bool iMultiple, int iValue, float iRate)
             : base(iName, iDescription, iMultiple, iValue)
         {
             catchRate = iRate;

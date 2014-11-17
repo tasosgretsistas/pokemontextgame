@@ -14,17 +14,18 @@ namespace PokemonTextEdition
         //Current game version.
         private const string version = "v0.2 [BETA]";
 
-        //This parameter determines how severe a message needs to be in order to get logged.
+        //This parameter determines how important a message needs to be in order to get logged.
         //0 = trivial, 1 = important, 2 = vital.
-        private const int logLevel = 0;
+        private static int logLevel = 1;
 
-        public static bool GodMode { get; set; }
+        //The name of the save game file to be used.
+        private const string saveGame = "savegame.sav"; 
 
-        private const string saveGame = "savegame.sav"; //The name of the save game file to be used.
+        //Developer mode.
+        public static bool GodMode { get; set; }        
 
-        //The font colour for each kind of message. (NYI)
-        public static ConsoleColor quotesColor = ConsoleColor.Green;
-        public static ConsoleColor battleColor = ConsoleColor.Red;
+        //The font colour for each kind of message. (If I ever decide to implement this)
+        public static ConsoleColor eventColor = ConsoleColor.Yellow;
 
         static void Main(string[] args)
         {
@@ -71,11 +72,37 @@ namespace PokemonTextEdition
 
                     break;
 
+                case "testbattle":
+
+                    TestBattle();
+
+                    break;
+
                 default:
 
                     Story.Introduction();
 
                     break;
+            }
+        }
+
+        #region Game Functionality
+
+        /// <summary>
+        /// Logging method that writes a given message into a file called "log.txt".
+        /// </summary>
+        /// <param name="message">The string of the actual message to be written.</param>
+        /// <param name="messageLevel">The importance of the message. 0 = trivial, 1 = important, 2 = vital.</param>
+        public static void Log(string message, int messageLevel)
+        {
+            //Simple log method that writes things into "log.txt".
+
+            using (StreamWriter writer = new StreamWriter("log.txt", true))
+            {
+                //If the message's level of importance is higher than the current logLevel, it gets written. Otherwise, it gets ignored.
+
+                if (messageLevel >= logLevel)
+                    writer.WriteLine("{0} - {1}", DateTime.Now, message);
             }
         }
 
@@ -180,24 +207,64 @@ namespace PokemonTextEdition
                 Program.MainMenu();
             }
         }
-        /// <summary>
-        /// Logging method that writes a given message into a file called "log.txt".
-        /// </summary>
-        /// <param name="message">The string of the actual message to be written.</param>
-        /// <param name="messageLevel">The importance of the message. 0 = trivial, 1 = important, 2 = vital.</param>
-        public static void Log(string message, int messageLevel)
+
+        public static void AnyKey()
         {
-            //Simple log method that writes things into "log.txt".
+            Console.WriteLine("\nPress any key to continue.");
 
-            using (StreamWriter writer = new StreamWriter("log.txt", true))
+            Console.ReadKey(true);
+
+            Console.WriteLine("");
+        }
+
+        #endregion
+
+        #region Developer Tools & Cheats
+
+        public static void TestBattle()
+        {
+            Generator gen = new Generator();
+            Battle battle = new Battle();
+
+            try
             {
-                //If the message's level of importance is higher than the current logLevel, it gets written. Otherwise, it gets ignored.
+                Console.Write("Your Pokemon name: ");
 
-                if (messageLevel >= logLevel)
-                    writer.WriteLine("{0} - {1}", DateTime.Now, message);
+                string playerPokemon = Console.ReadLine();
+
+                Console.Write("Your Pokemon level: ");
+
+                int playerLevel = Convert.ToInt32(Console.ReadLine());
+
+                Pokemon player = gen.Create(playerPokemon, playerLevel);
+
+                Overworld.player.party.Add(player);
+
+                Console.Write("Enemy Pokemon name: ");
+
+                string enemyPokemon = Console.ReadLine();
+
+                Console.Write("Enemy Pokemon level: ");
+
+                int enemyLevel = Convert.ToInt32(Console.ReadLine());
+
+                Pokemon enemy = gen.Create(enemyPokemon, enemyLevel);
+
+                Console.WriteLine("");
+
+                battle.Wild(enemy);
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("You fucked up. Reason: " + ex.Message);
+                Console.WriteLine("Try again.\n");
+                
+                TestBattle();
             }
         }
 
+        #endregion
     }
 }
 
