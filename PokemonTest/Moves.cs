@@ -25,7 +25,10 @@ namespace PokemonTextEdition
         //and the number coefficient of its effect - i.e. the effect's probability.
         public bool SecondaryEffect { get; set; }
         public int EffectID { get; set; }
-        public float EffectN { get; set; } 
+        public float EffectN { get; set; }
+
+        //Determines if the move has been disabled from use.
+        public bool Disabled { get; set; }
 
         /// <summary>
         /// The primary constructor for the Move class, representing a Pokemon's potential attack.
@@ -44,14 +47,19 @@ namespace PokemonTextEdition
         {
             Name = moveName;
             Type = moveType;
-            Damage = moveDamage;
-            Accuracy = moveAccuracy;
             Attribute = moveAttribute;
+
+            Damage = moveDamage;
+            Accuracy = moveAccuracy;            
             Priority = movePriority;
+
             PerfectAccuracy = movePerfectAccuracy;
+
             SecondaryEffect = moveSecondaryEffect;
             EffectID = moveEffectID;
             EffectN = moveEffectN;
+
+            Disabled = false;
         }
 
         public Moves()

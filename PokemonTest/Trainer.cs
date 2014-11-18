@@ -11,6 +11,7 @@ namespace PokemonTextEdition
 
         public string Name { get; set; } //The trainer's name.
         public string Type { get; set; } //The trainer's "class" - i.e., Hiker, Bug Catcher, etc.
+
         public string DisplayName //The trainer's displayed name - a combination of his trainer type (if any) and name.
         {
             get
@@ -51,10 +52,14 @@ namespace PokemonTextEdition
 
         public Trainer()
         {
-            Name = "";
-            Greeting = "Hello!";
-            DefeatSpeech = "Oh no! I can't believe I lost!";
-            VictorySpeech = "Haha! Eat it!";
+            Type = "Unspecified trainer type";
+            Name = "Unspecified trainer name";
+
+            Greeting = "Unspecified trainer greeting";
+            DefeatSpeech = "Unspecified trainer defeat speech";
+            VictorySpeech = "Unspecified trainer victory speech";
+            
+            party = new List<Pokemon>{ new Generator().Create("Mewtwo", 100) };
 
             ID = "0";
             Money = 0;
@@ -79,9 +84,11 @@ namespace PokemonTextEdition
         {
             Type = tType;
             Name = tName;
+
             Greeting = "\n\"" + tGreeting + "\"";
             DefeatSpeech = "\n\"" + tDefeat + "\"";
             VictorySpeech = "\n\"" + tVictory + "\"";
+
             party = tParty;
             Money = tMoney;
             ID = tid;

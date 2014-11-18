@@ -9,7 +9,7 @@ namespace PokemonTextEdition.NPCs
     {
         public Rival1() :base()
         {
-            Name = "Gary";
+            Name = Overworld.player.RivalName;
             Type = "Pokemon Trainer";
             Greeting = "You shouldn't be seeing this! if you do, contact the creator - (Ref: Rival1)";
             DefeatSpeech = "You shouldn't be seeing this! if you do, contact the creator - (Ref: Rival1)";

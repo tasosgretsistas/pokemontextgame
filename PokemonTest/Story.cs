@@ -286,7 +286,7 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
-            Console.WriteLine("ready to head out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
+            Console.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
 
             Program.AnyKey();
 
