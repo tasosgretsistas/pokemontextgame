@@ -505,8 +505,8 @@ namespace PokemonTextEdition
             //This string is used for logging, in order to determine whether moves do the correct amount of damage.
             string damageText = "";
 
-            Program.Log(attacker + " attacks " + defendingPokemon.Name + " (" + defendingPokemon.CurrentHP + "/" + defendingPokemon.MaxHP + " HP) with "
-                        + currentMove.Name, 1);
+            Program.Log(attackingPokemonName + " attacks " + defendingPokemon.Name + " (" + defendingPokemon.CurrentHP + "/" + defendingPokemon.MaxHP + " HP) with "
+                        + currentMove.Name + ".", 1);
 
             //The next part prints a message explaining the result of the TypeChart calculation to the player.
             if (typeMod == 2 || typeMod == 4)
@@ -514,6 +514,9 @@ namespace PokemonTextEdition
 
             else if (typeMod == 0.5f || typeMod == 0.25f)
                 Console.WriteLine("It's not very effective!");
+
+            if (typeMod != 1f)
+                damageText += " * " + typeMod + " Type";
 
             //Multi-hit attack calculation.
             if (currentMove.EffectID == 13)
@@ -557,7 +560,7 @@ namespace PokemonTextEdition
                     //Same-Type Attack Bonus check. If the Pokemon's attack is the same type as the Pokemon itself, it receives a 50% damage boost.
                     if (attackingPokemon.TypeCheck(currentMove.Type))
                     {
-                        damageText += " * 1.5 (STAB)";
+                        damageText += " * 1.5 STAB";
 
                         multiplier *= 1.5f;
                     }
@@ -571,7 +574,7 @@ namespace PokemonTextEdition
 
                         Console.WriteLine("A critical hit!");
 
-                        damageText += " * 1.2 (crit)";
+                        damageText += " * 1.2 Crit";
 
                         multiplier *= 1.2f;
                     }
@@ -579,7 +582,7 @@ namespace PokemonTextEdition
                     //This code simply makes wild Pokemon do 20% less damage. But one day, they'll turn against us!
                     if (attacker == "AI" && encounterType == "wild")
                     {
-                        damageText += " * 0.8 (wild)";
+                        damageText += " * 0.8 Wild";
 
                         multiplier *= 0.8f;
                     }
@@ -587,7 +590,7 @@ namespace PokemonTextEdition
                     //If the attacking Pokemon is burned, the status modifier for physical attacks is set to 0.5.
                     if (attackingPokemon.Status == "burn" && currentMove.Attribute == "Physical")
                     {
-                        damageText += " * 0.5 (burn)";
+                        damageText += " * 0.5 Burn";
 
                         multiplier *= 0.5f;
                     }
@@ -605,9 +608,9 @@ namespace PokemonTextEdition
 
                     //The minimum damage an attack can do is 1 so if the damage would be less than 1, damage becomes 1.
                     if (damage < 1)
-                        damage = 1;
+                        damage = 1;                    
 
-                    damageText = damage + " (base damage) * " + typeMod + " (typeMod)" + damageText;
+                    damageText = Math.Round((double)(damage), 2) + " Base"  + damageText;
 
                     //The overall multiplier is then calculated and damage gets multiplied by that amount.
                     multiplier *= typeMod;
@@ -621,8 +624,7 @@ namespace PokemonTextEdition
             if (currentMove.EffectID == 13)
                 Console.WriteLine("The attack hit {0} times!", hits);
 
-            Program.Log(defendingPokemonName + " takes " + DamageMessageFormatter((int)damage, defendingPokemon.CurrentHP), 1);
-            Program.Log(damageText, 1);
+            Program.Log(defendingPokemonName + " takes " + DamageMessageFormatter((int)damage, defendingPokemon.CurrentHP) + "(" + damageText + ")", 1);
 
             //After the damage is calculated, it gets subtracted from the defending Pokemon's HP after being rounded down to the nearest integer.
             Damage(defendingPokemon, (int)damage, true);
@@ -843,8 +845,11 @@ namespace PokemonTextEdition
 
             int chance = rng.Next(1, 101);
 
-            Program.Log("Effect resolution takes place. Seed = " + chance.ToString(), 1);
-            Program.Log("If the Seed number is smaller than the move's Chance, the effect will go through. ", 1);
+            if (currentMove.SecondaryEffect)
+            {
+                Program.Log("Effect resolution takes place. Seed = " + chance.ToString(), 1);
+                Program.Log("If the Seed number is smaller than the move's Chance, the effect will go through. ", 1);
+            }
 
             switch (currentMove.EffectID)
             {
@@ -1000,7 +1005,7 @@ namespace PokemonTextEdition
             Program.Log("The game checks whether a Pokemon has fainted.", 0);
 
             //If the Pokemon did not faint from the incurred damage...
-            if (pokemon.CurrentHP >= damage)
+            if (pokemon.CurrentHP > damage)
             {
                 //The damage is detracted from its HP.
                 pokemon.CurrentHP -= damage;
