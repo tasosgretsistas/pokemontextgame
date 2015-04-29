@@ -5,8 +5,8 @@ using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
-    class MtMoonPart1 : Location
-    {
+    class MtMoonPart2 : Location
+        {
         Generator generator = new Generator();
         Random rng = new Random();        
 
@@ -16,30 +16,31 @@ namespace PokemonTextEdition.Locations
         Trainer simon = TrainerList.trainers.Find(t => t.ID == "11");
         Trainer simonr = TrainerList.trainers.Find(t => t.ID == "11r");   
 
-        public MtMoonPart1()
+        public MtMoonPart2()
             : base()
         {
             Name = "Mt. Moon";
             Type = "cave";
-            Tag = "mtmoon1";
+            Tag = "mtmoon2";
 
-            West = "route3e";
-            East = "mtmoon2";
+            West = "mtmoon1";
+            North = "mtmoons";
+            East = "mtmoon3";
 
-            Description = "the cave's entrance";
-            LongDescription = "This is the entrance of the complex cave within Mt. Moon. There is only dim\nlight reflecting off the cave's floor to guide your way, and the cool, damp\nsensation one gets can send chills down anybody's spine. Proceed with caution.";
-            ConnectionsMessage = "The bright light to the west marks the exit of the cave towards Route 2, while\ngoing east would only take you deeper into the cave.";
-            HelpMessage = "\"west\" or \"go west\" - moves you to eastern Route 3.\n\"east\" or \"go east\" - moves you deeper into Mt. Moon.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
+            Description = "the cave's depths";
+            LongDescription = "These are the dark reaches of Mt. Moon's interior. Pitch black darkness and an\nunnerving quiet make this part really difficult to navigate. The only thing\nthat stands out is a peculiar melody emanating from the north...";
+            ConnectionsMessage = "Navigating due west would take you closer towards Route 3, and you are roughly\naware that following the cave's downward inclination to the east would take you\nto the eastern side of the cave and hopefully closer to Cerulean City.";
+            HelpMessage = "\"west\" or \"go west\" - moves you to the western end of Mt. Moon.\n\"east\" or \"go east\" - moves you further underground in the cave.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 
         public override void Encounter()
         {
-            int level = rng.Next(7, 11);
+            int level = rng.Next(8, 11);
             int species = rng.Next(1, 101);
 
             Battle battle = new Battle();
 
-            if (species > 50)
+            if (species > 45)
             {
                 battle.Wild(generator.Create("Zubat", level));
             }
@@ -49,14 +50,14 @@ namespace PokemonTextEdition.Locations
                 battle.Wild(generator.Create("Geodude", level));
             }
 
-            else if (species > 1)
+            else if (species > 5)
             {
                 battle.Wild(generator.Create("Paras", 8));
             }
 
             else
             {
-                battle.Wild(generator.Create("Clefairy", 8));
+                battle.Wild(generator.Create("Clefairy", 9));
             }
 
             return;
@@ -72,19 +73,19 @@ namespace PokemonTextEdition.Locations
         {
             if (rng.Next(1, 11) > 6)
             {
-                Console.WriteLine("Holding your trusty flashlight firmly in your hand, you proceed carefully into");
-                Console.WriteLine("the cave's darker reaches. You steer clear off particularly dangerous-looking");
-                Console.WriteLine("paths and hallways as you navigate further into the cave.");
+                Console.WriteLine("Naturally following the downward slopes of the cave, you pace ever steadily ");
+                Console.WriteLine("eastward. You maintain your calm so as not to lose your sense of direction, and");
+                Console.WriteLine("eventually the cave starts getting brighter again - you are on the right path!");
 
                 Program.AnyKey();
             }
 
             else
             {
-                Console.WriteLine("You clumsily step about inside the cave, tip-toeing so as to not make any noise");
-                Console.WriteLine("that could potentially stir the attention of wild Pokemon. Your attempts all go");
-                Console.WriteLine("to waste though, as you trip on a rock of some kind protruding off the floor,");
-                Console.WriteLine("and with a loud screech a startled Pokemon comes running your way!");
+                Console.WriteLine("As you aimlessly wander about the cave, you realize that frankly, you have not");
+                Console.WriteLine("the foggiest where you are supposed to be going. Eventually you find yourself");
+                Console.WriteLine("inside a corridor that's brightly lit by torches, making it easier to navigate");
+                Console.WriteLine("about, but at a cost - you appear to have been spotted by wild Pokemon!");
                 Console.WriteLine("");
 
                 Encounter();

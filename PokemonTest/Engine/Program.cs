@@ -5,14 +5,17 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PokemonTextEdition.Properties;
+using PokemonTextEdition.Classes;
 
 namespace PokemonTextEdition
 {
     public class Program
     {
         //Current game version.
-        private const string version = "v0.2 [BETA]";
+        public const string version = "v0.2 [BETA]";
+
+        //The platform the program is running on.
+        public const string platform = "console";
 
         //This parameter determines how important a message needs to be in order to get logged.
         //0 = trivial, 1 = important, 2 = vital.
@@ -38,7 +41,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("A letter in parentheses represents a command shortcut. For instance, (f)ight");
             Console.WriteLine("means that you only need to type \"f\" to input this particular command.");
-            Console.WriteLine("");
+            Console.WriteLine("");            
 
             MainMenu();
         }
@@ -112,22 +115,28 @@ namespace PokemonTextEdition
 
             Console.Write("Saving game... ");
 
-            //First, the game tries to open a file with the saveGame name.
-            //If it succeeds, all is well, and the game continues as normal.            
-
+            //First, the game tries to open a file with the saveGame name. If it succeeds, all is well, and the game continues as normal.    
             try
             {
-                Stream stream = File.Open(saveGame, FileMode.Create);
-                BinaryFormatter formatter = new BinaryFormatter();
+                using (Stream stream = File.Open(saveGame, FileMode.Create))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
 
-                Overworld.player.Location = Overworld.currentLocation.Tag;
-                formatter.Serialize(stream, Overworld.player);
+                    Overworld.player.Location = Overworld.currentLocation.Tag;
 
-                stream.Close();
+                    SaveState save = new SaveState(version, DateTime.Now, Overworld.player.Name, Overworld.player.RivalName, Overworld.player.StartingPokemon, Overworld.player.Money, Overworld.player.Location, Overworld.player.LastHealLocation, Overworld.player.seenPokemon, Overworld.player.caughtPokemon, Overworld.player.party, Overworld.player.box);
+                    
+                    formatter.Serialize(stream, save);
+
+                    stream.Close();
+
+                    Log("The game saved successfully.", 1);
+
+                    Console.WriteLine("Saved!\n");
+                }
             }
 
-            //If the operation is unsuccesful, a relevant message is displayed.
-            //Then, program flow resumes as usual.
+            //If the operation is unsuccesful, a relevant message is displayed. Then, program flow resumes as usual.
             catch (Exception ex)
             {
                 Log("Failed to save the game. Error: " + ex.Message, 2);
@@ -139,13 +148,6 @@ namespace PokemonTextEdition
 
                 Console.WriteLine("The game will now return to what was happening. Press any key to continue.\n");
                 Console.ReadKey(true);
-            }
-
-            finally
-            {
-                Log("The game saved successfully.", 1);
-
-                Console.WriteLine("Saved!\n");
             }
         }
 
@@ -159,15 +161,22 @@ namespace PokemonTextEdition
                 Console.Write("Loading game... ");
 
                 //If it does exist, it then tries to open the file and load the player's information.
-
                 try
                 {
-                    Stream stream = File.Open(saveGame, FileMode.Open);
-                    BinaryFormatter formatter = new BinaryFormatter();
+                    using (Stream stream = File.Open(saveGame, FileMode.Open))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
 
-                    Overworld.player = (Player)formatter.Deserialize(stream);
+                        Overworld.player = (Player)formatter.Deserialize(stream);
 
-                    stream.Close();
+                        stream.Close();
+
+                        Log("The game loaded successfully.", 1);
+
+                        Console.WriteLine("Loaded succesfully!\n");
+
+                        Overworld.LoadLocation(Overworld.player.Location);
+                    }
                 }
 
                 //If the operation is unsuccesful, a relevant message is displayed.
@@ -185,16 +194,6 @@ namespace PokemonTextEdition
                     Console.ReadKey(true);
 
                     Program.MainMenu();
-                }
-
-                //If this operation is succesful, the player is taken to the corresponding Overworld menu for his saved location.
-                finally
-                {
-                    Log("The game loaded successfully.", 1);
-
-                    Console.WriteLine("Loaded succesfully!\n");
-
-                    Overworld.LoadLocation(Overworld.player.Location);
                 }
             }
 

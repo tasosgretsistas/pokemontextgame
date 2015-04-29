@@ -9,6 +9,12 @@ namespace PokemonTextEdition
     {
         //A class that represents enemy trainers within the game.
 
+        #region Fields
+
+        //A unique identifier that marks each and every trainer in the TrainerList class individually. 
+        //An "r" after the number identifies that the trainer has already been defeated once and the battle is a rematch.
+        public string ID { get; set; }
+
         public string Name { get; set; } //The trainer's name.
         public string Type { get; set; } //The trainer's "class" - i.e., Hiker, Bug Catcher, etc.
 
@@ -29,9 +35,7 @@ namespace PokemonTextEdition
         public string DefeatSpeech { get; set; }  //The trainer's generic message upon losing.
         public string VictorySpeech { get; set; } //The trainer's generic message upon winning.
 
-        //A unique identifier that marks each and every trainer in the TrainerList class individually. 
-        //An "r" after the number identifies that the trainer has already been defeated once and the battle is a rematch.
-        public string ID { get; set; }
+        
 
         public int Money { get; set; }  //The trainer's money yield upon defeat.
 
@@ -50,6 +54,10 @@ namespace PokemonTextEdition
             }
         }
 
+        #endregion
+
+        #region Constructors
+
         public Trainer()
         {
             Type = "Unspecified trainer type";
@@ -63,11 +71,6 @@ namespace PokemonTextEdition
 
             ID = "0";
             Money = 0;
-        }
-
-        public Trainer(string n)
-        {
-            Name = n;
         }
 
         /// <summary>
@@ -93,6 +96,10 @@ namespace PokemonTextEdition
             Money = tMoney;
             ID = tid;
         }
+
+        #endregion
+
+        #region Methods
 
         public virtual void Encounter()
         {
@@ -131,5 +138,8 @@ namespace PokemonTextEdition
 
             Overworld.player.BlackOut();
         }
+
+        #endregion
     }
 }
+        

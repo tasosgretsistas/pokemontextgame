@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokemonTextEdition.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ namespace PokemonTextEdition
     {
         Random rng = new Random();
 
-
         public Pokemon BaseCreate(string name, int level)
         {
             //The code that generates a base Pokemon with no IVs. 2 parameters are needed - a valid name, and a level.            
@@ -17,17 +17,17 @@ namespace PokemonTextEdition
             //First, two Pokemon objects are declared - one for the "original" Pokemon, as retrieved from the PokemonList class, and one for the "result" Pokemon to be output.
             //The result Pokemon's parameters are simply copied from the original.
 
-            Pokemon original = PokemonList.allPokemon.Find(p => p.Name == name);
+            PokemonSpecies species = PokemonList.allPokemon.Find(p => p.Name == name);
 
-            Pokemon pokemon = new Pokemon(original.Name, original.Type1, original.Type2, original.PokedexSpecies, original.PokedexNumber, original.CatchRate,
-                               original.BaseHP, original.BaseAttack, original.BaseDefense, original.BaseSpecialAttack, original.BaseSpecialDefense, 
-                               original.BaseSpeed, original.EvolvesInto, original.EvolutionLevel);
+            Pokemon pokemon = new Pokemon(species);
 
-            pokemon.availableMoves = MovesList.PokemonAvailableMoves(name); //Then, it acquires its available moves from the MoveList method in the MovesList class.
+            //The available moves are acquired from the MoveList method in the MovesList class.
+            Dictionary<Moves, int> availableMoves = MovesList.PokemonAvailableMoves(name); 
+            
             pokemon.Level = level; //Its level is set to the given level afterwards so that its moves and stats can be set.
 
             //This loop basically adds every move that the Pokemon can learn to its knownMoves list.
-            foreach (KeyValuePair<Moves, int> move in pokemon.availableMoves)
+            foreach (KeyValuePair<Moves, int> move in availableMoves)
             {                
                 if (move.Value <= pokemon.Level)                    
                     pokemon.knownMoves.Add(move.Key);
@@ -129,8 +129,6 @@ namespace PokemonTextEdition
 
             return pokemon;
         }
-        
-
 
     }
 }

@@ -5,8 +5,8 @@ using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
-    class MtMoonPart2 : Location
-        {
+    class MtMoonPart1 : Location
+    {
         Generator generator = new Generator();
         Random rng = new Random();        
 
@@ -16,19 +16,18 @@ namespace PokemonTextEdition.Locations
         Trainer simon = TrainerList.trainers.Find(t => t.ID == "11");
         Trainer simonr = TrainerList.trainers.Find(t => t.ID == "11r");   
 
-        public MtMoonPart2()
+        public MtMoonPart1()
             : base()
         {
             Name = "Mt. Moon";
             Type = "cave";
-            Tag = "mtmoon2";
+            Tag = "mtmoon1";
 
-            West = "mtmoon1";
-            North = "mtmoons";
-            East = "mtmoon3";
+            West = "route3e";
+            East = "mtmoon2";
 
-            Description = "the cave's depths";
-            LongDescription = "These are the dark reaches of Mt. Moon's interior. Pitch black darkness and an\nunnerving quiet make this part really difficult to navigate. The only thing\nthat stands out is a peculiar melody emanating from the north...";
+            Description = "the cave's entrance";
+            LongDescription = "This is the entrance of the complex cave within Mt. Moon. There is only dim\nlight reflecting off the cave's floor to guide your way, and the cool, damp\nsensation one gets can send chills down anybody's spine. Proceed with caution.";
             ConnectionsMessage = "The bright light to the west marks the exit of the cave towards Route 2, while\ngoing east would only take you deeper into the cave.";
             HelpMessage = "\"west\" or \"go west\" - moves you to eastern Route 3.\n\"east\" or \"go east\" - moves you deeper into Mt. Moon.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
@@ -45,12 +44,12 @@ namespace PokemonTextEdition.Locations
                 battle.Wild(generator.Create("Zubat", level));
             }
 
-            else if (species > 25)
+            else if (species > 26)
             {
                 battle.Wild(generator.Create("Geodude", level));
             }
 
-            else if (species > 1)
+            else if (species > 2)
             {
                 battle.Wild(generator.Create("Paras", 8));
             }
@@ -65,8 +64,31 @@ namespace PokemonTextEdition.Locations
 
         public override void GoWest()
         {
-            Console.WriteLine("Enjoying a leisurely downhill stroll, you head down the mountain and towards");
-            Console.WriteLine("the western end of route 3, where you can see Pewter City from the high ground.");
+            if (rng.Next(1, 11) > 5)
+            {
+                Console.WriteLine("You carefully retrace your steps as you backtrack towards the exit of the cave.");
+                Console.WriteLine("Being cautious pays off, as soon enough you find yourself before a bright light");
+                Console.WriteLine("-- the light of day back in Route 3!");
+
+                Program.AnyKey();
+            }
+
+            else
+            {
+                Console.WriteLine("You get absent-minded on your way out of the cave and forget to take a left");
+                Console.WriteLine("turn where you were supposed to. You only realize it when you get to a part of");
+                Console.WriteLine("the cave you have no recollection of seeing before, and by then it's too late.");
+                Console.WriteLine("Or so the angered wild Pokemon running your way would suggest!");
+                Console.WriteLine("");
+
+                Encounter();
+
+                Console.WriteLine("Yikes - everything fine, which is a relief, but you remind yourself that you");
+                Console.WriteLine("ought to be more careful if you head back into the cave again. Thankfully, you");
+                Console.WriteLine("are now back out of the cave, where no wild Pokemon will be attacking you.");
+
+                Program.AnyKey();
+            }
         }
 
         public override void GoEast()

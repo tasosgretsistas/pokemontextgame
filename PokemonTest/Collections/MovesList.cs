@@ -141,7 +141,7 @@ namespace PokemonTextEdition
         static public Moves Pursuit = new Moves("Pursuit", "Dark", 40, 100, "Physical", 0, false, false, 16, 0);
         #endregion
 
-        //Testing.
+        //DEBUG
 
         #region Test Type
 
@@ -149,7 +149,6 @@ namespace PokemonTextEdition
         static public Moves test2 = new Moves("Test Move - Generator.cs", "Normal", 60, 100, "Physical", 0, false, false, 0, 0);
 
         #endregion
-
 
         /// <summary>
         /// This method simply returns the available moves for every Pokemon, plus what level they learn them at.
@@ -288,7 +287,6 @@ namespace PokemonTextEdition
                     moves.Add(Tackle, 1);
                     moves.Add(WingAttack, 7);
                     moves.Add(QuickAttack, 13);
-                    moves.Add(QuickAttack, 22);
                     break;
 
                 case "Rattata":

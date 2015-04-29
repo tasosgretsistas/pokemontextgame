@@ -32,13 +32,9 @@ namespace PokemonTextEdition
         /// <param name="iDescription">A description of the item's purpose.</param>
         /// <param name="iMultiple">This determines whether multiple of this item can be used at once.</param>
         /// <param name="iValue">The item's value when purchasing at a store.</param>
-        public Item(string iName, string iType, string iDescription, bool iMultiple, int iValue)
+        public Item(string iName, string iType, string iDescription, bool iMultiple, int iValue) : this(iName, iDescription, iMultiple, iValue)
         {
-            Name = iName;
             Type = iType;
-            Description = iDescription;
-            CanUseMultiple = iMultiple;
-            Value = iValue;
         }
 
         /// <summary>
@@ -109,7 +105,7 @@ namespace PokemonTextEdition
             //Code for adding an item to the player's bag, regardless of how it is to be obtained.
 
             //First the game searches whether there's an item in the player's inventory with the same name as this item. If so, a "quantity" amount of it is added.
-            if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == Name)))
+            if (Overworld.player.items.Exists(i => i.Equals(this)))
                 Overworld.player.items.Find(i => i.Name == Name).Count += quantity;
             
             //If an item with this item's name doesn't exist in the player's bag, this item gets added instead, with a starting count of "quantity".
@@ -129,7 +125,7 @@ namespace PokemonTextEdition
             //Code for removing an item from the player's bag, regardless of how it is removed.
 
             //First the game searches whether there's an item in the player's inventory with the same name as this item. If so, a "quantity" amount of it is removed.
-            if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == Name)))
+            if (Overworld.player.items.Exists(i => i.Equals(this)))
             {
                 Overworld.player.items.Find(i => i.Name == Name).Count -= quantity;
 
@@ -142,8 +138,8 @@ namespace PokemonTextEdition
             //This should never happen ideally, but I've added this error message to facilitate for the case I ever make a silly mistake like that.
             else
             {
-                Program.Log("Something went horribly wrong. The game tried to remove " + Name + " from the bag, but there were none.", 2);
-                Console.WriteLine("Please contact the author, because something went horribly wrong. Also send him the log.txt file.");
+                Program.Log("The game tried to remove " + Name + " from the bag, but there were none.", 2);
+                Console.WriteLine("The game tried to remove an item from the bag that didn't exist. Please contact the author, including the log.txt file.");
             }
 
             /*A message is then printed depending on the way the item was removed.
@@ -153,6 +149,24 @@ namespace PokemonTextEdition
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            Item i = obj as Item;
+
+            if ((object)i == null)
+                return false;
+
+            return (Name == i.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PokemonTextEdition.Properties;
 using PokemonTextEdition.Locations;
+using PokemonTextEdition.Classes;
 
 namespace PokemonTextEdition
 {

@@ -206,7 +206,7 @@ namespace PokemonTextEdition
 
             //A short introduction for the Pokemon.
 
-            Console.WriteLine("\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", Overworld.player.party.ElementAt(0).Name, Overworld.player.party.ElementAt(0).PokedexSpecies, Overworld.player.party.ElementAt(0).PokedexNumber);
+            Console.WriteLine("\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", Overworld.player.party.ElementAt(0).Name, Overworld.player.party.ElementAt(0).species.PokedexSpecies, Overworld.player.party.ElementAt(0).species.PokedexNumber);
             Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", Overworld.player.party.ElementAt(0).MaxHP, Overworld.player.party.ElementAt(0).knownMoves.ElementAt(0).Name);
             Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", Overworld.player.party.ElementAt(0).Name);
             Console.WriteLine("");           

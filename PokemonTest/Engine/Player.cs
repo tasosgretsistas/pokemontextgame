@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PokemonTextEdition.Properties;
+using PokemonTextEdition.Classes;
 using PokemonTextEdition.Items;
+using PokemonTextEdition.Locations;
 
 namespace PokemonTextEdition
 {

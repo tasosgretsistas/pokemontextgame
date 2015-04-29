@@ -18,6 +18,13 @@
     <ManifestKeyFile>PokemonTest_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
     <SignManifests>false</SignManifests>
+    <TargetZone>LocalIntranet</TargetZone>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,13 +40,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetZone>LocalIntranet</TargetZone>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,6 +67,7 @@
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -75,49 +76,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Battle.cs" />
-    <Compile Include="Generator.cs" />
-    <Compile Include="Item.cs" />
-    <Compile Include="ItemsList.cs" />
-    <Compile Include="Items\StatusHeal.cs" />
-    <Compile Include="Items\PokeBall.cs" />
-    <Compile Include="Items\Potion.cs" />
-    <Compile Include="Location.cs" />
-    <Compile Include="Locations\MtMoonPart1.cs" />
-    <Compile Include="Locations\MtMoonPart2.cs" />
-    <Compile Include="Locations\MtMoonPart3.cs" />
-    <Compile Include="Locations\MtMoonSecret.cs" />
-    <Compile Include="Locations\PalletTown.cs" />
-    <Compile Include="Locations\PewterCity.cs" />
-    <Compile Include="Locations\Route1.cs" />
-    <Compile Include="Locations\Route2N.cs" />
-    <Compile Include="Locations\Route2S.cs" />
-    <Compile Include="Locations\Route3E.cs" />
-    <Compile Include="Locations\Route3W.cs" />
-    <Compile Include="Locations\ViridianCity.cs" />
-    <Compile Include="Locations\ViridianForestPart1.cs" />
-    <Compile Include="Locations\ViridianForestPart2.cs" />
-    <Compile Include="Locations\ViridianForestPart3.cs" />
-    <Compile Include="Mart.cs" />
-    <Compile Include="Moves.cs" />
-    <Compile Include="MovesList.cs" />
-    <Compile Include="NPCs\Brock.cs" />
-    <Compile Include="Overworld.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Pokemon.cs" />
-    <Compile Include="PokemonList.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Classes\PokemonSpecies.cs" />
+    <Compile Include="Classes\SaveState.cs" />
+    <Compile Include="Engine\Battle.cs" />
+    <Compile Include="Engine\Generator.cs" />
+    <Compile Include="Classes\Item.cs" />
+    <Compile Include="Collections\ItemsList.cs" />
+    <Compile Include="Classes\Items\StatusHeal.cs" />
+    <Compile Include="Classes\Items\PokeBall.cs" />
+    <Compile Include="Classes\Items\Potion.cs" />
+    <Compile Include="Classes\Location.cs" />
+    <Compile Include="Classes\Locations\MtMoonPart1.cs" />
+    <Compile Include="Classes\Locations\MtMoonPart2.cs" />
+    <Compile Include="Classes\Locations\MtMoonPart3.cs" />
+    <Compile Include="Classes\Locations\MtMoonSecret.cs" />
+    <Compile Include="Classes\Locations\PalletTown.cs" />
+    <Compile Include="Classes\Locations\PewterCity.cs" />
+    <Compile Include="Classes\Locations\Route1.cs" />
+    <Compile Include="Classes\Locations\Route2N.cs" />
+    <Compile Include="Classes\Locations\Route2S.cs" />
+    <Compile Include="Classes\Locations\Route3E.cs" />
+    <Compile Include="Classes\Locations\Route3W.cs" />
+    <Compile Include="Classes\Locations\ViridianCity.cs" />
+    <Compile Include="Classes\Locations\ViridianForestPart1.cs" />
+    <Compile Include="Classes\Locations\ViridianForestPart2.cs" />
+    <Compile Include="Classes\Locations\ViridianForestPart3.cs" />
+    <Compile Include="Classes\Mart.cs" />
+    <Compile Include="Classes\Move.cs" />
+    <Compile Include="Collections\MovesList.cs" />
+    <Compile Include="Classes\NPCs\Brock.cs" />
+    <Compile Include="Engine\Overworld.cs" />
+    <Compile Include="Engine\Player.cs" />
+    <Compile Include="Classes\Pokemon.cs" />
+    <Compile Include="Collections\PokemonList.cs" />
+    <Compile Include="Engine\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Story.cs" />
-    <Compile Include="Trainer.cs" />
-    <Compile Include="NPCs\Rival1.cs" />
-    <Compile Include="TrainerList.cs" />
-    <Compile Include="TypeChart.cs" />
+    <Compile Include="Engine\Story.cs" />
+    <Compile Include="Classes\Trainer.cs" />
+    <Compile Include="Classes\NPCs\Rival1.cs" />
+    <Compile Include="Collections\TrainerList.cs" />
+    <Compile Include="Engine\TypeChart.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Bulbasaur.ico" />
@@ -125,7 +128,7 @@
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

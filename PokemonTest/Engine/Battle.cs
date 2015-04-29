@@ -456,7 +456,7 @@ namespace PokemonTextEdition
 
                 else
                 {
-                    float typeMod = TypeChart.Check(currentMove.Type, defendingPokemon.Type1, defendingPokemon.Type2);
+                    float typeMod = TypeChart.Check(currentMove.Type, defendingPokemon.species.Type1, defendingPokemon.species.Type2);
 
                     if (typeMod == 0)
                         Console.WriteLine("{0} was immune to the attack!", defendingPokemonName);
@@ -551,7 +551,7 @@ namespace PokemonTextEdition
             }
 
             if (currentMove.EffectID == 10)
-                damage = currentMove.EffectN; //If the selected move does a set amount of damage, the game skips damage calculation and goes damage gets dealt directly.
+                damage = currentMove.EffectN; //If the selected move does a set amount of damage, the game skips damage calculation.
 
             else
             {
@@ -853,7 +853,7 @@ namespace PokemonTextEdition
 
             switch (currentMove.EffectID)
             {
-                case 1: //Effect ID 1: Moves that burn with a certain % chance.
+                case 1: //% Based Burn
 
                     if (chance < currentMove.EffectN)
                     {
@@ -868,7 +868,7 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 2: //Effect ID 2: Moves that paralyze with a certain % chance.
+                case 2: //% Based Paralysis
 
                     if (chance < currentMove.EffectN)
                     {
@@ -883,7 +883,7 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 3: //Effect ID 3: Moves that poison with a certain % chance.
+                case 3: //% Based Poison
 
                     if (chance < currentMove.EffectN)
                     {
@@ -898,7 +898,7 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 5: //Effect ID 5: Leech Seed.
+                case 5: //Leech Seed
 
                     if (!defendingPokemon.leechSeed && !defendingPokemon.TypeCheck("Grass"))
                     {
@@ -914,7 +914,7 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 6: //Effect ID 6: Poison.
+                case 6: //Poison
 
                     if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Poison"))
                     {
@@ -930,7 +930,7 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 7: //Effect ID 7: Sleep.
+                case 7: //Sleep
 
                     if (defendingPokemon.Status == "")
                     {
@@ -957,13 +957,13 @@ namespace PokemonTextEdition
 
                     break;
 
-                case 11: //Effect ID 11: Rapid Spin.
+                case 11: //Rapid Spin
 
                     RapidSpin(attackingPokemon);
 
                     break;
 
-                case 12: //Effect ID 12: Protect.
+                case 12: //Protect
 
                     if (attacker == "player" && previousPlayerMove.EffectID != 12 || attacker == "AI" && previousEnemyMove.EffectID != 12)
                     {
@@ -976,6 +976,22 @@ namespace PokemonTextEdition
 
                     else
                         Console.WriteLine("The move failed!");
+
+                    break;
+
+                case 14: //Disable
+
+                    break;
+
+                case 15: //% based confusion
+
+                    break;
+
+                case 17: //Item steal
+
+                    break;
+
+                case 20: //Confusion
 
                     break;
 
@@ -1136,7 +1152,7 @@ namespace PokemonTextEdition
             float multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
 
             if (encounterType == "trainer")
-                multiplier = 1.3f;
+                multiplier = 40.3f;
 
             /* The amount of experience actually awarded for defeating another Pokemon.
              * This is actually an expression of percentage for the current level.
@@ -1161,9 +1177,11 @@ namespace PokemonTextEdition
             if (expYield < 0.1f)
                 expYield = 0.1f;
 
-            p.Experience += (int)(expYield * 300 * multiplier / 1.3f);
+            int expGain = (int)(expYield * 300 * multiplier / 1.3f);
 
-            Program.Log(p.Name + " received " + p.Experience + " experience.", 1);
+            p.Experience += expGain;
+
+            Program.Log(p.Name + " received " + expGain + " experience.", 1);
 
             //This is a while loop to facilitate for the case that a Pokemon gains more than 1 level at a time.
             while (p.Experience >= 300)
@@ -1303,7 +1321,7 @@ namespace PokemonTextEdition
 
                     //First, the chance to catch the Pokemon is calculated, using its current HP %, its individual catch rate, and the bonus multiplier from the PokeBall used.
                     //The result is a number ranging from 13 to 79, times ballBonus and divided by pokemon.CatchRate. This number expresses the % chance to catch the Pokemon.
-                    float catchRate = ((100 - life) + ((life - 60) / 3)) * ballBonus / enemyPokemon.CatchRate;
+                    float catchRate = ((100 - life) + ((life - 60) / 3)) * ballBonus / enemyPokemon.species.CatchRate;
                     int chance = rng.Next(1, 101);
 
                     //If the randomly generated number is smaller than the calculated catch rate, the Pokemon is caught.
