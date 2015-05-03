@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokemonTextEdition.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,7 +131,7 @@ namespace PokemonTextEdition.Locations
             Console.WriteLine("level land where multiple trainers have congregated. Most of them will probably");
             Console.WriteLine("want to take you on, and you're going to give them a run for their money!");
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             if (!timmy.HasBeenDefeated)
             {
@@ -147,7 +148,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("native to Pallet Town. How many more new Pokemon are you going to encounter,");
                     Console.WriteLine("you think to yourself as you move on.");
 
-                    Program.AnyKey();
+                    Text.AnyKey();
                 }
 
                 if (!timmy.HasBeenDefeated)
@@ -166,7 +167,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("You decide to give your Pokemon a small break from the constant battles, but");
                     Console.WriteLine("you can't wait until your next battle.");
 
-                    Program.AnyKey();
+                    Text.AnyKey();
 
                     Overworld.LoadLocation(this.Tag);
                 }
@@ -187,7 +188,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("impression that you need to step up your Pokemon training game yet. One more");
                     Console.WriteLine("ought to prove invaluable in giving you Pokemon battling experience.");
 
-                    Program.AnyKey();
+                    Text.AnyKey();
                 }
 
                 if (!mandy.HasBeenDefeated)
@@ -197,7 +198,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("have noticed you, so you approach her instead. You only briefly see her face,");
                     Console.WriteLine("but damn... she's really pretty.");
 
-                    Program.AnyKey();
+                    Text.AnyKey();
 
                     Console.WriteLine("Ugh, this is no time to be gawking at girls. There's a pink, round Pokemon that");
                     Console.WriteLine("you have never seen before next to her, so she must be a trainer - and a good");
@@ -210,7 +211,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("sure it's not just because you've fallen in love with that girl back there. But");
                     Console.WriteLine("enough of that, it's time to move on - onward to Mt. Moon!");
 
-                    Program.AnyKey();
+                    Text.AnyKey();
                 }
             }
 
@@ -222,7 +223,7 @@ namespace PokemonTextEdition.Locations
             Console.WriteLine("A good 15 minutes of walking later, you finally arrive at a plateau at the top");
             Console.WriteLine("of the mountain, where you can clearly see the entrance to Mt. Moon!");
 
-            Program.AnyKey();
+            Text.AnyKey();
         }
     }
 }

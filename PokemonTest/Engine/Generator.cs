@@ -22,12 +22,12 @@ namespace PokemonTextEdition
             Pokemon pokemon = new Pokemon(species);
 
             //The available moves are acquired from the MoveList method in the MovesList class.
-            Dictionary<Moves, int> availableMoves = MovesList.PokemonAvailableMoves(name); 
+            Dictionary<Move, int> availableMoves = MovesList.PokemonAvailableMoves(name); 
             
             pokemon.Level = level; //Its level is set to the given level afterwards so that its moves and stats can be set.
 
             //This loop basically adds every move that the Pokemon can learn to its knownMoves list.
-            foreach (KeyValuePair<Moves, int> move in availableMoves)
+            foreach (KeyValuePair<Move, int> move in availableMoves)
             {                
                 if (move.Value <= pokemon.Level)                    
                     pokemon.knownMoves.Add(move.Key);

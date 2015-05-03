@@ -88,7 +88,7 @@ namespace PokemonTextEdition.Classes
 
         #endregion
 
-                #region Constructors
+        #region Constructors
 
         /// <summary>
         /// Blank Pokemon constructor.
@@ -135,8 +135,8 @@ namespace PokemonTextEdition.Classes
             BaseSpecialDefense = pBaseSpd;
             BaseSpeed = pBaseSpe;
 
-            EvolvesInto = null;
-            EvolutionType = null;
+            EvolvesInto = "DoesNotEvolve";
+            EvolutionType = "DoesNotEvolve";
             EvolutionLevel = 0;
         }
 

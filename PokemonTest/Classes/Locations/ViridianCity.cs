@@ -23,10 +23,10 @@ namespace PokemonTextEdition.Locations
             ConnectionsMessage = "Route 1 is just south off here, and Route 2 within a few minutes to the north.\nTo the west lies Route 22, the gateway to Indigo Plateau.";         
             HelpMessage = "\"north\" or \"go north\" - moves you to Route 2.\n\"south\" or \"go south\" - moves you to Route 1.\n\"center\" or \"heal\" - takes you to a Pokemon center to heal your Pokemon.\n\"mart\" - takes you to a Pokemon mart where you can buy and sell items.";
 
-            martStock.Add(ItemsList.pokeball);
-            martStock.Add(ItemsList.potion);            
-            martStock.Add(ItemsList.antidote);
-            martStock.Add(ItemsList.awakening);
+            martStock.Add(ItemList.pokeball);
+            martStock.Add(ItemList.potion);            
+            martStock.Add(ItemList.antidote);
+            martStock.Add(ItemList.awakening);
         }
 
         public override void GoNorth()

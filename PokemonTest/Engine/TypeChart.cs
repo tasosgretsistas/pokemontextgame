@@ -5,14 +5,25 @@ using System.Text;
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// This class determines the damage type multiplers of an attack during combat.
+    /// </summary>
     public class TypeChart
     {
-        //The code for determining type multipliers during combat.
-
+        /// <summary>
+        /// This method checks the effectiveness of a move used against a Pokemon with specific types, and returns the result.
+        /// It accomplishes this by running the Calculate() method - twice, if the defending Pokemon has two types.
+        /// </summary>
+        /// <param name="attackType">The attacking move's type.</param>
+        /// <param name="defenderType1">The defending Pokemon's primary type.</param>
+        /// <param name="defenderType2">The defending Pokemon's secondary type. By default this will be an empty string if the Pokemon doesn't have a secondary type.</param>
+        /// <returns>Returns a float:
+        /// 1 if the move has normal effectiveness,
+        /// 0.5f or 0.25f if the move would be half effective or quarter effective respectively (not very effective), 
+        /// 2 or 4 if the move would be double or quadruple effective (super effective)
+        /// 0 if the move would have no effect (immune)</returns>
         public static float Check(string attackType, string defenderType1, string defenderType2)
         {
-            //The main checking method. It takes 3 arguments - a move, and the defending Pokemon's 2 types.
-            //Then, it runs Calculate method - twice if the defending Pokemon has two types - and returns the result of the calculation.
             float multiplier = 1;
 
             if (defenderType2 == "")
@@ -28,11 +39,14 @@ namespace PokemonTextEdition
             return multiplier;
         }
 
+        /// <summary>
+        /// This move calculates the effectiveness of an attack against a specific type of defending Pokemon. Refer to the documentation for the Check() method for more info.
+        /// </summary>
+        /// <param name="attackType">The attack's type.</param>
+        /// <param name="defenderType">The defending Pokemon's type.</param>
+        /// <returns></returns>
         public static float Calculate(string attackType, string defenderType)
         {
-            //The actual calculation method. It checks whether the defender is weak, resistant or immune to the attack.
-            //If it is, it returns the corresponding multiplier. Otherwise, it returns 1, for normal effectiveness.
-
             float mult = 1;
 
             if (attackType == "Normal")

@@ -6,7 +6,7 @@ using PokemonTextEdition.Items;
 
 namespace PokemonTextEdition
 {
-    class ItemsList
+    class ItemList
     {
         //A list of all items available in the game.
 
@@ -40,5 +40,25 @@ namespace PokemonTextEdition
 
         #endregion
 
+        public static List<Item> allItems = new List<Item> 
+        {
+            pokeball, greatball, ultraball, masterball,
+            potion, superpotion, hyperpotion, maxpotion, fullrestore,
+            antidote, paralyzeheal, awakening, burnheal, iceheal, fullheal
+        };
+
+
+        /// <summary>
+        /// List all items in the "allItems" list.
+        /// </summary>
+        public static void ListAllItems()
+        {
+            foreach (Item i in allItems)
+            {
+                Console.WriteLine(i.Name);
+            }
+
+            Console.WriteLine("");
+        }
     }
 }

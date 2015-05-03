@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PokemonTextEdition.NPCs;
+using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// This class holds any non-generic events within the game.
+    ///  One of these events is the very beginning of the game, invoked with the Introduction() method.
+    /// </summary>
     class Story
     {
-        //This class will hold any non-generic events with the game.
-        //One of these events is the very beginning of the game, with the Introduction() method.
-
         //Declaration for the rival.
         static Rival1 rival = new Rival1();
 
@@ -28,7 +30,7 @@ namespace PokemonTextEdition
             Console.WriteLine("find and head straight for Professor Oak's lab. The Professor is standing");
             Console.WriteLine("beside a table with three Pokeballs on it.");
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             Console.WriteLine("\"Ah, there you are -- I've been waiting all morning for you. Say, could you");
             Console.WriteLine(" remind me what your name was again?\"");
@@ -112,7 +114,7 @@ namespace PokemonTextEdition
                 Overworld.player.RivalName = name;
                 rival.Name = name;
 
-                Program.Log("The player named the rival " + name + ". He must be pretty tired of these offensive names.", 0);
+                Program.Log("The player named the rival " + name + ". He must be getting tired of these offensive names.", 0);
 
                 Console.WriteLine("");
                 Console.WriteLine("\"He should be joining us shortly. I know you've been waiting for this moment");
@@ -123,111 +125,116 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// This is the code for selecting the player's starting Pokemon.
+        /// </summary>
         public static void SelectPokemon()
         {
-            //Code for selecting the player's starting Pokemon.
-
             Console.WriteLine("Select the Pokemon you wish to start your adventure with!");
             Console.WriteLine("Available choices: (B)ulbasaur (Grass), (C)harmander (Fire), (S)quirtle (Water)");
 
             Generator generator = new Generator();
 
-            string selection = Console.ReadLine();  
+            Pokemon pokemon; //The player's Pokemon.
+            Pokemon rivalPokemon; //The rival's Pokemon.
+
+            string selection = Console.ReadLine();
+            bool validInput = false;
          
             if (selection != "")
                 Console.WriteLine("");
 
             //The Generator is invoked to create two Pokemon, based on the player's input.
-            //One for the player depending on his input, and a Pokemon that's strong vs the user's for the rival.
-            switch (selection)
+            //One for the player depending on his input, and a Pokemon that's strong vs the player's Pokemon for the rival.
+            switch (selection.ToLower())
             {
-                case "Bulbasaur":
                 case "bulbasaur":
-                case "B":
                 case "b":
+                    pokemon = generator.Create("Bulbasaur", 5);
+                    rivalPokemon = generator.Create("Charmander", 4);
 
-                    Overworld.player.AddPokemon(generator.Create("Bulbasaur", 5), false);
-
-                    rival.party.Add(generator.Create("Charmander", 4));
+                    validInput = true;
 
                     break;
 
-                case "Charmander":
                 case "charmander":
-                case "C":
                 case "c":
+                    pokemon = generator.Create("Charmander", 5);
+                    rivalPokemon = generator.Create("Squirtle", 4);
 
-                    Overworld.player.AddPokemon(generator.Create("Charmander", 5), false);
-
-                    rival.party.Add(generator.Create("Squirtle", 4));
+                    validInput = true;
 
                     break;
 
-                case "Squirtle":
                 case "squirtle":
-                case "S":
                 case "s":
+                    pokemon = generator.Create("Squirtle", 5);
+                    rivalPokemon = generator.Create("Bulbasaur", 4);
 
-                    Overworld.player.AddPokemon(generator.Create("Squirtle", 5), false);
-
-                    rival.party.Add(generator.Create("Bulbasaur", 4));
+                    validInput = true;
 
                     break;
 
                 //Pikachu! He will serve as a little cheat of sorts for me to debug the game.
-                case "Pikachu":
                 case "pikachu":
-                case "P":
                 case "p":
+                    pokemon = generator.Create("Pikachu", 25);
+                    rivalPokemon = generator.Create("Eevee", 5);
 
-                    Overworld.player.AddPokemon(generator.Create("Pikachu", 25), false);
+                    validInput = true;
 
-                    rival.party.Add(generator.Create("Eevee", 5));
-
-                    Console.WriteLine("Quite the cheater, aren't you...");
-
-                    Program.Log("Pikachu hax mode enabled.", 2);
+                    Console.WriteLine("Quite the cheater, aren't you...\n");
 
                     break;
 
                 default:
+                    Console.WriteLine("Invalid selection! Please try again.\n");
 
-                    Console.WriteLine("Invalid selection! Please try again.");
-                    Console.WriteLine("");
-
-                    SelectPokemon();
+                    pokemon = new Pokemon();
+                    rivalPokemon = new Pokemon();
 
                     break;
             }
 
-            Program.Log("The player selected " + Overworld.player.party.ElementAt(0).Name + ".", 1);
+            if (validInput)
+            {
+                Program.Log("The player selected " + pokemon.Name + ".", 1);
 
-            Overworld.player.StartingPokemon = Overworld.player.party.ElementAt(0).Name;
+                Overworld.player.AddPokemon(pokemon, false);
 
-            //A short introduction for the Pokemon.
+                rival.party.Add(rivalPokemon);
 
-            Console.WriteLine("\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", Overworld.player.party.ElementAt(0).Name, Overworld.player.party.ElementAt(0).species.PokedexSpecies, Overworld.player.party.ElementAt(0).species.PokedexNumber);
-            Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", Overworld.player.party.ElementAt(0).MaxHP, Overworld.player.party.ElementAt(0).knownMoves.ElementAt(0).Name);
-            Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", Overworld.player.party.ElementAt(0).Name);
-            Console.WriteLine("");           
+                Overworld.player.StartingPokemon = pokemon.Name;
+                Overworld.player.AddToCaught(pokemon.Name);
 
-            Console.WriteLine("Just as you pick up the Pokeball containing {0}, you hear someone", Overworld.player.party.ElementAt(0).Name);
-            Console.WriteLine("calling your name from behind you. It's your rival, {0} - it seems", rival.Name);
-            Console.WriteLine("that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
+                //A short introduction for the Pokemon.
 
-            Program.AnyKey();
+                Console.WriteLine("\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", pokemon.Name, pokemon.species.PokedexSpecies, pokemon.species.PokedexNumber);
+                Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", pokemon.MaxHP, pokemon.knownMoves.ElementAt(0).Name);
+                Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", pokemon.Name);
+                Console.WriteLine("");
 
-            Console.WriteLine("\"So, {0}, huh? I figured you'd pick a chump Pokemon like that!", Overworld.player.party.ElementAt(0).Name);
-            Console.WriteLine(" Very well - let me show you why my {0} is the superior Pokemon!\"", rival.party.ElementAt(0).Name);
-            Console.WriteLine("");
+                Console.WriteLine("Just as you pick up the Pokeball containing {0}, you hear someone", pokemon.Name);
+                Console.WriteLine("calling your name from behind you. It's your rival, {0} - it seems", rival.Name);
+                Console.WriteLine("that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
 
-            //The first battle with the rival then starts.
+                Text.AnyKey();
 
-            new Battle().Start(rival, "trainer");
+                Console.WriteLine("\"So, {0}, huh? I figured you'd pick a chump Pokemon like that!", pokemon.Name);
+                Console.WriteLine(" Very well - let me show you why my {0} is the superior Pokemon!\"", rivalPokemon.Name);
+                Console.WriteLine("");
 
-            Program.AnyKey();
+                //The first battle with the rival then starts.
 
-            PostRival();
+                new Battle().Start(rival, "trainer");
+
+                Text.AnyKey();
+
+                PostRival();
+            }
+
+            else
+                SelectPokemon();
         }
 
         static void PostRival()
@@ -242,7 +249,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("And just like that, {0} took off.", rival.Name);
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             Console.WriteLine("\"That kid might be a bit rude sometimes, but he really means you no ill.");
             Console.WriteLine(" Either way, you'd better chase after him - I know you've always dreamed");
@@ -257,7 +264,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("\"{0}!! Hold on!!\"", Overworld.player.Name);
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             Console.WriteLine("It's your mum, and she appears to be holding something.");
             Console.WriteLine("");
@@ -268,17 +275,17 @@ namespace PokemonTextEdition
             Console.WriteLine(" wild Pokemon if you weaken them a bit first, though.\"");
             Console.WriteLine("");
 
-            ItemsList.pokeball.Add(5, "obtain");
+            ItemList.pokeball.Add(5, "obtain");
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             Console.WriteLine("\"Oh, and take these too. They are potions - you can use them during and outside");
             Console.WriteLine(" of combat to heal your injured Pokemon. Don't let the poor critters faint!\"");
             Console.WriteLine("");
 
-            ItemsList.potion.Add(5, "obtain");
+            ItemList.potion.Add(5, "obtain");
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             Console.WriteLine("\"You can also heal your Pokemon at Pokemon Centers by using the \"heal\" command");
             Console.WriteLine(" in all cities. It's free, so please visit a Pokemon Center often in order to");
@@ -288,7 +295,7 @@ namespace PokemonTextEdition
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
             Console.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             //The user's Pokemon is then healed and the game moves on to the Overworld, where the player can navigate and perform additional actions.
 

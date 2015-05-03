@@ -6,13 +6,12 @@ using System.Text;
 
 namespace PokemonTextEdition
 {
-    [Serializable]
     public class Pokemon
     {
         #region Fields & Properties
 
-        //The Pokemon's Globally Unique ID.
-        public Guid guid = new Guid();
+        //The Pokemon's Globally Unique ID. NYI
+        //public Guid guid = new Guid();
 
         //The Pokemon's species.
         public PokemonSpecies species;
@@ -283,7 +282,7 @@ namespace PokemonTextEdition
         public bool confused = false; //Determines if a Pokemon is suffering from confusion.
 
         //A list that contains all the moves it currently knows.
-        public List<Moves> knownMoves = new List<Moves>();
+        public List<Move> knownMoves = new List<Move>();
 
         #endregion
 
@@ -324,13 +323,64 @@ namespace PokemonTextEdition
             species = PokemonList.allPokemon.Find(p => p.PokedexNumber == pokedexNumber);
         }
 
+        /// <summary>
+        /// Special constructor for deconstructing Pokemon from the CompactPokemon class, for use while loading the game.
+        /// </summary>
+        /// <param name="species">The Pokedex number of the Pokemon's species.</param>
+        /// <param name="nickname">The Pokemon's nickname.</param>
+        /// <param name="level">The Pokemon's current level.</param>
+        /// <param name="experience">The Pokemon's current experience.</param>
+        /// <param name="ivs">The Pokemon's individual values, as an int array.</param>
+        /// <param name="currentHP">The Pokemon's current HP.</param>
+        /// <param name="status">The Pokemon's current health status.</param>
+        /// <param name="moves">The Pokemon's known moves, as a string array.</param>
+        public Pokemon(int species, string nickname, int level, int experience, int[] ivs, int currentHP, string status, string[] moves)
+            :this(species)
+        {
+            Nickname = nickname;
+            //Console.WriteLine("Loaded " + Name + "'s nickname.");
+            Level = level;
+
+            //Console.WriteLine("Loaded " + Name + "'s level.");
+            Experience = experience;
+
+            //Console.WriteLine("Loaded " + Name + "'s experience.");
+
+            for (int i = 0; i < ivs.Length; i++)
+            {
+                IndividualValues[i] = ivs[i];
+            }
+            //Console.WriteLine("Loaded " + Name + "'s IVs.");
+
+            CurrentHP = currentHP;
+            //Console.WriteLine("Loaded " + Name + "'s currentHP.");
+            
+            Status = status;
+            //Console.WriteLine("Loaded " + Name + "'s status.");
+
+            for (int i = 0; i < moves.Length; i++)
+            {
+                //Console.WriteLine("Loading move: " + moves[i]);
+
+                Move move = MovesList.allMoves.Find(m => m.Name == moves[i]);
+
+                knownMoves.Add(move);
+
+                //Console.WriteLine("Loaded move: " + move.Name);
+            }
+
+            //Console.WriteLine("Loaded " + nickname + "'s moves.");
+
+        }
         #endregion
 
         #region Displaying Information
 
-        public string TypeMessage()
-        //This method simply returns the Pokemon's type formatted based on whether it is dual-typed.
-        //Used in printing the Pokemon's information.
+        /// <summary>
+        /// Returns the Pokemon's type formatted based on whether it is dual-typed. Used in printing the Pokemon's information.
+        /// </summary>
+        /// <returns>The Pokemon's type(s) as string.</returns>
+        public string TypeMessage()        
         {
             string type = species.Type1;
 
@@ -342,6 +392,10 @@ namespace PokemonTextEdition
             return type;
         }
 
+        /// <summary>
+        /// Returns the Pokemon's status condition formatted to be displayed to the user.
+        /// </summary>
+        /// <returns>The Pokemon's status condition as string.</returns>
         public string StatusMessage()
         {
             switch (Status)
@@ -366,33 +420,46 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// Returns the Pokemon's remaining life expressed as a percent of its maximum life.
+        /// </summary>
+        /// <returns>The Pokemon's remaining life percentage as double.</returns>
         public double PercentLife()
-        //This method returns the Pokemon's remaining life expressed as a percent of its maximum life.
         {
             return Math.Round((100.0 * CurrentHP / MaxHP), 2, MidpointRounding.AwayFromZero);
         }
 
+        /// <summary>
+        /// Displays all of a Pokemon's current stats, including its level, species and its currently known moves. Used to show the player his Pokemon's status.
+        /// </summary>
         public void PrintStatus()
-        //This method displays all of a Pokemon's current stats, including its level, species and its currently known moves.
         {
             Console.WriteLine("Level {0} {1}. HP: {2}/{3}. Type: {4}. Status: {5}.\nAttack: {6}. Defense: {7}. Sp. Attack: {8}. Sp Defense: {9} Speed: {10}.\nKnown moves: {11}",
                 Level, Name, CurrentHP, MaxHP, TypeMessage(), StatusMessage(), Attack, Defense, SpecialAttack, SpecialDefense, Speed, PrintMoves());
         }
 
+        /// <summary>
+        /// This is a brief version of the Status() method, used for Pokemon whose stats are to remain hidden - i.e., enemy Pokemon.
+        /// </summary>
         public void BriefStatus()
-        //This is a brief version of the Status() method, used for Pokemon whose stats are to remain hidden - i.e., enemy Pokemon.
         {
             Console.WriteLine("\nLevel {0} {1}. HP: {2}%. Type: {3}. Status: {4}. ", Level, Name, PercentLife(), TypeMessage(), StatusMessage());
         }
 
+        /// <summary>
+        /// This method prints the Pokemon's IVs. As this is not intended to be viewed by the player, it should not included in any list of commands.
+        /// </summary>
         public void PrintIVs()
-        //This method prints the Pokemon's IVs. As this is not intended to be viewed by the player, it is not included in the list of commands.
         {
             Console.WriteLine("{0}'s IVs: HP {1}, ATK {2}, DEF {3}, SPA {4}, SPD {5}, SPE {6}", Name, HPIV, AttackIV, DefenseIV, SpecialAttackIV, SpecialDefenseIV, SpeedIV);
         }
 
+        /// <summary>
+        /// This method returns the Pokemon's known moves, formatted by the amount of moves it knows.
+        /// </summary>
+        /// <returns>The Pokemon's moves as string.</returns>
         public string PrintMoves()
-        //This method returns the Pokemon's known moves, formatted by the amount of moves it knows.
+        
         {
             switch (knownMoves.Count)
             {
@@ -418,14 +485,12 @@ namespace PokemonTextEdition
         #region Supplementary Methods
 
         /// <summary>
-        /// Checks whether a Pokemon is of "type" in either of its types.
+        /// Checks whether a Pokemon is of a particular type.
         /// </summary>
         /// <param name="type">The type to check for.</param>
         /// <returns></returns>
         public bool TypeCheck(string type)
         {
-            //This method quickly determines whether a Pokemon is of a particular type.
-
             if (species.Type1 == type)
                 return true;
 
@@ -436,10 +501,11 @@ namespace PokemonTextEdition
                 return false;
         }
 
+        /// <summary>
+        /// This code runs when a Pokemon would faint, setting its life to 0, curing it of status ailments and restoring all temporary status conditions.
+        /// </summary>
         public void Faint()
         {
-            //This code runs when a Pokemon would faint, setting its life to 0, curing it of status ailments and restoring all temporary status conditions.
-
             CurrentHP = 0;
             Status = "";
 
@@ -469,10 +535,13 @@ namespace PokemonTextEdition
 
         #region Moves
 
-        public Moves SelectMove(bool mandatorySelection)
+        /// <summary>
+        /// Asks the player to select one of the Pokemon's moves.
+        /// </summary>
+        /// <param name="mandatorySelection"></param>
+        /// <returns></returns>
+        public Move SelectMove(bool mandatorySelection)
         {
-            //This code is used when the player is asked to select one of a Pokemon's moves.
-
             //First, all of the moves that the Pokemon knows are listed.
             for (int i = 0; i < this.knownMoves.Count; i++)
             {
@@ -492,7 +561,7 @@ namespace PokemonTextEdition
             {
                 Program.Log("The player chose to cancel the operation.", 0);
 
-                return new Moves();
+                return null;
             }
 
             //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
@@ -501,16 +570,17 @@ namespace PokemonTextEdition
                 Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
                 Console.WriteLine("\nInvalid input.\n");
 
-                return new Moves();
+                return null;
             }
         }
 
+        /// <summary>
+        /// Checks whether the Pokemon learns a new move at its level and if so, proceeds to learn it.
+        /// </summary>
         public void CheckForNewMoves()
         {
-            //This code checks whether the Pokemon learns a new move at its level and if so, proceeds to learn it.
-
             //This returns a list of all the moves the Pokemon has access to.
-            Dictionary<Moves, int> availableMoves = MovesList.PokemonAvailableMoves(species.Name);
+            Dictionary<Move, int> availableMoves = MovesList.PokemonAvailableMoves(species.Name);
 
             //If the Pokemon learns a new move at its current level, then the procedure starts.
             if (availableMoves.ContainsValue(Level))
@@ -519,15 +589,15 @@ namespace PokemonTextEdition
 
                 //This is a list that will contain all of the moves the Pokemon can learn at this level, to facilitate for the
                 //event that the Pokemon can learn more than one move at the current level.
-                List<Moves> moves = new List<Moves>();
+                List<Move> moves = new List<Move>();
 
-                foreach (KeyValuePair<Moves, int> move in availableMoves)
+                foreach (KeyValuePair<Move, int> move in availableMoves)
                 {
                     if (move.Value == this.Level)
                         moves.Add(move.Key);
                 }
 
-                foreach (Moves move in moves)
+                foreach (Move move in moves)
                 {
                     //The game checks whether the Pokemon already knows the move being learned before trying to make the Pokemon learn the move.
                     if (!this.knownMoves.Exists(m => m.Name == move.Name))
@@ -536,7 +606,11 @@ namespace PokemonTextEdition
             }
         }
 
-        public void LearnMove(Moves move)
+        /// <summary>
+        /// Attempts to teach a move to the Pokemon.
+        /// </summary>
+        /// <param name="move">The move to teach to the Pokemon.</param>
+        public void LearnMove(Move move)
         {
             //First, the game checks whether the Pokemon already knows 4 moves. If it doesn't, it learns the move.
             if (knownMoves.Count < 4)
@@ -565,11 +639,11 @@ namespace PokemonTextEdition
                         //If he types "yes", he is asked to give input as to which move should be forgotten.
                         Console.WriteLine("What move should be forgotten?");
 
-                        Moves tempMove = SelectMove(false);
+                        Move tempMove = SelectMove(false);
 
                         //If the input was a number larger than 0 and equal to or smaller than the amount of moves the Pokemon currently knows,
                         //the user the move selected is forgotten, and the new move is learned in its stead.
-                        if (tempMove.Name != "Blank")
+                        if (tempMove != null)
                         {
                             Console.WriteLine("\n1, 2 and poof!\n{0} forgot {1} and learned {2} instead!", Name, tempMove.Name, move.Name);
                             knownMoves.Remove(knownMoves.Find(moves => moves.Name == tempMove.Name));
@@ -623,13 +697,16 @@ namespace PokemonTextEdition
 
         #region Level Up & Evolution
 
+        /// <summary>
+        /// Handles levelling the Pokemon up, increasing its level by 1 and running the level up routine of checking for new moves, checking if the Pokemon evolves, etc.
+        /// </summary>
         public void LevelUp()
         {
-            //This code handles levelling up. It is currently completely linear, as the level-up threshold is set to 300 for all levels.
+            //This method is currently completely linear, as the level-up threshold is set to 300 experience per level for all levels.
 
             Program.Log(this.Name + " levelled up.", 0);
 
-            //Some temporary values to show the increase in stats after levelling up.
+            //Temporary values which help show the relative increase in stats after levelling up.
             int tempHP = MaxHP, tempAtk = Attack, tempDef = Defense, tempSpa = SpecialAttack, tempSpd = SpecialDefense, tempSpe = Speed;
 
             Level++;
@@ -661,10 +738,12 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// Handles a Pokemon's evolution.
+        /// </summary>
+        /// <param name="evolvedPokemon">The name of the Pokemon to evolve into. (Not in use - all Pokemon currently evolve into their "EvolvesInto" Pokemon)</param>
         public void Evolve(string evolvedPokemon)
         {
-            //Code that handles a Pokemon's evolution.
-
             Program.Log(Name + " is evolving.", 0);
 
             Console.WriteLine("\nWhat? {0} is evolving! (Type \"(c)ancel\" to stop evolving)", this.Name);
@@ -672,11 +751,9 @@ namespace PokemonTextEdition
             string decision = Console.ReadLine();
 
             //As is traditional in the games, the player has the option to cancel evolving.
-            switch (decision)
+            switch (decision.ToLower())
             {
-                case "Cancel":
                 case "cancel":
-                case "C":
                 case "c":
                     Program.Log("The player chose to cancel evolving.", 0);
 

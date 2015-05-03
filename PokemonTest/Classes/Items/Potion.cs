@@ -30,7 +30,7 @@ namespace PokemonTextEdition.Items
 
             //If the Pokemon the user selected is alive and not at full life, it gets healed for the healAmount and this method returns "true" for operation success.
             //Otherwise, an appropriate error message is displayed and the method returns "false" for operation failure.
-            if (pokemon.Name != "Blank")
+            if (pokemon != null)
             {
                 if (pokemon.CurrentHP > 0 && pokemon.CurrentHP < pokemon.MaxHP)
                 {
@@ -42,7 +42,7 @@ namespace PokemonTextEdition.Items
                     else
                         pokemon.CurrentHP = pokemon.MaxHP;
 
-                    Console.WriteLine("\n{0} HP was restored to {1}.", (pokemon.CurrentHP - previousHP), pokemon.Name);
+                    Console.WriteLine("{0} HP was restored to {1}.", (pokemon.CurrentHP - previousHP), pokemon.Name);
 
                     Program.Log("The player uses a Potion on " + pokemon.Name + ", restoring " + (pokemon.CurrentHP - previousHP) + "HP.", 1);
 
@@ -54,7 +54,7 @@ namespace PokemonTextEdition.Items
                 else if (pokemon.CurrentHP <= 0)
                 {
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
-                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);
+                    Console.WriteLine("You cannot use a {0} on a Pokemon that has fainted.\n", Name);
 
                     return false;
                 }
@@ -62,7 +62,7 @@ namespace PokemonTextEdition.Items
                 else
                 {
                     Program.Log("The player selected a Pokemon that was already at max HP.", 0);
-                    Console.WriteLine("\nThat Pokemon is already at max HP.");
+                    Console.WriteLine("That Pokemon is already at max HP.\n");
 
                     return false;
                 }

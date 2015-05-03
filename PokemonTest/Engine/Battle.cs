@@ -6,9 +6,13 @@ using System.Text;
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// This is an instance class that represents a battle between the player and either an enemy trainer or a wild Pokemon.
+    /// It should be instantiated by invoking either the Start method for trainer battles, or the Wild method for wild Pokemon battles.
+    /// </summary>
     class Battle
     {
-        #region Declarations
+        #region Variables
 
         //A random number generator that all methods that require randomness will use.
         Random rng = new Random();
@@ -24,22 +28,22 @@ namespace PokemonTextEdition
 
         //These objects identify the player's current Pokemon and the move he selected.
         Pokemon playerPokemon = new Pokemon();
-        Moves playerMove = new Moves();
+        Move playerMove = new Move();
 
         //These, on the other hand, are used for the AI's Pokemon and its selected move.
         Pokemon enemyPokemon = new Pokemon();
-        Moves enemyMove = new Moves();
+        Move enemyMove = new Move();
 
         //These objects identify the last move used by each side, i.e. in order to identify if the same move was used twice.   
-        Moves previousPlayerMove = new Moves();
-        Moves previousEnemyMove = new Moves();
+        Move previousPlayerMove = new Move();
+        Move previousEnemyMove = new Move();
 
         float sameMoveDamageBonus = 1; //This is used for moves that deal increased damage while being used consecutively.
 
         //These objects make it easier to do damage calculations.
         Pokemon attackingPokemon = new Pokemon();
         Pokemon defendingPokemon = new Pokemon();
-        Moves currentMove = new Moves();
+        Move currentMove = new Move();
 
         //These two strings make it easier to tell who's attacking and who's defending, as well as adjust messages accordingly.
         string attackingPokemonName = "";
@@ -62,9 +66,6 @@ namespace PokemonTextEdition
         /// <param name="type">A special tag to determine several in-battle factors based on the type of battle - i.e. special Pokemon, showcase battle, etc. Default is "trainer".</param>
         public void Start(Trainer t, string type)
         {
-            //The code for starting a battle with a trainer. It requires two parameters - an enemy trainer object, 
-            //as well as a type of encounter tag that is to be used for special battles.
-
             Program.Log("Battle against a trainer starts.", 1);
 
             PokemonSelection();
@@ -80,11 +81,13 @@ namespace PokemonTextEdition
             Actions();
         }
 
+        /// <summary>
+        /// This method is used to start a battle with a wild Pokemon. It is virtually identical to the trainer battle method,
+        /// except that it requires a Pokemon object as an input, rather than a trainer.
+        /// </summary>
+        /// <param name="e">The enemy Pokemon object.</param>
         public void Wild(Pokemon e)
         {
-            //The code for starting a battle with a wild Pokemon. It is virtually identical to the trainer battle method,
-            //except it requires a Pokemon as an input, rather than a trainer.
-
             Program.Log("Battle against a wild Pokemon starts.", 1);
 
             PokemonSelection();
@@ -101,8 +104,9 @@ namespace PokemonTextEdition
 
         void PokemonSelection()
         {
-            //This method selects a starting Pokemon for the trainer. First, it checks whether there are non-fainted Pokemon
-            //in the player's party. If so, it loops over the entire party until it finds the first Pokemon that's not fainted.
+            //This method selects a starting Pokemon for the trainer. 
+            //First, it checks whether there are non-fainted Pokemon in the player's party. 
+            //If so, it loops over the entire party until it finds the first Pokemon that's not fainted.
 
             if (Overworld.player.party.Exists(p => !p.Fainted))
             {
@@ -118,16 +122,23 @@ namespace PokemonTextEdition
                     }
                 }
             }
+
+            else
+            {
+                Console.WriteLine("ERROR: The game tried to start a fight while the player has no non-fainted Pokemon.");
+                Console.WriteLine("Please inform the author about this issue - Battle.cs, PokemonSelection()");
+            }
         }
 
         #endregion
 
         #region Basic Actions
 
+        /// <summary>
+        /// The main menu screen of the battle, from which the player picks an action.
+        /// </summary>
         void Actions()
         {
-            //This is kind of a "main menu" screen for battles, from which the player picks an action.
-
             Program.Log("The player is taken to the Actions menu.", 0);
 
             Console.WriteLine("What will you do?\n(Available commands: (f)ight, (s)tatus, (i)item, s(w)itch, (c)atch, (r)un)");
@@ -138,39 +149,33 @@ namespace PokemonTextEdition
                 Console.WriteLine("");
 
             //This switch handles player input. 
-            switch (action)
+            switch (action.ToLower())
             {
-                case "Fight":
                 case "fight":
                 case "f":
                     Fight();
                     break;
 
-                case "Status":
                 case "status":
                 case "s":
                     Status();
                     break;
 
-                case "Item":
                 case "item":
                 case "i":
                     Item();
                     break;
 
-                case "Switch":
                 case "switch":
                 case "w":
                     Switch();
                     break;
 
-                case "Catch":
                 case "catch":
                 case "c":
                     Catch();
                     break;
 
-                case "Run":
                 case "run":
                 case "r":
                     Run();
@@ -188,10 +193,11 @@ namespace PokemonTextEdition
             return;
         }
 
+        /// <summary>
+        /// A very simple status screen that displays the current status of the player's Pokemon as well as the current enemy Pokemon.
+        /// </summary>
         void Status()
         {
-            //A very simple status screen that displays the current status of the player's and the AI's Pokemon.
-
             Program.Log("The player views the Status screen.", 0);
 
             Console.WriteLine("Your Pokemon: ");
@@ -211,37 +217,34 @@ namespace PokemonTextEdition
             Actions();
         }
 
+        /// <summary>
+        /// The code that triggers when the player chooses to use an item.
+        /// </summary>
         void Item()
         {
-            //This code is used when the player chooses to use an item.
             //If the player succesfully uses an item, the AI attacks once. 
-            //Otherwise, the player is taken back to the actions screen.
-
             if (Overworld.player.UseItemsCombat())
                 AIAttack();
 
+            //Otherwise, the player is taken back to the actions screen.
             else
                 Actions();
         }
 
+        /// <summary>
+        /// This code handles switching the player's active Pokemon.
+        /// </summary>
         void Switch()
         {
-            //A screen for switching the active Pokemon.
-
             Program.Log("The player chooses to switch Pokemon.", 0);
 
             Console.WriteLine("Send out which Pokemon?\n(Valid input: 1-{0}, or press Enter to return.)\n", Overworld.player.party.Count);
 
             Pokemon pokemon = Overworld.player.SelectPokemon(false);
 
-            bool validSelection = true;
-
-            if (pokemon.Name == "Blank")
-                validSelection = false;
-
             //If the Pokemon the user selected is healthy and is not already the active Pokemon, it becomes the active Pokemon.
             //The AI also gets to attack once if the player succesfully changes Pokemon.
-            if (validSelection && pokemon != playerPokemon && !pokemon.Fainted)
+            if (pokemon != null && pokemon != playerPokemon && !pokemon.Fainted)
             {
                 Program.Log("The player switches " + playerPokemon.Name + " out for " + pokemon.Name + ". The AI will now attack.", 1);
 
@@ -281,10 +284,11 @@ namespace PokemonTextEdition
 
         #region Combat
 
+        /// <summary>
+        /// This is the first part of code that handles Pokemon fighting. Here, the player selects a move.
+        /// </summary>
         void Fight()
         {
-            //The first part of the fighting code. Here, the player selects a move.
-
             Program.Log("The player chooses to fight.", 1);
 
             //If the player's Pokemon is not move-locked, the player selects a move.
@@ -292,10 +296,10 @@ namespace PokemonTextEdition
             {
                 Console.WriteLine("Please select a move. (Valid input: 1-{0}, or press Enter to return.)\n", playerPokemon.knownMoves.Count);
 
-                Moves tempMove = playerPokemon.SelectMove(false);
+                Move tempMove = playerPokemon.SelectMove(false);
 
                 //The player is asked to select a move. If his selecetion is correct, the operation goes on.
-                if (tempMove.Name != "Blank")
+                if (tempMove != null)
                 {
                     playerMove = tempMove;
 
@@ -335,11 +339,12 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// This code simulates the AI selecting a move by using a random number generator.
+        /// TODO: Add more complex logic.
+        /// </summary>
         void AIMoveSelection()
         {
-            //The AI's attack code. It uses a random number generator to simulate the AI selecting attacks.
-            //TODO: Add more complex logic.           
-
             //While the enemy's Pokemon is not move-locked, it picks a random move.
             if (!enemyPokemon.moveLocked)
                 enemyMove = enemyPokemon.knownMoves.ElementAt(rng.Next(0, enemyPokemon.knownMoves.Count));
@@ -351,10 +356,11 @@ namespace PokemonTextEdition
             Program.Log("The AI selected the move " + enemyMove.Name + ".", 0);
         }
 
+        /// <summary>
+        /// This method determines the order of the events of the turn by checking each Pokemon's speed priority.
+        /// </summary>
         void TurnOrder()
         {
-            //Speed priority checking code. This method essentially determines how the turn will play out.
-
             Program.Log("The game goes into Speed Priority calculation.", 0);
 
             //Speed adjustments in case of paralysis.
@@ -407,10 +413,12 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// This method does some quick pre-combat calculations and helpful message adjustments.
+        /// </summary>
+        /// <param name="attacker"></param>
         void PreCombat(string attacker)
         {
-            //Quick pre-combat calculations and helpful message adjustments.
-
             Program.Log("The " + attacker + " attacks.", 0);
 
             if (attacker == "player")
@@ -490,9 +498,14 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// Calculates the damage that would be dealt by a damaging attack.
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="mod"></param>
         void DamageCalculation(string attacker, float mod)
         {
-            //This code calculates the damage that would be dealt by a damaging attack.
+
 
             float damage = 0; //The total damage inflicted to the defending Pokemon after all calculations are done. 
             int previousHP = defendingPokemon.CurrentHP; //This is used to accurately calculate how much damage the defending Pokemon took. 
@@ -608,9 +621,9 @@ namespace PokemonTextEdition
 
                     //The minimum damage an attack can do is 1 so if the damage would be less than 1, damage becomes 1.
                     if (damage < 1)
-                        damage = 1;                    
+                        damage = 1;
 
-                    damageText = Math.Round((double)(damage), 2) + " Base"  + damageText;
+                    damageText = Math.Round((double)(damage), 2) + " Base" + damageText;
 
                     //The overall multiplier is then calculated and damage gets multiplied by that amount.
                     multiplier *= typeMod;
@@ -651,10 +664,11 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// The effects that take place at the end of the turn are resolved in this method.
+        /// </summary>
         void EndOfTurn()
         {
-            //The effects that take place at the end of the turn are resolved in this method.
-
             Program.Log("End of turn resolution takes place.", 0);
 
             //Both Pokemon lose the Protect status, as it only lasts 1 turn.
@@ -745,10 +759,12 @@ namespace PokemonTextEdition
 
         #region Checks
 
+        /// <summary>
+        /// This method calculates whether a move will hit or not by invoking a random number generator.
+        /// </summary>
+        /// <returns>Returns true if the Pokemon will hit, or false if it will miss.</returns>
         bool HitCheck()
         {
-            //This method calculates whether a move will hit or not.
-
             //If the attack's accuracy is lower than a randomly generated number or the move has perfect accuracy, the attack hits.
             if (rng.Next(1, 101) < currentMove.Accuracy || currentMove.PerfectAccuracy)
             {
@@ -773,8 +789,6 @@ namespace PokemonTextEdition
         /// <returns>Returns true if the Pokemon is not paralyzed or if it will succesfully attack.</returns>
         bool ParalysisCheck()
         {
-            //This method determines whether a paralyzed Pokemon will attack or not.
-            
             if (attackingPokemon.Status == "paralysis")
             {
                 //If a randomly generated number is higher than 25, the Pokemon attacks succesfully.
@@ -795,17 +809,15 @@ namespace PokemonTextEdition
 
             else
                 return true;
-            
+
         }
 
         /// <summary>
-        /// Determines if a Pokemon is asleep, and whether it will wake up in order to attack if it is.
+        /// Determines if a Pokemon is asleep, and whether it will wake up in order to attack if it is. It also adjusts the sleep counter.
         /// </summary>
-        /// <returns>Returns true if the Pokemon is not asleep or if the Pokemon will wake up.</returns>
+        /// <returns>Returns true if the Pokemon is not asleep or if the Pokemon will wake up and attack.</returns>
         bool SleepCheck()
         {
-            //This method handles sleep and the sleep counter.
-
             if (attackingPokemon.Status == "sleep")
             {
                 //If the Pokemon was asleep and its sleep counter has hit 0, it wakes up.
@@ -838,11 +850,13 @@ namespace PokemonTextEdition
 
         #region Effect Resolution
 
+        /// <summary>
+        /// This method handles the resolution of the effects of moves, even if they're secondary effects.
+        /// It takes a move's effect ID into consideration, and uses a single 1-100 random number generator to calculate probability.
+        /// </summary>
+        /// <param name="attacker"></param>
         void Effect(string attacker)
         {
-            //This method handles the various effects of moves, even if they're secondary effects.
-            //It takes a move's effect ID into consideration, and uses a single 1-100 random number generator to calculate probability.
-
             int chance = rng.Next(1, 101);
 
             if (currentMove.SecondaryEffect)
@@ -1014,13 +1028,17 @@ namespace PokemonTextEdition
 
         #region Damage, Fainting & Experience
 
+        /// <summary>
+        /// //This method deals with damage being dealt to a Pokemon.
+        /// </summary>
+        /// <param name="pokemon">The Pokemon object that the damage is being dealt to.</param>
+        /// <param name="damage">The amount of damage that would be dealt.</param>
+        /// <param name="displayMessage">Determines whether a message will be displayed that </param>
         void Damage(Pokemon pokemon, int damage, bool displayMessage)
         {
-            //This method deals with damage being dealt to a Pokemon.
-
             Program.Log("The game checks whether a Pokemon has fainted.", 0);
 
-            //If the Pokemon did not faint from the incurred damage...
+            //If the Pokemon will not faint from the incurred damage...
             if (pokemon.CurrentHP > damage)
             {
                 //The damage is detracted from its HP.
@@ -1053,7 +1071,7 @@ namespace PokemonTextEdition
 
                     Console.WriteLine("\nThe enemy {0} fainted!", enemyPokemon.Name);
 
-                    AIFaint();
+                    AIPokemonFainted();
                 }
 
                 else if (playerPokemon.Fainted)
@@ -1062,15 +1080,16 @@ namespace PokemonTextEdition
 
                     Console.WriteLine("\n{0} fainted!", playerPokemon.Name);
 
-                    PlayerFaint();
+                    PlayerPokemonFainted();
                 }
             }
         }
 
-        void PlayerFaint()
+        /// <summary>
+        /// Code that triggers when the player's Pokemon faints. 
+        /// </summary>
+        void PlayerPokemonFainted()
         {
-            //Code that triggers when the player's Pokemon faints.        
-
             //First, the game checks if there are any Pokemon in the player's party that are still healthy.
             if (Overworld.player.party.Exists(pokemon => !pokemon.Fainted))
             {
@@ -1081,7 +1100,7 @@ namespace PokemonTextEdition
                 Pokemon pokemon = Overworld.player.SelectPokemon(true);
 
                 //If the Pokemon the user selected is alive, it becomes the active Pokemon.
-                if (pokemon.Name != "Blank" && !pokemon.Fainted)
+                if (!pokemon.Fainted)
                 {
                     Program.Log("The player switches " + playerPokemon.Name + " out for " + pokemon.Name + ".", 1);
 
@@ -1091,7 +1110,7 @@ namespace PokemonTextEdition
 
                     AddToParticipants(playerPokemon);
 
-                    Console.WriteLine("\n{0} was sent out!", playerPokemon.Name);
+                    Console.WriteLine("{0} was sent out!", playerPokemon.Name);
                 }
 
                 else
@@ -1099,8 +1118,9 @@ namespace PokemonTextEdition
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
                     Console.WriteLine("That Pokemon has fainted!");
 
-                    PlayerFaint();
+                    PlayerPokemonFainted();
                 }
+
             }
 
             //Otherwise, if the player has no remaining healthy Pokemon, he is taken to the defeat screen.
@@ -1112,10 +1132,11 @@ namespace PokemonTextEdition
             }
         }
 
-        void AIFaint()
+        /// <summary>
+        /// Code that triggers when the AI's Pokemon faints.
+        /// </summary>
+        void AIPokemonFainted()
         {
-            //Code that triggers when the AI's Pokemon faints.
-
             //First, experience is awarded to all of the player's Pokemon that participated in the battle.
             foreach (Pokemon p in participants)
             {
@@ -1145,14 +1166,16 @@ namespace PokemonTextEdition
                 Victory();
         }
 
-        void Experience(Pokemon p)
+        /// <summary>
+        /// Experience calculation and award code. Right now there's a flat 300 experience threshold per level, soon to change.   
+        /// </summary>
+        /// <param name="pokemon">The Pokemon that will receive the experience.</param>
+        void Experience(Pokemon pokemon)
         {
-            //Experience calculation and award code. Right now there's a flat 300 experience threshold per level, soon to change.   
-
             float multiplier = 1; //This is a band-aid multiplier that simply makes trainer battles give more experience.
 
             if (encounterType == "trainer")
-                multiplier = 40.3f;
+                multiplier = 1.3f;
 
             /* The amount of experience actually awarded for defeating another Pokemon.
              * This is actually an expression of percentage for the current level.
@@ -1164,11 +1187,11 @@ namespace PokemonTextEdition
 
             float expYield;
 
-            if (p.Level <= enemyPokemon.Level)
-                expYield = ((enemyPokemon.Level - p.Level) * 0.33f) + 0.45f;
+            if (pokemon.Level <= enemyPokemon.Level)
+                expYield = ((enemyPokemon.Level - pokemon.Level) * 0.33f) + 0.45f;
 
             else
-                expYield = ((enemyPokemon.Level - p.Level) * 0.05f) + 0.45f;
+                expYield = ((enemyPokemon.Level - pokemon.Level) * 0.05f) + 0.45f;
 
             //Program.Log("Exp yield was " + expYield.ToString(), 1);
             //The above log code helped me test exp yield, keeping it here in case it comes in handy.
@@ -1179,23 +1202,23 @@ namespace PokemonTextEdition
 
             int expGain = (int)(expYield * 300 * multiplier / 1.3f);
 
-            p.Experience += expGain;
+            pokemon.Experience += expGain;
 
-            Program.Log(p.Name + " received " + expGain + " experience.", 1);
+            Program.Log(pokemon.Name + " received " + expGain + " experience.", 1);
 
             //This is a while loop to facilitate for the case that a Pokemon gains more than 1 level at a time.
-            while (p.Experience >= 300)
-                p.LevelUp();
+            while (pokemon.Experience >= 300)
+                pokemon.LevelUp();
         }
 
         #endregion
 
         #region Victory & Defeat
-
+        /// <summary>
+        /// The "You win!" code.
+        /// </summary>
         void Victory()
         {
-            //The "You win!" code. 
-
             BattleOverAdjustments();
 
             Program.Log("The player has won, so battleOver is now true.", 1);
@@ -1215,10 +1238,11 @@ namespace PokemonTextEdition
                 Program.Log("The player was battling a wild Pokemon, and will now return to the overworld.", 0);
         }
 
+        /// <summary>
+        /// The "You lose!" code.
+        /// </summary>
         void Defeat()
         {
-            //The "You lose!" code - pretty much identical to the victory code, should probably make it a bit nicer.
-
             BattleOverAdjustments();
 
             Program.Log("The player has lost, so battleOver is now true.", 1);
@@ -1245,10 +1269,11 @@ namespace PokemonTextEdition
 
         #region Special Actions
 
+        /// <summary>
+        /// This code handles escaping from battle.
+        /// </summary>
         void Run()
         {
-            //Code for escaping from battle.
-
             Program.Log("The player chose to run away.", 0);
 
             //First, the game examines whether it is currently in a wild fight. If so, the operation continues.
@@ -1298,10 +1323,11 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// This code handles catching wild Pokemon.
+        /// </summary>
         void Catch()
         {
-            //Code for catching Pokemon wild Pokemon.
-
             //First, the program examines whether it is currently in a wild fight. If not, an error is shown and the player is taken back to the menu.
             Program.Log("The player chose to attempt to catch the Pokemon.", 0);
 
@@ -1314,7 +1340,7 @@ namespace PokemonTextEdition
 
                     Overworld.player.items.Find(i => i.Type == "pokeball").Remove(1, "throw");
 
-                    Console.WriteLine("Threw a Poke Ball ({1} left) at the wild {0}! 1, 2, 3...\n", enemyPokemon.Name, ItemsList.pokeball.Count);
+                    Console.WriteLine("Threw a Poke Ball ({1} left) at the wild {0}! 1, 2, 3...\n", enemyPokemon.Name, ItemList.pokeball.Count);
 
                     float life = (float)enemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
                     float ballBonus = 1; //Each specific PokeBall's catch rate multiplier. (NYI)
@@ -1374,10 +1400,11 @@ namespace PokemonTextEdition
 
         #region Important Methods
 
+        /// <summary>
+        /// This method is invoked when the AI alone should attack.
+        /// </summary>
         void AIAttack()
         {
-            //This method gets called up when the AI alone should attack.
-
             AIMoveSelection(); //The AI selects an attack,
             PreCombat("AI"); // then uses it.
 
@@ -1396,11 +1423,14 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// //This method formats the message for damage dealt to a Pokemon depending on whether it was overkill or not. Used primarily for logging purposes.
+        /// </summary>
+        /// <param name="damage">The damage that would be dealt to the Pokemon.</param>
+        /// <param name="currentHP">The Pokemon's current HP.</param>
+        /// <returns></returns>
         string DamageMessageFormatter(int damage, int currentHP)
         {
-            //This method formats the message for damage dealt to a Pokemon depending on whether it was overkill or not.
-            //Used primarily for logging purposes.
-
             if (damage <= currentHP)
                 return damage + " damage.";
 
@@ -1412,14 +1442,19 @@ namespace PokemonTextEdition
 
         #region Supplementary Methods
 
+        /// <summary>
+        /// This method adds a Pokemon to the "Participants" list, for the purpose of gaining experience.
+        /// </summary>
+        /// <param name="p">The Pokemon to add to the list.</param>
         void AddToParticipants(Pokemon p)
         {
-            //This method adds a Pokemon to the "Participants" list, for the purpose of gaining experience.
-
             if (!participants.Contains(p))
                 participants.Add(p);
         }
 
+        /// <summary>
+        /// This code restores the temporary variables of the battle and the various Pokemon to their default state.
+        /// </summary>
         void BattleOverAdjustments()
         {
             foreach (Pokemon p in Overworld.player.party)
@@ -1428,18 +1463,25 @@ namespace PokemonTextEdition
             battleOver = true;
         }
 
+        /// <summary>
+        /// This cancels a Pokemon's move-lock.
+        /// </summary>
+        /// <param name="pokemon"></param>
         void CancelMoveLock(Pokemon pokemon)
         {
-            //This cancels a Pokemon's move-lock.
+
 
             if (pokemon.moveLocked)
                 pokemon.moveLocked = false;
         }
 
+        /// <summary>
+        /// This method gets called up when Rapid Spin is used, which clears up the field off all hazards.
+        /// TODO: Add to this when I add more hazards.
+        /// </summary>
+        /// <param name="pokemon"></param>
         void RapidSpin(Pokemon pokemon)
         {
-            //This method gets called up when Rapid Spin is used, which clears up the field off all hazards.
-            //TODO: Add to this when I add more hazards.
             if (pokemon.leechSeed)
                 pokemon.leechSeed = false;
 

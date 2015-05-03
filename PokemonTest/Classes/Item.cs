@@ -5,7 +5,6 @@ using System.Text;
 
 namespace PokemonTextEdition
 {
-    [Serializable]
     public class Item
     {
         #region Declarations & Constructors

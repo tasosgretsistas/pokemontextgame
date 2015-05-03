@@ -5,9 +5,10 @@ using System.Text;
 
 namespace PokemonTextEdition
 {
-    [Serializable]
-    public class Moves
+    public class Move
     {
+        #region Fields & Properties
+
         //The move's primary identifiers - its name, elemental type, and attribute (physical, special, status).
         public string Name { get; set; }
         public string Type { get; set; }
@@ -30,6 +31,9 @@ namespace PokemonTextEdition
         //Determines if the move has been disabled from use.
         public bool Disabled { get; set; }
 
+        #endregion
+
+        #region Constructors
         /// <summary>
         /// The primary constructor for the Move class, representing a Pokemon's potential attack.
         /// </summary>
@@ -43,7 +47,7 @@ namespace PokemonTextEdition
         /// <param name="moveSecondaryEffect">A flag to be used for moves that have secondary effects.</param>
         /// <param name="moveEffectID">The move's secondary effect ID number. Each unique effect has a different ID.</param>
         /// <param name="moveEffectN">The move's secondary effect and the effect's coefficient - for instance, the effect's probability, or the amount of damage it'd deal.</param>
-        public Moves(string moveName, string moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, float moveEffectN)
+        public Move(string moveName, string moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, float moveEffectN)
         {
             Name = moveName;
             Type = moveType;
@@ -62,10 +66,12 @@ namespace PokemonTextEdition
             Disabled = false;
         }
 
-        public Moves()
+        public Move()
         {
-            Name = "Blank";
+            Name = "Sample Move";
             Type = "";
         }
+
+        #endregion
     }
 }

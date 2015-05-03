@@ -60,6 +60,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -79,9 +83,10 @@
     <Compile Include="Classes\PokemonSpecies.cs" />
     <Compile Include="Classes\SaveState.cs" />
     <Compile Include="Engine\Battle.cs" />
+    <Compile Include="Engine\Cheats.cs" />
     <Compile Include="Engine\Generator.cs" />
     <Compile Include="Classes\Item.cs" />
-    <Compile Include="Collections\ItemsList.cs" />
+    <Compile Include="Collections\ItemList.cs" />
     <Compile Include="Classes\Items\StatusHeal.cs" />
     <Compile Include="Classes\Items\PokeBall.cs" />
     <Compile Include="Classes\Items\Potion.cs" />
@@ -110,12 +115,8 @@
     <Compile Include="Classes\Pokemon.cs" />
     <Compile Include="Collections\PokemonList.cs" />
     <Compile Include="Engine\Program.cs" />
+    <Compile Include="Engine\Text.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Engine\Story.cs" />
     <Compile Include="Classes\Trainer.cs" />
     <Compile Include="Classes\NPCs\Rival1.cs" />
@@ -159,12 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>PublicSettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

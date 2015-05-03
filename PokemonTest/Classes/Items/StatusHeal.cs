@@ -30,7 +30,7 @@ namespace PokemonTextEdition.Items
 
             //If the Pokemon the user selected is alive and is suffering from a status this item can cure, it gets healed for the healAmount and this method returns
             // "true" for operation success. Otherwise, an appropriate error message is displayed and the method returns "false" for operation failure.
-            if (pokemon.Name != "Blank")
+            if (pokemon.Name != null)
             {
                 if (pokemon.CurrentHP > 0 && pokemon.Status == healType)
                 {

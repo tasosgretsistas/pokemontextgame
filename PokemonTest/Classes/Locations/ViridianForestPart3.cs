@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokemonTextEdition.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("should stop looking at the map, either. You follow the path that you know");
                 Console.WriteLine("is safe enough to tread on, and it pays off - you can see the northern exit.");
 
-                Program.AnyKey();
+                Text.AnyKey();
             }
 
             else
@@ -91,7 +92,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("You sigh in relief that nobody got harmed due to your inattentiveness. No");
                 Console.WriteLine("distractions from now on - you follow the path towards the northern exit.");
 
-                Program.AnyKey();
+                Text.AnyKey();
             }
 
             if (!michael.HasBeenDefeated)
@@ -125,7 +126,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("where you wanted to go - the forest's center. Score 1 for you and your party!");
             }
 
-            Program.AnyKey();
+            Text.AnyKey();
         }
     }
 }

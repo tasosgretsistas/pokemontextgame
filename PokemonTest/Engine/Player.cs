@@ -5,20 +5,19 @@ using System.Text;
 using PokemonTextEdition.Classes;
 using PokemonTextEdition.Items;
 using PokemonTextEdition.Locations;
+using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition
 {
-    [Serializable]
+    /// <summary>
+    /// This class describes a player - his Pokemon, his money, his items, as well as his progress in the game.
+    /// </summary>
     public class Player
     {
-        #region Properties & Constructors
-
-        //A class that describes the player condition (Pokemon, money, badges, etc) as well as the player's progress in the game.
+        #region Properties
 
         //The player's name, as well as the player's rival.
-
         public string Name { get; set; }
-
         public string RivalName { get; set; }
 
         //The player's starting Pokemon. Determines the rival's Pokemon during various stages of the game.
@@ -56,6 +55,13 @@ namespace PokemonTextEdition
         //A list of all the trainers the player has defeated.
         public List<string> defeatedTrainers = new List<string>();
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Default player constructor. Generates a player with the default name of "Red", while assigning the rival the default name "Blue".
+        /// </summary>
         public Player()
         {
             Name = "Red";
@@ -69,11 +75,12 @@ namespace PokemonTextEdition
 
         #region General Methods
 
+        /// <summary>
+        /// Displays the player's information to the player.
+        /// </summary>
         public void PlayerInfo()
         {
-            //This method displays the status for each Pokemon in the player's party, separated by an empty line for every Pokemon.
-            Console.WriteLine("Your information: ");
-            Console.WriteLine("");
+            Console.WriteLine("Your information: \n");
 
             Console.WriteLine("Name: " + Name);
             Console.WriteLine("Badges: " + badgeList.Count);
@@ -83,9 +90,11 @@ namespace PokemonTextEdition
             Console.WriteLine("");
         }
 
+        /// <summary>
+        /// Displays the status for each Pokemon in the player's party, separated by an empty line for each Pokemon.
+        /// </summary>
         public void PartyStatus()
         {
-            //This method displays the status for each Pokemon in the player's party, separated by an empty line for every Pokemon.
             Console.WriteLine("Your party's status: \n");
 
             for (int i = 0; i < party.Count; i++)
@@ -96,6 +105,9 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// Restores every Pokemon in the player's party to their maximum health and sets their status to the default of an empty string.
+        /// </summary>
         public void PartyHeal()
         {
             foreach (Pokemon p in Overworld.player.party)
@@ -105,15 +117,17 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// This code handles the event of the player "blacking out" -- running out of available Pokemon during a fight.
+        /// Heals of all the player's Pokemon then invokes the Overworld to load the location where the player last healed at.
+        /// </summary>
         public void BlackOut()
         {
-            //Code that triggers when the player is defeated.
-
             Program.Log("The player has been defeated, and is now returning to the last Pokemon Center he visited - " + LastHealLocation, 1);
 
             Console.WriteLine("You will now be taken to the last city you rested at.");
 
-            Program.AnyKey();
+            Text.AnyKey();
 
             PartyHeal();
 
@@ -125,14 +139,12 @@ namespace PokemonTextEdition
         #region Adding Pokemon
 
         /// <summary>
-        /// Code for adding a Pokemon to the player's party, or box if his party is full. If both party and box are full, the Pokemon will be released.
+        /// Add a Pokemon to the player's party, or box if his party is full. If both party and box are full, the Pokemon is not added to either.
         /// </summary>
-        /// <param name="p">The new Pokemon.</param>
-        /// <param name="method">Method of acquisition. Examples: catch, gift, trade</param>
+        /// <param name="p">The Pokemon to add.</param>
+        /// <param name="displayMessage">Determines whether a message should be displayed to the player.</param>
         public void AddPokemon(Pokemon p, bool displayMessage)
         {
-            //This method handles adding a new Pokemon to the player's lists of Pokemon, depending on how many Pokemon each list already holds.
-
             //If the player's party is not full, the new Pokemon is added to the party. 
             if (party.Count <= 6)
             {
@@ -157,74 +169,99 @@ namespace PokemonTextEdition
 
             //If both the player's party and box are full, it is instead simply destroyed.
             else
-                Console.WriteLine("Both your party and box are full, so {0}{1} had to be released!", p.Name);
+                Console.WriteLine("Both your party and box are full, so {0} had to be released!", p.Name);
         }
 
+        /// <summary>
+        /// Adds a Pokemon to the player's list of seen Pokemon, if it has not already been seen.
+        /// </summary>
+        /// <param name="name">The Pokemon to add to the list.</param>
         public void AddToSeen(string name)
         {
-            if (!seenPokemon.Exists(n => n == name))
+            if (!seenPokemon.Exists(p => p == name))
                 seenPokemon.Add(name);
         }
 
+        /// <summary>
+        /// Adds a Pokemon to the player's list of caught Pokemon, if it has not already been caught. Also adds it to the seen list.
+        /// </summary>
+        /// <param name="name">The Pokemon to add to the list.</param>
         public void AddToCaught(string name)
         {
-            if (!seenPokemon.Exists(n => n == name))
+            if (!seenPokemon.Exists(p => p == name))
                 seenPokemon.Add(name);
 
-            if (!caughtPokemon.Exists(n => n == name))
-                seenPokemon.Add(name);
+            if (!caughtPokemon.Exists(p => p == name))
+                caughtPokemon.Add(name);
         }
 
         #endregion
 
         #region Selecting & Switching Pokemon
 
+        /// <summary>
+        /// Asks the player to select a Pokemon from his party.
+        /// </summary>
+        /// <param name="mandatorySelection">Determines whether it is mandatory for the player to select a Pokemon or not.</param>
+        /// <returns>Returns the Pokemon object that the player selected if his selection was valid, or null if it was invalid.</returns>
         public Pokemon SelectPokemon(bool mandatorySelection)
         {
-            //This code is used when the player is asked to select a Pokemon in his party.
+            Pokemon pokemon;
 
-            //First, all of the Pokemon in the player's party are listed.
-            for (int i = 0; i < party.Count; i++)
+            do
             {
-                Console.WriteLine("{0} - Level {1} {2}, {3}/{4} HP.", i + 1, party.ElementAt(i).Level, party.ElementAt(i).Name,
-                                                                        party.ElementAt(i).CurrentHP, party.ElementAt(i).MaxHP);
+                //First, all of the Pokemon in the player's party are listed.
+                for (int i = 0; i < party.Count; i++)
+                {
+                    Console.WriteLine("{0} - Level {1} {2}, {3}/{4} HP.", i + 1, party.ElementAt(i).Level, party.ElementAt(i).Name,
+                                                                            party.ElementAt(i).CurrentHP, party.ElementAt(i).MaxHP);
+                }
+
+                string input = Console.ReadLine();
+                int index;
+                bool validInput = Int32.TryParse(input, out index);
+
+                if (input != "")
+                    Console.WriteLine("");
+
+                //Then, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
+                if (validInput && index > 0 && index <= party.Count)
+                {
+                    pokemon = party.ElementAt(index - 1);
+                }
+
+                //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
+                else if (input == String.Empty && !mandatorySelection)
+                {
+                    Program.Log("The player chose to cancel the operation.", 0);
+
+                    pokemon = null;
+                }
+
+                //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
+                else
+                {
+                    Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
+
+                    Console.WriteLine("Invalid input.\n");
+
+                    pokemon = null;
+                }
             }
 
-            string input = Console.ReadLine();
-            int index;
-            bool validInput = Int32.TryParse(input, out index);
+            while (mandatorySelection && pokemon == null);
 
-            //First, input is taken from the player. If the input is a number corresponding to a Pokemon in the player's party, the operation carries on.
-            if (validInput && index > 0 && index <= party.Count)
-            {
-                return party.ElementAt(index - 1);
-            }
-
-            //If the player hit enter and the selection wasn't mandatory, he is returned back to whatever was happening.
-            else if (input == String.Empty && !mandatorySelection)
-            {
-                Program.Log("The player chose to cancel the operation.", 0);
-
-                return new Pokemon();
-            }
-
-            //If the input was smaller than 1, bigger than the player's party size or not a number, an error message is shown.
-            else
-            {
-                Program.Log("The player gave invalid input. Returning to what was previously happening.", 0);
-                Console.WriteLine("Invalid input.\n");
-
-                return new Pokemon();
-            }
+            return pokemon;
         }
 
+        /// <summary>
+        /// Switches around the order of the Pokemon in the player's party.
+        /// </summary>
         public void SwitchAround()
         {
-            //This method is used to switch around the order of Pokemon in the player's party.
-
             //Temporary Pokemon objects to handle the switching operation.
-            Pokemon pokemon1 = new Pokemon();
-            Pokemon pokemon2 = new Pokemon();
+            Pokemon pokemon1;
+            Pokemon pokemon2;
 
             if (party.Count > 1)
             {
@@ -307,12 +344,12 @@ namespace PokemonTextEdition
 
         #region Items
 
+        /// <summary>
+        /// This is the main method for accessing the player's bag. The player is asked if he wants to simply view his bag's contents or use an item,
+        /// and gets redirected to the relevant menu. If there are no items in the player's bag, a relevant message is displayed instead.
+        /// </summary>
         public void ItemsMain()
         {
-            //This is the main method for accessing the player's bag. The player is asked if he wants to 
-            //simply view his bag's contents or use an item, and gets redirected to the relevant menu.
-            //If there are no items in the player's bag, a relevant message is displayed instead.
-
             if (items.Count > 0)
             {
                 Console.WriteLine("What would you like to do with the items in your bag?");
@@ -323,20 +360,16 @@ namespace PokemonTextEdition
                 if (input != "")
                     Console.WriteLine("");
 
-                switch (input)
+                switch (input.ToLower())
                 {
-                    case "View":
                     case "view":
-                    case "V":
                     case "v":
 
                         DisplayItems();
 
                         break;
 
-                    case "Use":
                     case "use":
-                    case "U":
                     case "u":
 
                         UseItems();
@@ -358,10 +391,11 @@ namespace PokemonTextEdition
                 Console.WriteLine("There are no items in your bag!\n");
         }
 
+        /// <summary>
+        /// Displays the contents of the player's bag, and is to be called when an item is not going to be used.
+        /// </summary>
         public void DisplayItems()
         {
-            //This method simply displays the contents of your bag, and is to be called when an item is not going to be used.
-
             //If there are more than 10 unique kinds of items in the player's bag, he is asked to select a particular type to display.
             if (items.Count > 10)
             {
@@ -375,6 +409,7 @@ namespace PokemonTextEdition
 
                 if (items.Exists(item => item.Type == input))
                 {
+                    //This line is genius and I should implement this like everywhere. I love you, Linq.
                     items.Where(item => item.Type == input).ToList().ForEach(item => Console.WriteLine(item.Print()));
 
                     Console.WriteLine("");
@@ -406,13 +441,14 @@ namespace PokemonTextEdition
             }
         }
 
+        /// <summary>
+        /// Asks the user to select an item, and subsequently uses it.
+        /// </summary>
         public void UseItems()
         {
-            //This method simply uses an item. An item is selected using the SelectItem method, and it is subsequently used.
-
             Item item = SelectItem("use");
 
-            if (item.Name != "Sample Item")
+            if (item != null)
             {
                 item.Use();
                 Console.WriteLine("");
@@ -421,11 +457,16 @@ namespace PokemonTextEdition
             ItemsMain();
         }
 
+        /// <summary>
+        /// Asks the user to select an item, and subsequently uses it. Additionally returns boolean to output the result of the operation.
+        /// Same as the UseItems() method, except this method is to be called during combat.         
+        /// </summary>
+        /// <returns>Returns true if an item was used, or false otherwise.</returns>
         public bool UseItemsCombat()
         {
             Item item = SelectItem("use");
 
-            if (item.Name != "Sample Item")
+            if (item != null)
             {
                 if (item.UseCombat())
                     return true;
@@ -445,7 +486,6 @@ namespace PokemonTextEdition
         /// <returns></returns>
         public Item SelectItem(string method)
         {
-            //This method is used for selecting an item off the player's bag. 
             //Frankly this became a bit too big and difficult to follow, so I'm not too happy with it.
 
             List<Item> tempList = new List<Item>(); //A temporary list used to display a sublist of a specific type of items, should the player's bag hold too more than 10 items.
@@ -471,11 +511,11 @@ namespace PokemonTextEdition
                 {
                     Console.WriteLine("There were no items of type \"{0}\" in your bag.\n", input);
 
-                    return new Item();
+                    return null;
                 }
 
                 else
-                    return new Item();
+                    return null;
             }
 
             //Else if there are less than 10 items in the player's bag, there is no need for a sublist so tempList becomes the player's bag. 
@@ -514,11 +554,10 @@ namespace PokemonTextEdition
                 if (input2 != "")
                     Console.WriteLine("Invalid input.\n");
 
-                return new Item();
+                return null;
             }
         }
 
         #endregion
-
     }
 }

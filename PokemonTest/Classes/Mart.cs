@@ -74,7 +74,7 @@ namespace PokemonTextEdition
             item = DisplayStock();
 
             //If the player selected a valid item, its properties are displayed, and the operation carries on.
-            if (item.Name != "Sample Item")
+            if (item != null)
             {
                 int itemCount = 0;
 
@@ -149,7 +149,7 @@ namespace PokemonTextEdition
                 item = Overworld.player.SelectItem("sell");
 
                 //If the player selected a valid item, its properties are displayed, and the operation carries on.
-                if (item.Name != "Sample Item")
+                if (item != null)
                 {
                     int saleValue = (int)(item.Value / 2); //The item's price for selling - half the purchasing price.
                     int itemCount = 0;
@@ -244,7 +244,7 @@ namespace PokemonTextEdition
             //If the player hit enter, he is returned back to the mart main screen.
             else if (input == "")
             {
-                return new Item();
+                return null;
             }
 
             //If the input was smaller than 1, bigger than the mart's stock count or not a number, an error message is shown.
@@ -252,7 +252,7 @@ namespace PokemonTextEdition
             {
                 Console.WriteLine("Invalid input.\n");
 
-                return new Item();
+                return null;
             }
         }  
     }
