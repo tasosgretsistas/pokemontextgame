@@ -16,6 +16,8 @@ namespace PokemonTextEdition
         //Declaration for the rival.
         static Rival1 rival = new Rival1();
 
+        public static DateTime beginDate;
+
         public static void Introduction()
         {
             //The story's narration.
@@ -130,6 +132,8 @@ namespace PokemonTextEdition
         /// </summary>
         public static void SelectPokemon()
         {
+            beginDate = DateTime.Now;
+
             Console.WriteLine("Select the Pokemon you wish to start your adventure with!");
             Console.WriteLine("Available choices: (B)ulbasaur (Grass), (C)harmander (Fire), (S)quirtle (Water)");
 
@@ -270,26 +274,42 @@ namespace PokemonTextEdition
             Console.WriteLine("");
 
             Console.WriteLine("\"I almost forgot! I was supposed to give you these before you leave. They are ");
-            Console.WriteLine(" called Pokeballs, and they are used for catching Pokemon. Type \"catch\" during");
-            Console.WriteLine(" a battle with a wild Pokemon to attempt to catch it. It is easier to capture");
-            Console.WriteLine(" wild Pokemon if you weaken them a bit first, though.\"");
+            Console.WriteLine(" called Pokeballs and they are used for catching Pokemon. I have heard that");
+            Console.WriteLine("  it is easier to capture wild Pokemon if you weaken them a bit first, though.\"");
             Console.WriteLine("");
 
             ItemList.pokeball.Add(5, "obtain");
 
+            Console.WriteLine("");
+            Console.WriteLine("You can use the Pokeballs by typing \"catch\" during a battle with a wild Pokemon");
+            Console.WriteLine("in order to attempt to capture it.");
+
             Text.AnyKey();
 
-            Console.WriteLine("\"Oh, and take these too. They are potions - you can use them during and outside");
-            Console.WriteLine(" of combat to heal your injured Pokemon. Don't let the poor critters faint!\"");
+            Console.WriteLine("\"Oh, and take these Potions too! You can use them to heal your injured Pokemon.");
+            Console.WriteLine(" The poor critters will faint if they run out of vitality, and that's bad!\"");
             Console.WriteLine("");
 
             ItemList.potion.Add(5, "obtain");
 
+            Console.WriteLine("");
+            Console.WriteLine("You can use Potions by typing \"item\", both during and outside of a battle.");
+
+            Text.AnyKey();
+           
+            Console.WriteLine("\"Oh, and don't forget - you can also heal your Pokemon at Pokemon Centers.");
+            Console.WriteLine(" It's free, but you can only find Pokemon Centers in towns and cities.\"");
+
+            Console.WriteLine("");
+            Console.WriteLine("In many locations, you can type \"center\" or \"heal\" to fully heal your Pokemon");
+            Console.WriteLine("at the local Pokemon Center.");
+
             Text.AnyKey();
 
-            Console.WriteLine("\"You can also heal your Pokemon at Pokemon Centers by using the \"heal\" command");
-            Console.WriteLine(" in all cities. It's free, so please visit a Pokemon Center often in order to");
-            Console.WriteLine(" keep your Pokemon healthy. Good luck on your journey, darling!\"");
+            Console.WriteLine("Your mother sobs for a bit before finally speaking again.");
+            Console.WriteLine("");
+
+            Console.WriteLine("\"Good luck in your journey honey! And don't forget to change underpants daily!\"");
             Console.WriteLine("");
 
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");

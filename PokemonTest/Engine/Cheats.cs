@@ -12,6 +12,9 @@ namespace PokemonTextEdition.Engine
     {
         #region Cheats 
 
+        /// <summary>
+        /// Lists the Individual Values of each Pokemon in the player's party, which are normally hidden from the player.
+        /// </summary>
         public static void TellMe()
         {
             foreach (Pokemon p in Overworld.player.party)
@@ -20,6 +23,9 @@ namespace PokemonTextEdition.Engine
             Console.WriteLine("");
         }
 
+        /// <summary>
+        /// Sets the Individual Values of every Pokemon in the player's party to 31, effectively making them as strong as they can be, and then heals them to full.
+        /// </summary>
         public static void ScrewTheRules()
         {
             Console.WriteLine("I have money!\n");
@@ -41,6 +47,9 @@ namespace PokemonTextEdition.Engine
 
         #region Developer Tools
 
+        /// <summary>
+        /// Starts a test battle between 2 Pokemon of the player's choice, including their current level.
+        /// </summary>
         public static void TestBattle()
         {
             Generator gen = new Generator();

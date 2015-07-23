@@ -162,7 +162,7 @@ namespace PokemonTextEdition
 
                         stream.Close();
 
-                        DisplaySaveStateInformation(savestate);
+                        Console.WriteLine(savestate.SaveInfo(version));
                     }
 
                     Console.WriteLine("Do you want to overwrite it?\nType (y)es to overwrite or press Enter to cancel");
@@ -197,10 +197,10 @@ namespace PokemonTextEdition
                         Overworld.player.Location = Overworld.currentLocation.Tag;
 
                         //The player's information is compressed into the save file...
-                        SaveState save = new SaveState(version, DateTime.Now,
+                        SaveState save = new SaveState(version, Story.beginDate, DateTime.Now,
                                                         Overworld.player.Name, Overworld.player.RivalName, Overworld.player.StartingPokemon,
                                                         Overworld.player.Location, Overworld.player.LastHealLocation,
-                                                        Overworld.player.Money, Overworld.player.items,
+                                                        null, Overworld.player.Money, Overworld.player.items,
                                                         Overworld.player.badgeList, Overworld.player.defeatedTrainers,
                                                         Overworld.player.seenPokemon, Overworld.player.caughtPokemon,
                                                         Overworld.player.party, Overworld.player.box);
@@ -251,7 +251,7 @@ namespace PokemonTextEdition
 
                         stream.Close();
 
-                        DisplaySaveStateInformation(savestate);
+                        Console.WriteLine(savestate.SaveInfo(version));
 
                         Console.WriteLine("Would you like to load this game?");
 
@@ -373,21 +373,7 @@ namespace PokemonTextEdition
             Overworld.LoadLocation(Overworld.player.Location);
         }
 
-        /// <summary>
-        /// Briefly displays the player's information stored in a particular save state object.
-        /// </summary>
-        /// <param name="save">The save state object to load the information from.</param>
-        static void DisplaySaveStateInformation(SaveState save)
-        {
-            string gameVersion = "";
 
-            if (version == save.GameVersion)
-                gameVersion = " (current)";
-
-            Console.WriteLine("This save file was created with game version " + save.GameVersion + gameVersion + ".");
-            Console.WriteLine("The player is called " + save.PlayerName + ". You have seen " + save.SeenPokemon.Length + " Pokemon and caught " + save.CaughtPokemon.Length + ".");
-            Console.WriteLine("Last save date was on " + save.SaveDate + ".\n");
-        }
 
         #endregion
 
