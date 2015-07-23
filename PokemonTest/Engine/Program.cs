@@ -67,10 +67,6 @@ namespace PokemonTextEdition
             {
                 case "skip":
                 case "s":
-#if DEBUG
-
-#warning DEBUG is defined
-#endif
                     SkipIntro();
 
                     break;
