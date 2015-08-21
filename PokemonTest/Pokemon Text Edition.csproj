@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Classes\PokemonSpecies.cs" />
     <Compile Include="Classes\SaveState.cs" />
+    <Compile Include="Classes\Type.cs" />
     <Compile Include="Engine\Battle.cs" />
     <Compile Include="Engine\Cheats.cs" />
     <Compile Include="Engine\Generator.cs" />
@@ -115,7 +116,7 @@
     <Compile Include="Classes\Pokemon.cs" />
     <Compile Include="Collections\PokemonList.cs" />
     <Compile Include="Engine\Program.cs" />
-    <Compile Include="Engine\Text.cs" />
+    <Compile Include="Engine\UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Story.cs" />
     <Compile Include="Classes\Trainer.cs" />

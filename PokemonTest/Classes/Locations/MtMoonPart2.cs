@@ -1,8 +1,5 @@
 ﻿using PokemonTextEdition.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
@@ -78,7 +75,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("eastward. You maintain your calm so as not to lose your sense of direction, and");
                 Console.WriteLine("eventually the cave starts getting brighter again - you are on the right path!");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             else
@@ -95,7 +92,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("and yell out a few curses. Wiping the sweat off your forehead, you swear to be");
                 Console.WriteLine("more careful from now on, for the sake of your Pokemon.");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             if (!simon.HasBeenDefeated)
@@ -113,7 +110,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("You have definitely not seen that Pokemon before, and it looked really strong.");
                     Console.WriteLine("Your heart is pumping with excitement as you pick up your pace going onward.");
 
-                    Text.AnyKey();
+                    UI.AnyKey();
                 }
 
                 if (!simon.HasBeenDefeated)
@@ -130,7 +127,7 @@ namespace PokemonTextEdition.Locations
                     Console.WriteLine("still have the journey ahead to think about, so once more you start walking");
                     Console.WriteLine("towards the unknown with a confident stride.");
 
-                    Text.AnyKey();
+                    UI.AnyKey();
                 }
             }
         }

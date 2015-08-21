@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using PokemonTextEdition.Engine;
 using PokemonTextEdition.Locations;
-using PokemonTextEdition.Classes;
-using PokemonTextEdition.Engine;
+using System;
+using System.Collections.Generic;
 
 namespace PokemonTextEdition
 {
     /// <summary>
-    /// The overworld class, used to allow the player to move within the world.
+    /// The overworld class, used to allow the player to move and act within the world.
     /// For all intents and purposes, this is the main part of the game, where all other classes will return.
     /// This is enforced by the fact that every option in the Options() screen redirects back to Options().
     /// </summary>

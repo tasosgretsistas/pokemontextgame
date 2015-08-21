@@ -1,12 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Engine
 {
-    class Text
+    class UI
     {
+        public static void WriteLine(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public static void Write(string message)
+        {
+            Console.Write(message);
+        }
+
+        public static void Error(string message)
+        {
+            if (message != "")
+                Console.WriteLine(message);
+
+            Program.Log(message, 1);
+        }
+
         public static string UserInput(string displayMessage, string[] validInput)//, bool mandatorySelection, bool displayError, bool numbersOnly)
         {
             string input = null;

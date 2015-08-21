@@ -1,11 +1,7 @@
-﻿using System;
+﻿using PokemonTextEdition.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using PokemonTextEdition.Classes;
-using PokemonTextEdition.Items;
-using PokemonTextEdition.Locations;
-using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition
 {
@@ -127,7 +123,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("You will now be taken to the last city you rested at.");
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             PartyHeal();
 

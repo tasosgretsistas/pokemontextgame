@@ -1,8 +1,5 @@
 ﻿using PokemonTextEdition.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
@@ -72,7 +69,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("duck for wild Pokemon. Instead, you move through the less dense parts of");
                 Console.WriteLine("the forest until you find the path that leads to the northern side.");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             else
@@ -87,7 +84,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("Both you and your food are safe - for now. You go back to reading the map,");
                 Console.WriteLine("which points you in the way north and once again back into the forest.");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             if (!eric.HasBeenDefeated)
@@ -122,7 +119,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("view, and then the path that leads to the southern side of the forest.");
             }
 
-            Text.AnyKey();
+            UI.AnyKey();
         }
     }
 }

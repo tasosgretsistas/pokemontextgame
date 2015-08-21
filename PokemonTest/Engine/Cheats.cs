@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Engine
-{   
+{
     /// <summary>
     /// This class holds the various cheats and developer tools of the game.
     /// </summary>

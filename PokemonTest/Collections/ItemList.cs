@@ -1,8 +1,6 @@
-﻿using System;
+﻿using PokemonTextEdition.Items;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PokemonTextEdition.Items;
 
 namespace PokemonTextEdition
 {

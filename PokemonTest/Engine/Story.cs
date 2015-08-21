@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using PokemonTextEdition.Engine;
 using PokemonTextEdition.NPCs;
-using PokemonTextEdition.Engine;
+using System;
+using System.Linq;
 
 namespace PokemonTextEdition
 {
@@ -32,7 +30,7 @@ namespace PokemonTextEdition
             Console.WriteLine("find and head straight for Professor Oak's lab. The Professor is standing");
             Console.WriteLine("beside a table with three Pokeballs on it.");
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             Console.WriteLine("\"Ah, there you are -- I've been waiting all morning for you. Say, could you");
             Console.WriteLine(" remind me what your name was again?\"");
@@ -222,7 +220,7 @@ namespace PokemonTextEdition
                 Console.WriteLine("calling your name from behind you. It's your rival, {0} - it seems", rival.Name);
                 Console.WriteLine("that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
 
-                Text.AnyKey();
+                UI.AnyKey();
 
                 Console.WriteLine("\"So, {0}, huh? I figured you'd pick a chump Pokemon like that!", pokemon.Name);
                 Console.WriteLine(" Very well - let me show you why my {0} is the superior Pokemon!\"", rivalPokemon.Name);
@@ -232,7 +230,7 @@ namespace PokemonTextEdition
 
                 new Battle().Start(rival, "trainer");
 
-                Text.AnyKey();
+                UI.AnyKey();
 
                 PostRival();
             }
@@ -253,7 +251,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("And just like that, {0} took off.", rival.Name);
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             Console.WriteLine("\"That kid might be a bit rude sometimes, but he really means you no ill.");
             Console.WriteLine(" Either way, you'd better chase after him - I know you've always dreamed");
@@ -268,7 +266,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("\"{0}!! Hold on!!\"", Overworld.player.Name);
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             Console.WriteLine("It's your mum, and she appears to be holding something.");
             Console.WriteLine("");
@@ -284,7 +282,7 @@ namespace PokemonTextEdition
             Console.WriteLine("You can use the Pokeballs by typing \"catch\" during a battle with a wild Pokemon");
             Console.WriteLine("in order to attempt to capture it.");
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             Console.WriteLine("\"Oh, and take these Potions too! You can use them to heal your injured Pokemon.");
             Console.WriteLine(" The poor critters will faint if they run out of vitality, and that's bad!\"");
@@ -295,7 +293,7 @@ namespace PokemonTextEdition
             Console.WriteLine("");
             Console.WriteLine("You can use Potions by typing \"item\", both during and outside of a battle.");
 
-            Text.AnyKey();
+            UI.AnyKey();
            
             Console.WriteLine("\"Oh, and don't forget - you can also heal your Pokemon at Pokemon Centers.");
             Console.WriteLine(" It's free, but you can only find Pokemon Centers in towns and cities.\"");
@@ -304,7 +302,7 @@ namespace PokemonTextEdition
             Console.WriteLine("In many locations, you can type \"center\" or \"heal\" to fully heal your Pokemon");
             Console.WriteLine("at the local Pokemon Center.");
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             Console.WriteLine("Your mother sobs for a bit before finally speaking again.");
             Console.WriteLine("");
@@ -315,7 +313,7 @@ namespace PokemonTextEdition
             Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
             Console.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             //The user's Pokemon is then healed and the game moves on to the Overworld, where the player can navigate and perform additional actions.
 

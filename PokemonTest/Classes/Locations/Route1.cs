@@ -1,8 +1,5 @@
 ﻿using PokemonTextEdition.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
@@ -67,7 +64,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("shortcut has paid off though - in the horizon before you looms Viridian City!");
             }
 
-            Text.AnyKey();
+            UI.AnyKey();
         }
 
         public override void GoSouth()
@@ -93,7 +90,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("-- you had fun, gained some valuable experience and you're nearly home!");
             }
 
-            Text.AnyKey();
+            UI.AnyKey();
         }
     }
 }

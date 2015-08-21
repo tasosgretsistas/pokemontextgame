@@ -1,8 +1,6 @@
 ﻿using PokemonTextEdition.Classes;
 using PokemonTextEdition.Engine;
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -228,7 +226,7 @@ namespace PokemonTextEdition
                 Console.WriteLine("\nPlease contact the author about this issue.\n");
 
                 Console.WriteLine("The game will now return to what was happening.");
-                Text.AnyKey();
+                UI.AnyKey();
             }
         }
 
@@ -299,7 +297,7 @@ namespace PokemonTextEdition
                 Console.WriteLine("\nPlease contact the author about this issue.");
 
                 Console.WriteLine("\nReturning to the main menu.");
-                Text.AnyKey();
+                UI.AnyKey();
 
                 Program.MainMenu();
             }
@@ -367,7 +365,7 @@ namespace PokemonTextEdition
 
             Log("The game loaded successfully.", 1);
 
-            Text.AnyKey();
+            UI.AnyKey();
 
             //The game finally loads the player's location.
             Overworld.LoadLocation(Overworld.player.Location);

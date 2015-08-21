@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace PokemonTextEdition.Classes
+﻿namespace PokemonTextEdition.Classes
 {
     public class PokemonSpecies
     {
@@ -15,6 +10,7 @@ namespace PokemonTextEdition.Classes
         //The Pokemon's elemental types.
         public string Type1 { get; set; }
         public string Type2 { get; set; }
+        public Types type = Types.Water;
 
         //The Pokemon's Pokedex information - its species name and number.
         public string PokedexSpecies { get; set; }

@@ -1,8 +1,5 @@
 ﻿using PokemonTextEdition.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PokemonTextEdition.Locations
 {
@@ -78,7 +75,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("the direction of Pewter City. Few minutes later, you find yourself in the");
                 Console.WriteLine("middle of the forest, just as planned!");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             else
@@ -94,7 +91,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("okay at least. You decide to be a bit more careful from now on, as you go");
                 Console.WriteLine("even deeper into this dangerous forest.");
 
-                Text.AnyKey();
+                UI.AnyKey();
             }
 
             if (!nick.HasBeenDefeated)
@@ -133,7 +130,7 @@ namespace PokemonTextEdition.Locations
                 Console.WriteLine("follow the signs around the forest until you are finally back at Route 2.");
             }
 
-            Text.AnyKey();
+            UI.AnyKey();
         }
     }
 }

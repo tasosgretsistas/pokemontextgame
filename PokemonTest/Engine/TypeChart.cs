@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace PokemonTextEdition
+﻿namespace PokemonTextEdition
 {
     /// <summary>
     /// This class determines the damage type multiplers of an attack during combat.
