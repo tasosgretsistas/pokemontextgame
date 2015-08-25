@@ -10,7 +10,6 @@
         //The Pokemon's elemental types.
         public string Type1 { get; set; }
         public string Type2 { get; set; }
-        public Types type = Types.Water;
 
         //The Pokemon's Pokedex information - its species name and number.
         public string PokedexSpecies { get; set; }
@@ -38,9 +37,9 @@
             }
         }
 
+        //The base stats for the particular species of Pokemon. These determine its overall potential.
         #region Base Stats
 
-        //The base stats for the particular species of Pokemon. These determine its overall potential.
         private int[] baseStats = new int[6];
 
         public int BaseHP

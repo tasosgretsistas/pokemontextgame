@@ -10,8 +10,8 @@ namespace PokemonTextEdition
         #region Fields
 
         //A unique identifier that marks each and every trainer in the TrainerList class individually. 
-        //An "r" after the number identifies that the trainer has already been defeated once and the battle is a rematch.
-        public string ID { get; set; }
+        //A negative number identifies that the trainer has already been defeated once and the battle is a rematch.
+        public int ID { get; set; }
 
         public string Name { get; set; } //The trainer's name.
         public string Type { get; set; } //The trainer's "class" - i.e., Hiker, Bug Catcher, etc.
@@ -58,21 +58,21 @@ namespace PokemonTextEdition
 
         public Trainer()
         {
-            Type = "Unspecified trainer type";
-            Name = "Unspecified trainer name";
+            Type = "Undefined Type";
+            Name = "Unnamed Trainer";
 
-            Greeting = "Unspecified trainer greeting";
+            Greeting = "Greetings! You shouldn't be seeing this. If you do, please contact the author.";
             DefeatSpeech = "Unspecified trainer defeat speech";
             VictorySpeech = "Unspecified trainer victory speech";
-            
-            party = new List<Pokemon>{ new Generator().Create("Mewtwo", 100) };
 
-            ID = "0";
+            party = new List<Pokemon> { new Generator().Create("Mewtwo", 100) };
+
+            ID = 0;
             Money = 0;
         }
 
         /// <summary>
-        /// The main constructor for initializing an enemy trainer NPC.
+        /// The default constructor for initializing an enemy trainer NPC.
         /// </summary>
         /// <param name="tName">The trainer's name.</param>
         /// <param name="tGreeting">The trainer's greeting pre-combat.</param>
@@ -81,18 +81,20 @@ namespace PokemonTextEdition
         /// <param name="tParty">The trainer's party of Pokemon. Maximum size is 6.</param>
         /// <param name="tMoney">The amount of money the trainer yields upon being defeated.</param>
         /// <param name="tid">The trainer's unique identifier number for the TrainerList list.</param>
-        public Trainer(string tType, string tName, string tGreeting, string tDefeat, string tVictory, List<Pokemon> tParty, int tMoney, string tid)
+        public Trainer(int tid, string tType, string tName, int tMoney, string tGreeting, string tDefeat, string tVictory, List<Pokemon> tParty)
         {
+            ID = tid;
+
             Type = tType;
             Name = tName;
+
+            Money = tMoney;
 
             Greeting = "\n\"" + tGreeting + "\"";
             DefeatSpeech = "\n\"" + tDefeat + "\"";
             VictorySpeech = "\n\"" + tVictory + "\"";
 
             party = tParty;
-            Money = tMoney;
-            ID = tid;
         }
 
         #endregion

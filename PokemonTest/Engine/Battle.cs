@@ -16,7 +16,7 @@ namespace PokemonTextEdition
         Random rng = new Random();
 
         //An object that represents the current enemy trainer.
-        Trainer enemyTrainer = new Trainer();
+        Trainer enemyTrainer;
 
         //A list of Pokemon that participated in a battle against a particular Pokemon, for the purpose of experience calculation.
         List<Pokemon> participants = new List<Pokemon>();
@@ -25,30 +25,33 @@ namespace PokemonTextEdition
         int aiCurrentPokemonIndex = 0; //This is used as a counter for the AI to switch Pokemon.
 
         //These objects identify the player's current Pokemon and the move he selected.
-        Pokemon playerPokemon = new Pokemon();
-        Move playerMove = new Move();
+        Pokemon playerPokemon;
+        Move playerMove;
 
         //These, on the other hand, are used for the AI's Pokemon and its selected move.
-        Pokemon enemyPokemon = new Pokemon();
-        Move enemyMove = new Move();
+        Pokemon enemyPokemon;
+        Move enemyMove;
 
         //These objects identify the last move used by each side, i.e. in order to identify if the same move was used twice.   
-        Move previousPlayerMove = new Move();
-        Move previousEnemyMove = new Move();
+        Move previousPlayerMove;
+        Move previousEnemyMove;
 
         float sameMoveDamageBonus = 1; //This is used for moves that deal increased damage while being used consecutively.
 
         //These objects make it easier to do damage calculations.
-        Pokemon attackingPokemon = new Pokemon();
-        Pokemon defendingPokemon = new Pokemon();
-        Move currentMove = new Move();
+        Pokemon attackingPokemon;
+        Pokemon defendingPokemon;
+        Move currentMove;
 
         //These two strings make it easier to tell who's attacking and who's defending, as well as adjust messages accordingly.
-        string attackingPokemonName = "";
-        string defendingPokemonName = "";
+        string attackingPokemonName;
+        string defendingPokemonName;
 
         //A bool that tells the program that the battle is now over. Not the most elegant solution, but it works!
         bool battleOver = false;
+
+        //Determines if the player won or lost.
+        bool victory = true;
 
         //An integer that counts how many times the player has tried to escape.
         int escapeAttempts = 1;
@@ -74,7 +77,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("{0} wants to battle!\n{0} sent out a level {1} {2}!\n", t.DisplayName, enemyPokemon.Level, enemyPokemon.Name);
 
-            Overworld.player.AddToSeen(enemyPokemon.Name);
+            Overworld.player.AddToSeen(enemyPokemon.species.PokedexNumber);
 
             Actions();
         }
@@ -95,7 +98,7 @@ namespace PokemonTextEdition
 
             Console.WriteLine("A wild level {0} {1} appeared!\n", e.Level, e.Name);
 
-            Overworld.player.AddToSeen(e.Name);
+            Overworld.player.AddToSeen(e.species.PokedexNumber);
 
             Actions();
         }
@@ -1154,7 +1157,7 @@ namespace PokemonTextEdition
                 participants.Clear();
                 AddToParticipants(playerPokemon);
 
-                Overworld.player.AddToSeen(enemyPokemon.Name);
+                Overworld.player.AddToSeen(enemyPokemon.species.PokedexNumber);
 
                 Actions();
             }

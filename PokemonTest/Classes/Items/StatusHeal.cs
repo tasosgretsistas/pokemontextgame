@@ -7,8 +7,8 @@ namespace PokemonTextEdition.Items
     {
         public string healType; //The type of status ailment this particular item heals.
 
-        public StatusHeal(string iName, string iDescription, bool iMultiple, int iValue, string iHeal)
-            : base(iName, iDescription, iMultiple, iValue)
+        public StatusHeal(int iID, string iName, string iDescription, bool iMultiple, int iValue, string iHeal)
+            : base(iID, iName, iDescription, iMultiple, iValue)
         {
             healType = iHeal;
             Type = "statusheal";

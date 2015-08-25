@@ -77,8 +77,8 @@ namespace PokemonTextEdition
             {
                 int itemCount = 0;
 
-                if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
-                    itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count; //This searches for the selected item in the player's bag and returns how many of the item the player has.
+                if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.ItemID == item.ItemID)))
+                    itemCount = Overworld.player.items.Find(i => i.ItemID == item.ItemID).Count; //This searches for the selected item in the player's bag and returns how many of the item the player has.
 
                 Console.WriteLine("{0}s, huh? They're ${1} each. How many would you like to buy?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to buy or press enter to return.)",
                                   item.Name, item.Value, itemCount, Overworld.player.Money);
@@ -153,8 +153,8 @@ namespace PokemonTextEdition
                     int saleValue = (int)(item.Value / 2); //The item's price for selling - half the purchasing price.
                     int itemCount = 0;
 
-                    if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.Name == item.Name)))
-                        itemCount = Overworld.player.items.Find(i => i.Name == item.Name).Count;
+                    if (Overworld.player.items.Contains(Overworld.player.items.Find(i => i.ItemID == item.ItemID)))
+                        itemCount = Overworld.player.items.Find(i => i.ItemID == item.ItemID).Count;
 
                     Console.WriteLine("{0}s, right? I can give you ${1} a piece. How many are you selling?\n(You have {2} {0}s on you. Money: ${3}.\nEnter amount to sell or press enter to return.)",
                                       item.Name, saleValue, itemCount, Overworld.player.Money);

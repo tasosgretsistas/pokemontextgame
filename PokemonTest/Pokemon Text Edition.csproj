@@ -116,6 +116,7 @@
     <Compile Include="Classes\Pokemon.cs" />
     <Compile Include="Collections\PokemonList.cs" />
     <Compile Include="Engine\Program.cs" />
+    <Compile Include="Engine\SaveLoad.cs" />
     <Compile Include="Engine\UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Story.cs" />

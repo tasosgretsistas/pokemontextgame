@@ -4,6 +4,8 @@
     {
         #region Fields & Properties
 
+        public int ID { get; set; }
+
         //The move's primary identifiers - its name, elemental type, and attribute (physical, special, status).
         public string Name { get; set; }
         public string Type { get; set; }

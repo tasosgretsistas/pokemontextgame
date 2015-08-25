@@ -9,8 +9,8 @@ namespace PokemonTextEdition.Locations
         Generator generator = new Generator();
         Random rng = new Random();
 
-        Trainer michael = TrainerList.trainers.Find(t => t.ID == "3");
-        Trainer michaelr = TrainerList.trainers.Find(t => t.ID == "3r");    
+        Trainer michael = TrainerList.trainers.Find(t => t.ID == 3);
+        Trainer michaelr = TrainerList.trainers.Find(t => t.ID == -3);    
  
         public ViridianForestPart3()
         {

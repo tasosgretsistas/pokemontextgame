@@ -9,15 +9,15 @@ namespace PokemonTextEdition.Locations
         Random rng = new Random();
         Generator generator = new Generator();
 
-        Trainer lenny = TrainerList.trainers.Find(t => t.ID == "6");
-        Trainer timmy = TrainerList.trainers.Find(t => t.ID == "7");
-        Trainer mina = TrainerList.trainers.Find(t => t.ID == "8");
-        Trainer mandy = TrainerList.trainers.Find(t => t.ID == "9");
+        Trainer lenny = TrainerList.trainers.Find(t => t.ID == 7);
+        Trainer timmy = TrainerList.trainers.Find(t => t.ID == 8);
+        Trainer mina = TrainerList.trainers.Find(t => t.ID == 9);
+        Trainer mandy = TrainerList.trainers.Find(t => t.ID == 10);
 
-        Trainer lenny2 = TrainerList.trainers.Find(t => t.ID == "6r");
-        Trainer timmy2 = TrainerList.trainers.Find(t => t.ID == "7r");
-        Trainer mina2 = TrainerList.trainers.Find(t => t.ID == "8r");
-        Trainer mandy2 = TrainerList.trainers.Find(t => t.ID == "9r");
+        Trainer lenny2 = TrainerList.trainers.Find(t => t.ID == -7);
+        Trainer timmy2 = TrainerList.trainers.Find(t => t.ID == -8);
+        Trainer mina2 = TrainerList.trainers.Find(t => t.ID == -9);
+        Trainer mandy2 = TrainerList.trainers.Find(t => t.ID == -10);
 
         public Route3W()
             : base()

@@ -10,12 +10,11 @@ namespace PokemonTextEdition.NPCs
         {
             Name = Overworld.player.RivalName;
             Type = "Pokemon Trainer";
-            Greeting = "You shouldn't be seeing this! if you do, contact the creator - (Ref: Rival1)";
-            DefeatSpeech = "You shouldn't be seeing this! if you do, contact the creator - (Ref: Rival1)";
-            VictorySpeech = "You shouldn't be seeing this! if you do, contact the creator - (Ref: Rival1)";
+
             party = new List<Pokemon> {  };
+
             Money = 500;
-            ID = "rival1";
+            ID = 1;
         }
 
         //Narration after the rival battle, with different dialogue based on the result of the battle.

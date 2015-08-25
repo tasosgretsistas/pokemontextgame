@@ -177,7 +177,7 @@ namespace PokemonTextEdition
 
                 case "save":
                 case "a":
-                    Program.Save();
+                    SaveLoad.Save();
 
                     Options();
 

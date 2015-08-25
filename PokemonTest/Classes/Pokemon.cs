@@ -1,4 +1,5 @@
 ﻿using PokemonTextEdition.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -141,7 +142,7 @@ namespace PokemonTextEdition
 
         #region Actual Stats
 
-        //The Pokemon's resulting stats, after being calculated by the StatAdjust method. 
+        //The Pokemon's resulting stats after being adjusted for the Pokemon's level method. 
         //These are the Pokemon's active stats during any one fight.
 
         public int MaxHP

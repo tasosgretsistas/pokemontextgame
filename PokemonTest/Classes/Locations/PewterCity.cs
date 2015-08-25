@@ -7,13 +7,13 @@ namespace PokemonTextEdition.Locations
     {
         Generator generator = new Generator();
 
-        Trainer fred = TrainerList.trainers.Find(t => t.ID == "4");
+        Trainer fred = TrainerList.trainers.Find(t => t.ID == 4);
 
-        Trainer dave = TrainerList.trainers.Find(t => t.ID == "5");
+        Trainer dave = TrainerList.trainers.Find(t => t.ID == 5);
 
         Trainer brock = new NPCs.Brock();
 
-        Trainer brock2 = TrainerList.trainers.Find(t => t.ID == "brockr");
+        Trainer brock2 = TrainerList.trainers.Find(t => t.ID == -6);
 
         public PewterCity()
         {
@@ -36,7 +36,7 @@ namespace PokemonTextEdition.Locations
 
         public override void GoEast()
         {
-            if (!Overworld.player.defeatedTrainers.Contains("brock"))
+            if (!Overworld.player.defeatedTrainers.Contains(brock.ID))
             {
                 Console.WriteLine("Just as you start walking towards the rocky path that leads eastward, a man");
                 Console.WriteLine("equipped in mountain gear comes running at you.");

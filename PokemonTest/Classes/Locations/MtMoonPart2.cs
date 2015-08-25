@@ -8,11 +8,11 @@ namespace PokemonTextEdition.Locations
         Generator generator = new Generator();
         Random rng = new Random();        
 
-        Trainer lana = TrainerList.trainers.Find(t => t.ID == "10");
-        Trainer lanar = TrainerList.trainers.Find(t => t.ID == "10r");
+        Trainer lana = TrainerList.trainers.Find(t => t.ID == 11);
+        Trainer lanar = TrainerList.trainers.Find(t => t.ID == -11);
 
-        Trainer simon = TrainerList.trainers.Find(t => t.ID == "11");
-        Trainer simonr = TrainerList.trainers.Find(t => t.ID == "11r");   
+        Trainer simon = TrainerList.trainers.Find(t => t.ID == 12);
+        Trainer simonr = TrainerList.trainers.Find(t => t.ID == -12);   
 
         public MtMoonPart2()
             : base()

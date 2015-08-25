@@ -207,7 +207,6 @@ namespace PokemonTextEdition
                 rival.party.Add(rivalPokemon);
 
                 Overworld.player.StartingPokemon = pokemon.Name;
-                Overworld.player.AddToCaught(pokemon.Name);
 
                 //A short introduction for the Pokemon.
 

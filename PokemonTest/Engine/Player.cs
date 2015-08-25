@@ -12,6 +12,8 @@ namespace PokemonTextEdition
     {
         #region Properties
 
+        public int PlayerID { get; set; }
+
         //The player's name, as well as the player's rival.
         public string Name { get; set; }
         public string RivalName { get; set; }
@@ -39,8 +41,8 @@ namespace PokemonTextEdition
         public List<Pokemon> box = new List<Pokemon>();
 
         //These two lists describe the Pokemon that the player has encountered and captured.
-        public List<string> seenPokemon = new List<string>();
-        public List<string> caughtPokemon = new List<string>();
+        public List<int> seenPokemon = new List<int>();
+        public List<int> caughtPokemon = new List<int>();
 
         //The player's list of items.
         public List<Item> items = new List<Item>();
@@ -49,7 +51,7 @@ namespace PokemonTextEdition
         public List<string> badgeList = new List<string>();
 
         //A list of all the trainers the player has defeated.
-        public List<string> defeatedTrainers = new List<string>();
+        public List<int> defeatedTrainers = new List<int>();
 
         #endregion
 
@@ -60,6 +62,8 @@ namespace PokemonTextEdition
         /// </summary>
         public Player()
         {
+            PlayerID = new Random().Next(1, 10001);
+
             Name = "Red";
             RivalName = "Blue";
             StartingPokemon = "";
@@ -147,7 +151,7 @@ namespace PokemonTextEdition
                 if (displayMessage)
                     Console.WriteLine("{0} was added to the party!", p.Name);
 
-                AddToCaught(p.Name);
+                AddToCaught(p.species.PokedexNumber);
 
                 party.Add(p);
             }
@@ -158,7 +162,7 @@ namespace PokemonTextEdition
                 if (displayMessage)
                     Console.WriteLine("Your party is full, so {0} was sent to the box.", p.Name);
 
-                AddToCaught(p.Name);
+                AddToCaught(p.species.PokedexNumber);
 
                 box.Add(p);
             }
@@ -171,24 +175,24 @@ namespace PokemonTextEdition
         /// <summary>
         /// Adds a Pokemon to the player's list of seen Pokemon, if it has not already been seen.
         /// </summary>
-        /// <param name="name">The Pokemon to add to the list.</param>
-        public void AddToSeen(string name)
+        /// <param name="number">The Pokedex number of the Pokemon to add to the list.</param>
+        public void AddToSeen(int number)
         {
-            if (!seenPokemon.Exists(p => p == name))
-                seenPokemon.Add(name);
+            if (!seenPokemon.Exists(p => p == number))
+                seenPokemon.Add(number);
         }
 
         /// <summary>
         /// Adds a Pokemon to the player's list of caught Pokemon, if it has not already been caught. Also adds it to the seen list.
         /// </summary>
-        /// <param name="name">The Pokemon to add to the list.</param>
-        public void AddToCaught(string name)
+        /// <param name="number">The Pokedex number of the Pokemon to add to the list.</param>
+        public void AddToCaught(int number)
         {
-            if (!seenPokemon.Exists(p => p == name))
-                seenPokemon.Add(name);
+            if (!seenPokemon.Exists(p => p == number))
+                seenPokemon.Add(number);
 
-            if (!caughtPokemon.Exists(p => p == name))
-                caughtPokemon.Add(name);
+            if (!caughtPokemon.Exists(p => p == number))
+                caughtPokemon.Add(number);
         }
 
         #endregion
@@ -406,7 +410,7 @@ namespace PokemonTextEdition
                 if (items.Exists(item => item.Type == input))
                 {
                     //This line is genius and I should implement this like everywhere. I love you, Linq.
-                    items.Where(item => item.Type == input).ToList().ForEach(item => Console.WriteLine(item.Print()));
+                    items.Where(item => item.Type == input).ToList().ForEach(item => Console.WriteLine(item.PrintInfo()));
 
                     Console.WriteLine("");
 
@@ -428,7 +432,7 @@ namespace PokemonTextEdition
 
                 foreach (Item i in items)
                 {
-                    Console.WriteLine(i.Print());
+                    Console.WriteLine(i.PrintInfo());
                 }
 
                 Console.WriteLine("");
@@ -526,7 +530,7 @@ namespace PokemonTextEdition
             {
                 if (i.Count > 0)
                 {
-                    Console.WriteLine("{0} - {1}", counter, i.Print());
+                    Console.WriteLine("{0} - {1}", counter, i.PrintInfo());
                     counter++;
                 }
             }

@@ -7,8 +7,8 @@ namespace PokemonTextEdition.Items
     {
         public int healAmount; //The amount of HP this particular potion restores.
 
-        public Potion(string iName, string iDescription, bool iMultiple, int iValue, int iHeal)
-            : base(iName, iDescription, iMultiple, iValue)
+        public Potion(int iID, string iName, string iDescription, bool iMultiple, int iValue, int iHeal)
+            : base(iID, iName, iDescription, iMultiple, iValue)
         {
             healAmount = iHeal;
             Type = "potion";
