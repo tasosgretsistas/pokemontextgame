@@ -3,14 +3,34 @@ using System.Collections.Generic;
 
 namespace PokemonTextEdition
 {
-    public class Location
+    /// <summary>
+    /// The type of location, such as town, city or forest.
+    /// </summary>
+    enum LocationType
+    {
+        City,
+        Town,
+        Route,
+        Cave,
+        Forest
+    }
+
+    /// <summary>
+    /// The list of location tags currently in the game.
+    /// </summary>
+    enum LocationTag
+    {
+
+    }
+
+    class Location
     {
         #region Declarations & Constructors
 
         //The location's primary attributes.
         //The tag is a helpful identification string for the location, used mostly for checking its connection to other locations.
         public string Name { get; set; }
-        public string Type { get; set; }
+        public LocationType Type { get; set; }
         public string Tag { get; set; }
 
         //The location's descriptive elements.
@@ -34,6 +54,9 @@ namespace PokemonTextEdition
 
         public Location()
         {
+            Name = "Unnamed Location";
+            Type = LocationType.Route;
+
         }
 
         #endregion
@@ -90,42 +113,50 @@ namespace PokemonTextEdition
 
         #region Special Facilities
 
+        /// <summary>
+        /// This method represents visiting a Pokemon Center within a town or city, which heals a player's Pokemon party.
+        /// </summary>
         public virtual void Center()
         {
-            //Simple code for healing the player's party.
-            //If the player is inside a city, his Pokemon will get healed,  and the "lastHeal" tag which specifies what city the player last healed in will update. 
-            //If the player is not within a city, an error message will be displayed.
-           
-            if (Type == "city" || Type == "town" || Tag != "route3e")
+            //If the player is in a city, town, or a route with a Pokemon Center...
+            if (Type == LocationType.City || Type == LocationType.Town || Tag == "route3e")
             {
+                //All of his Pokemon are healed.
+
                 foreach (Pokemon p in Overworld.player.party)
                 {
                     p.CurrentHP = p.MaxHP;
-                    p.Status = "";
+                    p.Status = PokemonStatus.None;
                 }
                 Console.WriteLine("Your Pokemon are now fully healed!\n");
+
+                //Then, the player's "lastHeal" tag is updated to the current location.
                 Overworld.player.LastHealLocation = this.Tag;
             }
 
+            //If he is not in a city, an error message is displayed.
             else
-            {
                 Console.WriteLine("There is no Pokemon Center in {0}.\n", Name);
-            }
         }
 
+        /// <summary>
+        /// This method represents visiting a Pokemon Mart within a city, which allows the player to buy and sell items.
+        /// </summary>
         public virtual void Mart()
         {
-            if (Type == "city")
-            {
-                new Mart().Welcome(martStock);
-            }
-
-            else
-            {
-                Console.WriteLine("There is no Pokemon Mart in {0}\n.", Name);
-            }
+            //If the player is in a city, an instance of the Mart class is created with the item stock list provided by this object's mart stock list.
+            if (Type == LocationType.City)            
+                new Mart().Welcome(this.martStock);
+            
+            //If the player is not in a city, an error message is displayed.
+            else            
+                Console.WriteLine("There is no Pokemon Mart in {0}.\n", Name);
         }
 
+        /// <summary>
+        /// This method represents visiting a Pokemon Gym within a city, which allows the player to take on a Gym Leader.
+        /// This method should be overriden as there is no default behaviour for visiting a gym and as such only produces an error message.
+        /// </summary>
         public virtual void Gym()
         {
             Console.WriteLine("There is no Pokemon Gym in {0}.\n", Name);

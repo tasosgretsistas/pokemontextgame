@@ -13,7 +13,7 @@ namespace PokemonTextEdition.Locations
             : base()
         {
             Name = "Route 1";
-            Type = "route";
+            Type = LocationType.Route;
             Tag = "route1";
 
             North = "viridian";

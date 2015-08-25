@@ -227,6 +227,8 @@ namespace PokemonTextEdition
 
                 //The first battle with the rival then starts.
 
+                rival.party.Add(generator.Create("Mewtwo", 1));
+
                 new Battle().Start(rival, "trainer");
 
                 UI.AnyKey();

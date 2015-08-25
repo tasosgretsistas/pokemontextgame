@@ -1,13 +1,13 @@
 ﻿using PokemonTextEdition.Items;
-using System;
 using System.Collections.Generic;
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// A list of all the items currently in the game.
+    /// </summary>
     class ItemList
     {
-        //A list of all items available in the game.
-
         #region Pokeballs
 
         static public PokeBall pokeball = new PokeBall(1, "PokeBall", "A tool for catching wild Pokemon.", false, 100, 1f);
@@ -29,12 +29,12 @@ namespace PokemonTextEdition
 
         #region Status Heal
 
-        static public StatusHeal antidote = new StatusHeal(10, "Antidote", "Cures poison from a selected Pokemon.", false, 50, "poison");
-        static public StatusHeal paralyzeheal = new StatusHeal(11, "Paralyze Heal", "Heals paralysis from a selected Pokemon.", false, 100, "paralysis");
-        static public StatusHeal awakening = new StatusHeal(12, "Awakening", "Awakens a selected Pokemon from sleep.", false, 125, "sleep");
-        static public StatusHeal burnheal = new StatusHeal(13, "Burn Heal", "Heals burn from a selected Pokemon.", false, 125, "burn");
-        static public StatusHeal iceheal = new StatusHeal(14, "Ice Heal", "Defrosts a frozen Pokemon.", false, 125, "freeze");
-        static public StatusHeal fullheal = new StatusHeal(15, "Full Heal", "Heals all status conditions from a Pokemon.", false, 300, "full");
+        static public StatusHeal antidote = new StatusHeal(10, "Antidote", "Cures poison from a selected Pokemon.", false, 50, PokemonStatus.Poison);
+        static public StatusHeal paralyzeheal = new StatusHeal(11, "Paralyze Heal", "Heals paralysis from a selected Pokemon.", false, 100, PokemonStatus.Paralysis);
+        static public StatusHeal awakening = new StatusHeal(12, "Awakening", "Awakens a selected Pokemon from sleep.", false, 125, PokemonStatus.Sleep);
+        static public StatusHeal burnheal = new StatusHeal(13, "Burn Heal", "Heals burn from a selected Pokemon.", false, 125, PokemonStatus.Burn);
+        static public StatusHeal iceheal = new StatusHeal(14, "Ice Heal", "Defrosts a frozen Pokemon.", false, 125, PokemonStatus.None);
+        static public StatusHeal fullheal = new StatusHeal(15, "Full Heal", "Heals all status conditions from a Pokemon.", false, 300, PokemonStatus.None);
 
         #endregion
 
@@ -44,19 +44,5 @@ namespace PokemonTextEdition
             potion, superpotion, hyperpotion, maxpotion, fullrestore,
             antidote, paralyzeheal, awakening, burnheal, iceheal, fullheal
         };
-
-
-        /// <summary>
-        /// List all items in the "allItems" list.
-        /// </summary>
-        public static void ListAllItems()
-        {
-            foreach (Item i in allItems)
-            {
-                Console.WriteLine(i.Name);
-            }
-
-            Console.WriteLine("");
-        }
     }
 }

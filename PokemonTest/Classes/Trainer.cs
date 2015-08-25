@@ -109,7 +109,7 @@ namespace PokemonTextEdition
             foreach (Pokemon p in party)
             {
                 p.CurrentHP = p.MaxHP;
-                p.Status = "";
+                p.Status = PokemonStatus.None;
             }
 
             Console.WriteLine(Greeting);

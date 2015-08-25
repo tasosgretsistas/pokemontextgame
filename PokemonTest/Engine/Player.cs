@@ -113,7 +113,7 @@ namespace PokemonTextEdition
             foreach (Pokemon p in Overworld.player.party)
             {
                 p.CurrentHP = p.MaxHP;
-                p.Status = "";
+                p.Status = PokemonStatus.None;
             }
         }
 
@@ -480,7 +480,7 @@ namespace PokemonTextEdition
         }
 
         /// <summary>
-        /// This method is used for selecting an item off the player's bag. 
+        /// Asks the player to select an item from their bag. 
         /// </summary>
         /// <param name="method">This designates how the item is going to be utilized - i.e. use, sell, discard. It affects the displayed message.</param>
         /// <returns></returns>

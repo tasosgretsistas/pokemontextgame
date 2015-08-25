@@ -8,7 +8,7 @@ namespace PokemonTextEdition.Locations
         public ViridianCity()
         {
             Name = "Viridian City";
-            Type = "city";
+            Type = LocationType.City;
             Tag = "viridian";
 
             South = "route1";

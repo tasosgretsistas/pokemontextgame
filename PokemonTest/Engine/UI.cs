@@ -15,12 +15,16 @@ namespace PokemonTextEdition.Engine
             Console.Write(message);
         }
 
-        public static void Error(string message)
+        public static void Error(string message, string debugInfo, int errorLevel)
         {
             if (message != "")
-                Console.WriteLine(message);
+            {
+                Console.WriteLine("Error: " + message);
+                Console.WriteLine("Please contact the author with your log.txt file so he can fix it. :|");
+            }
 
-            Program.Log(message, 1);
+            if (debugInfo != "")
+                Program.Log(debugInfo, errorLevel);
         }
 
         public static string UserInput(string displayMessage, string[] validInput)//, bool mandatorySelection, bool displayError, bool numbersOnly)

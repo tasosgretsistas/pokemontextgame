@@ -1,4 +1,7 @@
 ﻿using System;
+using PokemonTextEdition.Classes;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace PokemonTextEdition.Engine
 {
@@ -43,7 +46,7 @@ namespace PokemonTextEdition.Engine
         #endregion
 
         #region Developer Tools
-
+        
         /// <summary>
         /// Starts a test battle between 2 Pokemon of the player's choice, including their current level.
         /// </summary>
@@ -88,6 +91,85 @@ namespace PokemonTextEdition.Engine
 
                 TestBattle();
             }
+        }
+
+        /// <summary>
+        /// Lists every Pokemon currently available in the game.
+        /// </summary>
+        public static void ListAllPokemon()
+        {
+            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            {
+                string evolutionMessage = "";
+
+                if (p.Evolves)
+                    evolutionMessage = ", evolves into " + p.EvolvesInto;
+
+                Console.WriteLine(p.Name + evolutionMessage);
+            }
+
+            Console.WriteLine("");
+        }
+
+        /// <summary>
+        /// Lists every Pokemon currently available in the game sorted by Base Stat Total (the sum of all its base stats) - for error checking purposes.
+        /// </summary>
+        public static void DisplayBSTs()
+        {
+            Dictionary<string, int> totals = new Dictionary<string, int>();
+
+            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            {
+                int BST = p.BaseHP + p.BaseAttack + p.BaseDefense + p.BaseSpecialAttack + p.BaseSpecialDefense + p.BaseSpeed;
+                totals.Add(p.Name, BST);
+            }
+
+            totals = totals.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+            foreach (var i in totals)
+            {
+                Console.WriteLine("{0} - {1}", i.Key, i.Value);
+            }
+        }
+
+        /// <summary>
+        ///  Lists every Pokemon that can evolve currently available in the game as well as its respective evolution - for error checking purposes.
+        /// </summary>
+        public static void DisplayEvolutions()
+        {
+            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            {
+                if (p.Evolves)
+                    Console.WriteLine("{0} evolves into {1}.", p.Name, p.EvolvesInto);
+            }
+        }
+
+        /// <summary>
+        /// Lists every move currently available in the game.
+        /// </summary>
+        public static void ListAllMoves()
+        {
+            Console.WriteLine(MoveList.allMoves.Count + " moves found.\n");
+
+            foreach (Move move in MoveList.allMoves)
+            {
+                Console.WriteLine(move.Name.PadRight(15) + ": Type: " + move.Type + ", Power: " + move.Damage + ", Effect ID: " + move.EffectID);
+            }
+
+            Console.WriteLine("");
+        }
+
+        /// <summary>
+        /// Lists every item currently available in the game.
+        /// </summary>
+        public static void ListAllItems()
+        {
+            foreach (Item i in ItemList.allItems)
+            {
+                Console.WriteLine(i.Name);
+            }
+
+            Console.WriteLine("");
         }
 
         #endregion

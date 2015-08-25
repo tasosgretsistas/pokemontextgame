@@ -5,9 +5,9 @@ namespace PokemonTextEdition.Items
     [Serializable]
     class StatusHeal : Item
     {
-        public string healType; //The type of status ailment this particular item heals.
+        public PokemonStatus healType; //The type of status ailment this particular item heals.
 
-        public StatusHeal(int iID, string iName, string iDescription, bool iMultiple, int iValue, string iHeal)
+        public StatusHeal(int iID, string iName, string iDescription, bool iMultiple, int iValue, PokemonStatus iHeal)
             : base(iID, iName, iDescription, iMultiple, iValue)
         {
             healType = iHeal;
@@ -31,7 +31,7 @@ namespace PokemonTextEdition.Items
             {
                 if (pokemon.CurrentHP > 0 && pokemon.Status == healType)
                 {
-                    pokemon.Status = "";
+                    pokemon.Status = PokemonStatus.None;
 
                     Console.WriteLine("\n{0} was cured of its {1}.", pokemon.Name, healType);
 

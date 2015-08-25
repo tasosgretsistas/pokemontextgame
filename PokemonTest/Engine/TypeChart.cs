@@ -1,27 +1,31 @@
-﻿namespace PokemonTextEdition
+﻿using PokemonTextEdition.Classes;
+
+namespace PokemonTextEdition
 {
+    
+
     /// <summary>
     /// This class determines the damage type multiplers of an attack during combat.
     /// </summary>
-    public class TypeChart
+    class TypeChart
     {
         /// <summary>
         /// This method checks the effectiveness of a move used against a Pokemon with specific types, and returns the result.
         /// It accomplishes this by running the Calculate() method - twice, if the defending Pokemon has two types.
         /// </summary>
-        /// <param name="attackType">The attacking move's type.</param>
-        /// <param name="defenderType1">The defending Pokemon's primary type.</param>
-        /// <param name="defenderType2">The defending Pokemon's secondary type. By default this will be an empty string if the Pokemon doesn't have a secondary type.</param>
+        /// <param name="attackType">The attacking move's Types.</param>
+        /// <param name="defenderType1">The defending Pokemon's primary Types.</param>
+        /// <param name="defenderType2">The defending Pokemon's secondary Types. By default this will be an empty string if the Pokemon doesn't have a secondary Types.</param>
         /// <returns>Returns a float:
         /// 1 if the move has normal effectiveness,
         /// 0.5f or 0.25f if the move would be half effective or quarter effective respectively (not very effective), 
         /// 2 or 4 if the move would be double or quadruple effective (super effective)
         /// 0 if the move would have no effect (immune)</returns>
-        public static float Check(string attackType, string defenderType1, string defenderType2)
+        public static float Check(Type attackType, Type defenderType1, Type defenderType2)
         {
             float multiplier = 1;
 
-            if (defenderType2 == "")
+            if (defenderType2 == Type.None)
             {
                 multiplier = Calculate(attackType, defenderType1);
             }
@@ -37,341 +41,341 @@
         /// <summary>
         /// This move calculates the effectiveness of an attack against a specific type of defending Pokemon. Refer to the documentation for the Check() method for more info.
         /// </summary>
-        /// <param name="attackType">The attack's type.</param>
-        /// <param name="defenderType">The defending Pokemon's type.</param>
+        /// <param name="attackType">The attack's Types.</param>
+        /// <param name="defenderType">The defending Pokemon's Types.</param>
         /// <returns></returns>
-        public static float Calculate(string attackType, string defenderType)
+        public static float Calculate(Type attackType, Type defenderType)
         {
             float mult = 1;
 
-            if (attackType == "Normal")
+            if (attackType == Type.Normal)
             {
                 switch (defenderType)
                 {
-                    case "Rock":
-                    case "Steel":
+                    case Type.Rock:
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Ghost":
+                    case Type.Ghost:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Fire")
+            else if (attackType == Type.Fire)
             {
                 switch (defenderType)
                 {
-                    case "Water":
-                    case "Rock":
-                    case "Fire":
-                    case "Dragon":
+                    case Type.Water:
+                    case Type.Rock:
+                    case Type.Fire:
+                    case Type.Dragon:
                         mult = 0.5f;
                         break;
-                    case "Grass":
-                    case "Ice":
-                    case "Steel":
-                    case "Bug":
+                    case Type.Grass:
+                    case Type.Ice:
+                    case Type.Steel:
+                    case Type.Bug:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Water")
+            else if (attackType == Type.Water)
             {
                 switch (defenderType)
                 {
-                    case "Water":
-                    case "Grass":
-                    case "Dragon":
+                    case Type.Water:
+                    case Type.Grass:
+                    case Type.Dragon:
                         mult = 0.5f;
                         break;
-                    case "Ground":
-                    case "Rock":
-                    case "Fire":
+                    case Type.Ground:
+                    case Type.Rock:
+                    case Type.Fire:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Grass")
+            else if (attackType == Type.Grass)
             {
                 switch (defenderType)
                 {
-                    case "Flying":
-                    case "Poison":
-                    case "Fire":
-                    case "Bug":
-                    case "Grass":
-                    case "Dragon":
-                    case "Steel":
+                    case Type.Flying:
+                    case Type.Poison:
+                    case Type.Fire:
+                    case Type.Bug:
+                    case Type.Grass:
+                    case Type.Dragon:
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Water":
-                    case "Ground":
-                    case "Rock":
+                    case Type.Water:
+                    case Type.Ground:
+                    case Type.Rock:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Electric")
+            else if (attackType == Type.Electric)
             {
                 switch (defenderType)
                 {
-                    case "Electric":
-                    case "Grass":
-                    case "Dragon":
+                    case Type.Electric:
+                    case Type.Grass:
+                    case Type.Dragon:
                         mult = 0.5f;
                         break;
-                    case "Flying":
-                    case "Water":
+                    case Type.Flying:
+                    case Type.Water:
                         mult = 2;
                         break;
-                    case "Ground":
+                    case Type.Ground:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Ice")
+            else if (attackType == Type.Ice)
             {
                 switch (defenderType)
                 {
-                    case "Water":
-                    case "Ice":
-                    case "Steel":
-                    case "Fire":
+                    case Type.Water:
+                    case Type.Ice:
+                    case Type.Steel:
+                    case Type.Fire:
                         mult = 0.5f;
                         break;
-                    case "Flying":
-                    case "Ground":
-                    case "Grass":
-                    case "Dragon":
+                    case Type.Flying:
+                    case Type.Ground:
+                    case Type.Grass:
+                    case Type.Dragon:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Fighting")
+            else if (attackType == Type.Fighting)
             {
                 switch (defenderType)
                 {
-                    case "Flying":
-                    case "Poison":
-                    case "Bug":
-                    case "Psychic":
-                    case "Fairy":
+                    case Type.Flying:
+                    case Type.Poison:
+                    case Type.Bug:
+                    case Type.Psychic:
+                    case Type.Fairy:
                         mult = 0.5f;
                         break;
-                    case "Normal":
-                    case "Ice":
-                    case "Rock":
-                    case "Dark":
-                    case "Steel":
+                    case Type.Normal:
+                    case Type.Ice:
+                    case Type.Rock:
+                    case Type.Dark:
+                    case Type.Steel:
                         mult = 2;
                         break;
-                    case "Ghost":
+                    case Type.Ghost:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Poison")
+            else if (attackType == Type.Poison)
             {
                 switch (defenderType)
                 {
 
-                    case "Poison":
-                    case "Ground":
-                    case "Rock":
-                    case "Ghost":
+                    case Type.Poison:
+                    case Type.Ground:
+                    case Type.Rock:
+                    case Type.Ghost:
                         mult = 0.5f;
                         break;
-                    case "Grass":
-                    case "Fairy":
+                    case Type.Grass:
+                    case Type.Fairy:
                         mult = 2;
                         break;
-                    case "Steel":
+                    case Type.Steel:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Ground")
+            else if (attackType == Type.Ground)
             {
                 switch (defenderType)
                 {
-                    case "Bug":
-                    case "Grass":
+                    case Type.Bug:
+                    case Type.Grass:
                         mult = 0.5f;
                         break;
-                    case "Poison":
-                    case "Fire":
-                    case "Rock":
-                    case "Electric":
-                    case "Steel":
+                    case Type.Poison:
+                    case Type.Fire:
+                    case Type.Rock:
+                    case Type.Electric:
+                    case Type.Steel:
                         mult = 2;
                         break;
-                    case "Flying":
+                    case Type.Flying:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Flying")
+            else if (attackType == Type.Flying)
             {
                 switch (defenderType)
                 {
-                    case "Rock":
-                    case "Electric":
-                    case "Steel":
+                    case Type.Rock:
+                    case Type.Electric:
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Fighting":
-                    case "Bug":
-                    case "Grass":
+                    case Type.Fighting:
+                    case Type.Bug:
+                    case Type.Grass:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Psychic")
+            else if (attackType == Type.Psychic)
             {
                 switch (defenderType)
                 {
-                    case "Psychic":
-                    case "Steel":
+                    case Type.Psychic:
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Fighting":
-                    case "Poison":
+                    case Type.Fighting:
+                    case Type.Poison:
                         mult = 2;
                         break;
-                    case "Dark":
+                    case Type.Dark:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Bug")
+            else if (attackType == Type.Bug)
             {
                 switch (defenderType)
                 {
-                    case "Flying":
-                    case "Fighting":
-                    case "Fire":
-                    case "Ghost":
-                    case "Poison":
-                    case "Steel":
-                    case "Fairy":
+                    case Type.Flying:
+                    case Type.Fighting:
+                    case Type.Fire:
+                    case Type.Ghost:
+                    case Type.Poison:
+                    case Type.Steel:
+                    case Type.Fairy:
                         mult = 0.5f;
                         break;
-                    case "Grass":
-                    case "Psychic":
-                    case "Dark":
+                    case Type.Grass:
+                    case Type.Psychic:
+                    case Type.Dark:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Rock")
+            else if (attackType == Type.Rock)
             {
                 switch (defenderType)
                 {
-                    case "Fighting":
-                    case "Ground":
-                    case "Steel":
+                    case Type.Fighting:
+                    case Type.Ground:
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Flying":
-                    case "Bug":
-                    case "Fire":
-                    case "Ice":
+                    case Type.Flying:
+                    case Type.Bug:
+                    case Type.Fire:
+                    case Type.Ice:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Ghost")
+            else if (attackType == Type.Ghost)
             {
                 switch (defenderType)
                 {
-                    case "Dark":
+                    case Type.Dark:
                         mult = 0.5f;
                         break;
-                    case "Ghost":
-                    case "Psychic":
+                    case Type.Ghost:
+                    case Type.Psychic:
                         mult = 2;
                         break;                   
-                    case "Normal":
+                    case Type.Normal:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Dragon")
+            else if (attackType == Type.Dragon)
             {
                 switch (defenderType)
                 {
-                    case "Steel":
+                    case Type.Steel:
                         mult = 0.5f;
                         break;
-                    case "Dragon":
+                    case Type.Dragon:
                         mult = 2;
                         break;                    
-                    case "Fairy":
+                    case Type.Fairy:
                         mult = 0;
                         break;
                 }
             }
 
-            else if (attackType == "Dark")
+            else if (attackType == Type.Dark)
             {
                 switch (defenderType)
                 {
-                    case "Dark":
-                    case "Fairy":
-                    case "Ice":
+                    case Type.Dark:
+                    case Type.Fairy:
+                    case Type.Ice:
                         mult = 0.5f;
                         break;
-                    case "Psychic":
-                    case "Ghost":
+                    case Type.Psychic:
+                    case Type.Ghost:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Steel")
+            else if (attackType == Type.Steel)
             {
                 switch (defenderType)
                 {
-                    case "Steel":
-                    case "Fire":
-                    case "Water":
-                    case "Electric":
+                    case Type.Steel:
+                    case Type.Fire:
+                    case Type.Water:
+                    case Type.Electric:
                         mult = 0.5f;
                         break;
-                    case "Fairy":
-                    case "Rock":
-                    case "Ice":
+                    case Type.Fairy:
+                    case Type.Rock:
+                    case Type.Ice:
                         mult = 2;
                         break;
                 }
             }
 
-            else if (attackType == "Fairy")
+            else if (attackType == Type.Fairy)
             {
                 switch (defenderType)
                 {
-                    case "Steel":
-                    case "Fire":
-                    case "Poison":
+                    case Type.Steel:
+                    case Type.Fire:
+                    case Type.Poison:
                         mult = 0.5f;
                         break;
-                    case "Dark":
-                    case "Fighting":
-                    case "Dragon":
+                    case Type.Dark:
+                    case Type.Fighting:
+                    case Type.Dragon:
                         mult = 2;
                         break;                    
                 }

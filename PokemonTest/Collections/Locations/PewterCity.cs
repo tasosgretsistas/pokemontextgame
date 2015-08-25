@@ -18,7 +18,7 @@ namespace PokemonTextEdition.Locations
         public PewterCity()
         {
             Name = "Pewter City";
-            Type = "city";
+            Type = LocationType.City;
             Tag = "pewter";
 
             South = "route2n";

@@ -15,7 +15,7 @@ namespace PokemonTextEdition.Locations
         public ViridianForestPart3()
         {
             Name = "Viridian Forest";
-            Type = "forest";
+            Type = LocationType.Forest;
             Tag = "forest3";
 
             South = "forest2";

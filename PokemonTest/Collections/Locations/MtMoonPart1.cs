@@ -18,7 +18,7 @@ namespace PokemonTextEdition.Locations
             : base()
         {
             Name = "Mt. Moon";
-            Type = "cave";
+            Type = LocationType.Cave;
             Tag = "mtmoon1";
 
             West = "route3e";

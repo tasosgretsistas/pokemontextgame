@@ -1,14 +1,16 @@
-﻿namespace PokemonTextEdition
+﻿using PokemonTextEdition.Classes;
+
+namespace PokemonTextEdition
 {
     public class Move
     {
         #region Fields & Properties
 
-        public int ID { get; set; }
+        public int MoveID { get; set; }
 
         //The move's primary identifiers - its name, elemental type, and attribute (physical, special, status).
         public string Name { get; set; }
-        public string Type { get; set; }
+        public Type Type { get; set; }
         public string Attribute { get; set; } 
 
         //Its unique parameters - damage, accuracy and priority (-6 to 6).
@@ -34,6 +36,7 @@
         /// <summary>
         /// The primary constructor for the Move class, representing a Pokemon's potential attack.
         /// </summary>
+        /// <param name="moveID">The move's unique ID.</param>
         /// <param name="moveName">The move's name.</param>
         /// <param name="moveType">The move's elemental type.</param>
         /// <param name="moveDamage">The move's base damage.</param>
@@ -44,8 +47,10 @@
         /// <param name="moveSecondaryEffect">A flag to be used for moves that have secondary effects.</param>
         /// <param name="moveEffectID">The move's secondary effect ID number. Each unique effect has a different ID.</param>
         /// <param name="moveEffectN">The move's secondary effect and the effect's coefficient - for instance, the effect's probability, or the amount of damage it'd deal.</param>
-        public Move(string moveName, string moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, float moveEffectN)
+        public Move(int moveID, string moveName, Type moveType, int moveDamage, int moveAccuracy,  string moveAttribute, int movePriority, bool movePerfectAccuracy, bool moveSecondaryEffect, int moveEffectID, float moveEffectN)
         {
+            MoveID = moveID;
+
             Name = moveName;
             Type = moveType;
             Attribute = moveAttribute;
@@ -65,8 +70,9 @@
 
         public Move()
         {
+            MoveID = 0;
             Name = "Sample Move";
-            Type = "";
+            Type = Type.None;
         }
 
         #endregion

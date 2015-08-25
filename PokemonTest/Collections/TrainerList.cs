@@ -2,6 +2,9 @@
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// A list of all the generic trainer NPCs species currently in the game.
+    /// </summary>
     class TrainerList
     {
         static public List<Trainer> trainers = new List<Trainer>()

@@ -57,12 +57,12 @@ namespace PokemonTextEdition.Classes
         public int CurrentHP;
         public string Status;
 
-        public string HeldItem;
+        public int HeldItem;
 
-        public string[] Moves;
+        public int[] Moves;
 
         public CompactPokemon(int pokedexNumber, int uniqueID, string nickname, int ability, int gender, int level, int experience, 
-                              int[] individualValues, int currentHP, string status, string helditem, string[] moves)
+                              int[] individualValues, int currentHP, string status, int helditem, int[] moves)
         {
             PokedexNumber = pokedexNumber;
             UniqueID = uniqueID;
@@ -86,13 +86,11 @@ namespace PokemonTextEdition.Classes
     class CompactItem
     {
         public int ItemID;
-        public string Name;
         public int Count;
 
-        public CompactItem(int id, string name, int count)
+        public CompactItem(int id, int count)
         {
             ItemID = id;
-            Name = name;
             Count = count;
         }
     }

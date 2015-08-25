@@ -8,8 +8,8 @@ namespace PokemonTextEdition.Locations
         public PalletTown()
             : base()
         {
-            Name = "Pallet Town";            
-            Type = "town";
+            Name = "Pallet Town";
+            Type = LocationType.Town;
             Tag = "pallet";
 
             North = "route1";

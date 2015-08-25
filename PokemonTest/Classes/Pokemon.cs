@@ -5,6 +5,19 @@ using System.Linq;
 
 namespace PokemonTextEdition
 {
+    /// <summary>
+    /// The various statuses that a Pokemon may be afflicted by, such as sleep and paralysis.
+    /// </summary>
+    public enum PokemonStatus
+    {
+        None,
+        Burn,
+        Freeze,
+        Paralysis,
+        Poison,
+        Sleep
+    }
+
     public class Pokemon
     {
         #region Fields & Properties
@@ -66,7 +79,6 @@ namespace PokemonTextEdition
 
                     Program.Log("Level property error. Current: " + Level + ". New level: " + value, 2);
                 }
-
             }
         }
 
@@ -149,9 +161,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((HPIV + (2 * species.BaseHP) + 100) * Level / 100) + 10;
-
-                return value;
+                return ((HPIV + (2 * species.BaseHP) + 100) * Level / 100) + 10;
             }
         }
 
@@ -159,9 +169,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((AttackIV + (2 * species.BaseAttack)) * Level / 100) + 5;
-
-                return value;
+                return ((AttackIV + (2 * species.BaseAttack)) * Level / 100) + 5;
             }
         }
 
@@ -169,9 +177,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((DefenseIV + (2 * species.BaseDefense)) * Level / 100) + 5;
-
-                return value;
+                return ((DefenseIV + (2 * species.BaseDefense)) * Level / 100) + 5;
             }
         }
 
@@ -180,9 +186,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((SpecialAttackIV + (2 * species.BaseSpecialAttack)) * Level / 100) + 5;
-
-                return value;
+                return ((SpecialAttackIV + (2 * species.BaseSpecialAttack)) * Level / 100) + 5;
             }
         }
 
@@ -190,9 +194,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((SpecialDefenseIV + (2 * species.BaseSpecialDefense)) * Level / 100) + 5;
-
-                return value;
+                return ((SpecialDefenseIV + (2 * species.BaseSpecialDefense)) * Level / 100) + 5;
             }
         }
 
@@ -200,9 +202,7 @@ namespace PokemonTextEdition
         {
             get
             {
-                int value = ((SpeedIV + (2 * species.BaseSpeed)) * Level / 100) + 5;
-
-                return value;
+                return ((SpeedIV + (2 * species.BaseSpeed)) * Level / 100) + 5;
             }
         }
 
@@ -248,9 +248,9 @@ namespace PokemonTextEdition
         }
 
         //This is used to determine whether the Pokemon is currently suffering from a status ailment.
-        protected string status = "";
+        protected PokemonStatus status = PokemonStatus.None;
 
-        public string Status
+        public PokemonStatus Status
         {
             get
             {
@@ -259,16 +259,7 @@ namespace PokemonTextEdition
 
             set
             {
-                if (value == "" || value == "burn" || value == "poison" || value == "paralysis" || value == "sleep")
-                    status = value;
-
-                else
-                {
-                    Console.WriteLine("The game tried to set " + Name + "'s status to " + value + ", which is unintended behaviour.");
-                    Console.WriteLine("Please report this to the author, including the log.txt file.");
-
-                    Program.Log("Status property error. Current: " + status + ". New status: " + value, 2);
-                }
+                status = value;
             }
         }
 
@@ -331,45 +322,27 @@ namespace PokemonTextEdition
         /// <param name="experience">The Pokemon's current experience.</param>
         /// <param name="ivs">The Pokemon's individual values, as an int array.</param>
         /// <param name="currentHP">The Pokemon's current HP.</param>
-        /// <param name="status">The Pokemon's current health status.</param>
-        /// <param name="moves">The Pokemon's known moves, as a string array.</param>
-        public Pokemon(int species, string nickname, int level, int experience, int[] ivs, int currentHP, string status, string[] moves)
+        /// <param name="status">The Pokemon's current status condition.</param>
+        /// <param name="moves">The Pokemon's known moves, as a list of moves.</param>
+        public Pokemon(int species, string nickname, int level, int experience, int[] ivs, int currentHP, PokemonStatus status, List<Move> moves)
             :this(species)
         {
             Nickname = nickname;
-            //Console.WriteLine("Loaded " + Name + "'s nickname.");
+
             Level = level;
 
-            //Console.WriteLine("Loaded " + Name + "'s level.");
             Experience = experience;
-
-            //Console.WriteLine("Loaded " + Name + "'s experience.");
 
             for (int i = 0; i < ivs.Length; i++)
             {
                 IndividualValues[i] = ivs[i];
             }
-            //Console.WriteLine("Loaded " + Name + "'s IVs.");
 
             CurrentHP = currentHP;
-            //Console.WriteLine("Loaded " + Name + "'s currentHP.");
             
             Status = status;
-            //Console.WriteLine("Loaded " + Name + "'s status.");
 
-            for (int i = 0; i < moves.Length; i++)
-            {
-                //Console.WriteLine("Loading move: " + moves[i]);
-
-                Move move = MovesList.allMoves.Find(m => m.Name == moves[i]);
-
-                knownMoves.Add(move);
-
-                //Console.WriteLine("Loaded move: " + move.Name);
-            }
-
-            //Console.WriteLine("Loaded " + nickname + "'s moves.");
-
+            knownMoves = moves;
         }
         #endregion
 
@@ -381,9 +354,9 @@ namespace PokemonTextEdition
         /// <returns>The Pokemon's type(s) as string.</returns>
         public string TypeMessage()        
         {
-            string type = species.Type1;
+            string type = species.Type1.ToString();
 
-            if (species.Type2 != "")
+            if (species.Type2 != Classes.Type.None)
             {
                 type += "/" + species.Type2;
             }
@@ -399,19 +372,19 @@ namespace PokemonTextEdition
         {
             switch (Status)
             {
-                case "":
+                case PokemonStatus.None:
                     return "Normal";
 
-                case "poison":
+                case PokemonStatus.Poison:
                     return "Poisoned";
 
-                case "burn":
+                case PokemonStatus.Burn:
                     return "Burnt";
 
-                case "paralysis":
+                case PokemonStatus.Paralysis:
                     return "Paralyzed";
 
-                case "sleep":
+                case PokemonStatus.Sleep:
                     return "Asleep";
 
                 default:
@@ -488,7 +461,7 @@ namespace PokemonTextEdition
         /// </summary>
         /// <param name="type">The type to check for.</param>
         /// <returns></returns>
-        public bool TypeCheck(string type)
+        public bool TypeCheck(Classes.Type type)
         {
             if (species.Type1 == type)
                 return true;
@@ -506,7 +479,7 @@ namespace PokemonTextEdition
         public void Faint()
         {
             CurrentHP = 0;
-            Status = "";
+            Status = PokemonStatus.None;
 
             RestoreTemporaryStatus(true);
         }
@@ -579,7 +552,7 @@ namespace PokemonTextEdition
         public void CheckForNewMoves()
         {
             //This returns a list of all the moves the Pokemon has access to.
-            Dictionary<Move, int> availableMoves = MovesList.PokemonAvailableMoves(species.Name);
+            Dictionary<Move, int> availableMoves = MoveList.PokemonAvailableMoves(species.Name);
 
             //If the Pokemon learns a new move at its current level, then the procedure starts.
             if (availableMoves.ContainsValue(Level))

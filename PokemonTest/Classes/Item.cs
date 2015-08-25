@@ -1,4 +1,4 @@
-﻿using System;
+﻿using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition
 {
@@ -15,13 +15,41 @@ namespace PokemonTextEdition
         public bool CanUseMultiple { get; set; } //This determines whether multiple of this item can be used at once.
 
         public int Value { get; set; } //The item's value when purchasing at a store.
-        public int Count { get; set; } //How many instances of the item the player holds.
+
+        protected int count; //How many instances of the item the player holds.
+
+        public int Count
+        {
+            get
+            {
+                return count;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    count = 0;
+
+                    UI.Error("The game tried to set the count of an item to less than 0.",
+                             "The game tried to set the count of " + Name + " to " + value + ", which is less than 0.", 2);
+                }
+
+                else if (value > 99)
+                {
+                    count = 99;
+                }
+
+                else
+                    count = value;
+            }
+        } 
 
         public Item()
         {
             ItemID = 0;
             Name = "Sample Item";
             Type = "";
+            Value = 0;
         }
 
         /// <summary>
@@ -81,7 +109,7 @@ namespace PokemonTextEdition
         {
             Program.Log("The player tried to use a " + Name + " outside of combat.", 0);
 
-            Console.WriteLine("This item cannot be used outside of combat.\n");
+            UI.WriteLine("This item cannot be used outside of combat.\n");
 
             return false;
         }
@@ -94,7 +122,7 @@ namespace PokemonTextEdition
         {
             Program.Log("The player tried to use a " + Name + " during combat.", 0);
 
-            Console.WriteLine("This item cannot be used during combat.\n");
+            UI.WriteLine("This item cannot be used during combat.\n");
 
             return false;
         }
@@ -139,7 +167,7 @@ namespace PokemonTextEdition
 
             //A message is then printed depending on method of acquisition.
             if (method == "obtain")
-                Console.WriteLine("You obtained {0}!", AddRemoveQuantityFormat(quantity));
+                UI.WriteLine("You obtained " + AddRemoveQuantityFormat(quantity) + "!");
         }
 
         /// <summary>
@@ -149,7 +177,7 @@ namespace PokemonTextEdition
         /// <param name="method">The method of acquisition of the item, i.e. "sold" or "used".</param>
         public void Remove(int quantity, string method)
         {
-            //First the game searches whether there's an item in the player's inventory with the same name as this item. If so, a "quantity" amount of it is removed.
+            //First the game checls wether the item exists in the player's inventory. If so, a "quantity" amount of it is removed.
             if (Overworld.player.items.Exists(i => i.Equals(this)))
             {
                 Overworld.player.items.Find(i => i.ItemID == ItemID).Count -= quantity;
@@ -163,8 +191,8 @@ namespace PokemonTextEdition
             //This should never happen ideally, but I've added this error message to facilitate for the case I ever make a silly mistake like that.
             else
             {
-                Program.Log("The game tried to remove " + Name + " from the bag, but there were none.", 2);
-                Console.WriteLine("The game tried to remove an item from the bag that didn't exist. Please contact the author, including the log.txt file.");
+                UI.Error("The game tried to remove an item that does not exist in the player's bag.",
+                         "The game tried to remove " + Name + " from the bag, but there were none.", 2);
             }
 
             /*A message is then printed depending on the way the item was removed.

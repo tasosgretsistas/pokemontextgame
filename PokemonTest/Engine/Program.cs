@@ -78,17 +78,17 @@ namespace PokemonTextEdition
                     break;
 
                 case "list items":
-                    ItemList.ListAllItems();
+                    Cheats.ListAllItems();
                     MainMenu();
                     break;
 
                 case "list pokemon":
-                    PokemonList.ListAllPokemon();
+                    Cheats.ListAllPokemon();
                     MainMenu();
                     break;
 
                 case "list moves":
-                    MovesList.ListAllMoves();
+                    Cheats.ListAllMoves();
                     MainMenu();
                     break;
 

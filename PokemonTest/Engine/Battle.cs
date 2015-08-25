@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,7 +53,7 @@ namespace PokemonTextEdition
         bool battleOver = false;
 
         //Determines if the player won or lost.
-        bool victory = true;
+        //bool victory = true;
 
         //An integer that counts how many times the player has tried to escape.
         int escapeAttempts = 1;
@@ -368,10 +370,10 @@ namespace PokemonTextEdition
             int playerSpeed = playerPokemon.Speed;
             int enemySpeed = enemyPokemon.Speed;
 
-            if (playerPokemon.Status == "paralysis")
+            if (playerPokemon.Status == PokemonStatus.Paralysis)
                 playerSpeed = (int)(playerSpeed * 0.25f);
 
-            if (enemyPokemon.Status == "paralysis")
+            if (enemyPokemon.Status == PokemonStatus.Paralysis)
                 enemySpeed = (int)(enemySpeed * 0.25f);
 
             //If the player's Pokemon is faster or its move had higher priority, it goes first. 
@@ -506,8 +508,6 @@ namespace PokemonTextEdition
         /// <param name="mod"></param>
         void DamageCalculation(string attacker, float mod)
         {
-
-
             float damage = 0; //The total damage inflicted to the defending Pokemon after all calculations are done. 
             int previousHP = defendingPokemon.CurrentHP; //This is used to accurately calculate how much damage the defending Pokemon took. 
 
@@ -602,7 +602,7 @@ namespace PokemonTextEdition
                     }
 
                     //If the attacking Pokemon is burned, the status modifier for physical attacks is set to 0.5.
-                    if (attackingPokemon.Status == "burn" && currentMove.Attribute == "Physical")
+                    if (attackingPokemon.Status == PokemonStatus.Burn && currentMove.Attribute == "Physical")
                     {
                         damageText += " * 0.5 Burn";
 
@@ -646,7 +646,7 @@ namespace PokemonTextEdition
             //Program.Log(defenderName + " took " + (previousHP - defendingPokemon.currentHP).ToString() + " damage.", 1);
 
             //Finally, if the move has a secondary effect, it gets resolved.
-            if (currentMove.SecondaryEffect)
+            if (currentMove.SecondaryEffect && !battleOver)
             {
                 Program.Log("The move has a secondary effect, so it will now be resolved.", 0);
 
@@ -676,7 +676,7 @@ namespace PokemonTextEdition
             playerPokemon.protect = false;
             enemyPokemon.protect = false;
 
-            if (enemyPokemon.Status == "burn" || enemyPokemon.Status == "poison")
+            if (enemyPokemon.Status == PokemonStatus.Burn || enemyPokemon.Status == PokemonStatus.Poison)
             {
                 //Residual damage due to status effects.
 
@@ -721,7 +721,7 @@ namespace PokemonTextEdition
 
             //These are mirrors of the previous methods, but for the player's Pokemon instead of the AI's.
 
-            if (playerPokemon.Status == "burn" || playerPokemon.Status == "poison")
+            if (playerPokemon.Status == PokemonStatus.Burn || playerPokemon.Status == PokemonStatus.Poison)
             {
                 Console.WriteLine("\n{0} lost some life due to its {1}!", playerPokemon.Name, playerPokemon.Status);
 
@@ -790,7 +790,7 @@ namespace PokemonTextEdition
         /// <returns>Returns true if the Pokemon is not paralyzed or if it will succesfully attack.</returns>
         bool ParalysisCheck()
         {
-            if (attackingPokemon.Status == "paralysis")
+            if (attackingPokemon.Status == PokemonStatus.Paralysis)
             {
                 //If a randomly generated number is higher than 25, the Pokemon attacks succesfully.
                 if (rng.Next(1, 101) > 25)
@@ -819,7 +819,7 @@ namespace PokemonTextEdition
         /// <returns>Returns true if the Pokemon is not asleep or if the Pokemon will wake up and attack.</returns>
         bool SleepCheck()
         {
-            if (attackingPokemon.Status == "sleep")
+            if (attackingPokemon.Status == PokemonStatus.Sleep)
             {
                 //If the Pokemon was asleep and its sleep counter has hit 0, it wakes up.
                 if (attackingPokemon.sleepCounter == 0)
@@ -827,7 +827,7 @@ namespace PokemonTextEdition
                     Program.Log(attackingPokemonName + " woke up.", 1);
                     Console.WriteLine("\n{0} woke up!", attackingPokemonName);
 
-                    attackingPokemon.Status = "";
+                    attackingPokemon.Status = PokemonStatus.None;
 
                     return true;
                 }
@@ -872,27 +872,27 @@ namespace PokemonTextEdition
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Fire"))
+                        if (defendingPokemon.Status == PokemonStatus.None && !defendingPokemon.TypeCheck(Classes.Type.Fire))
                         {
                             Program.Log(defendingPokemonName + " gets burnt by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got burnt by the attack!", defendingPokemonName);
-                            defendingPokemon.Status = "burn";
+                            defendingPokemon.Status = PokemonStatus.Burn;
                         }
                     }
 
                     break;
 
-                case 2: //% Based Paralysis
+                case 2: //% Based Paralysis 
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Electric"))
+                        if (defendingPokemon.Status == PokemonStatus.None && !defendingPokemon.TypeCheck(Classes.Type.Electric))
                         {
                             Program.Log(defendingPokemonName + " gets paralyzed by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got paralyzed by the attack!", defendingPokemonName);
-                            defendingPokemon.Status = "paralysis";
+                            defendingPokemon.Status = PokemonStatus.Paralysis;
                         }
                     }
 
@@ -902,12 +902,12 @@ namespace PokemonTextEdition
 
                     if (chance < currentMove.EffectN)
                     {
-                        if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Poison"))
+                        if (defendingPokemon.Status == PokemonStatus.None && !defendingPokemon.TypeCheck(Classes.Type.Poison))
                         {
                             Program.Log(defendingPokemonName + " gets poisoned by " + currentMove.Name + ". Chance = " + currentMove.EffectN, 1);
 
                             Console.WriteLine("{0} got poisoned by the attack!", defendingPokemonName);
-                            defendingPokemon.Status = "poison";
+                            defendingPokemon.Status = PokemonStatus.Poison;
                         }
                     }
 
@@ -915,7 +915,7 @@ namespace PokemonTextEdition
 
                 case 5: //Leech Seed
 
-                    if (!defendingPokemon.leechSeed && !defendingPokemon.TypeCheck("Grass"))
+                    if (!defendingPokemon.leechSeed && !defendingPokemon.TypeCheck(Classes.Type.Grass))
                     {
                         Program.Log(defendingPokemonName + " gets afflicted by Leech Seed.", 1);
 
@@ -931,13 +931,13 @@ namespace PokemonTextEdition
 
                 case 6: //Poison
 
-                    if (defendingPokemon.Status == "" && !defendingPokemon.TypeCheck("Poison"))
+                    if (defendingPokemon.Status == PokemonStatus.None && !defendingPokemon.TypeCheck(Classes.Type.Poison))
                     {
                         Program.Log(defendingPokemonName + " gets poisoned by " + currentMove.Name + ".", 1);
 
                         Console.WriteLine("{0} got poisoned by the attack!", defendingPokemonName);
 
-                        defendingPokemon.Status = "poison";
+                        defendingPokemon.Status = PokemonStatus.Poison;
                     }
 
                     else
@@ -947,7 +947,7 @@ namespace PokemonTextEdition
 
                 case 7: //Sleep
 
-                    if (defendingPokemon.Status == "")
+                    if (defendingPokemon.Status == PokemonStatus.None)
                     {
                         int sleepRNG = rng.Next(1, 101);
 
@@ -964,7 +964,7 @@ namespace PokemonTextEdition
 
                         Console.WriteLine("{0} fell asleep!", defendingPokemonName);
 
-                        defendingPokemon.Status = "sleep";
+                        defendingPokemon.Status = PokemonStatus.Sleep;
                     }
 
                     else
@@ -1012,11 +1012,8 @@ namespace PokemonTextEdition
 
                 default: //Foolproof.
                     {
-                        Console.WriteLine("Uh oh, something went wrong. The game tried to resolve an effect whose ID isn't");
-                        Console.WriteLine("handled by the the effect resolution program. Please contact the author with");
-                        Console.WriteLine("your log.txt file so he can figure how that happened. :|");
-
-                        Program.Log("The game tried to resolve the effect of " + currentMove.Name + " (Effect ID: " + currentMove.EffectID + "), which does not exist.", 2);
+                        UI.Error("The game tried to resolve an attack with an invalid effect ID.",
+                                 "The game tried to resolve the effect of " + currentMove.Name + "(Effect ID: " + currentMove.EffectID + "), which does not exist.", 2);
 
                         break;
                     }

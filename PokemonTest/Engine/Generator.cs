@@ -20,7 +20,7 @@ namespace PokemonTextEdition
             Pokemon pokemon = new Pokemon(species);
 
             //The available moves are acquired from the MoveList method in the MovesList class.
-            Dictionary<Move, int> availableMoves = MovesList.PokemonAvailableMoves(name); 
+            Dictionary<Move, int> availableMoves = MoveList.PokemonAvailableMoves(name); 
             
             pokemon.Level = level; //Its level is set to the given level afterwards so that its moves and stats can be set.
 
@@ -38,7 +38,7 @@ namespace PokemonTextEdition
 
             //If something goes wrong and the Pokemon does not know any moves, it automatically learns Tackle.
             if (pokemon.knownMoves.Count < 1)
-                pokemon.knownMoves.Add(MovesList.test2);
+                pokemon.knownMoves.Add(MoveList.test2);
 
             return pokemon;
         }
