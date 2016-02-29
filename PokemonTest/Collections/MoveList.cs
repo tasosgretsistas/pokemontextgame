@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using PokemonTextEdition.Classes;
+﻿using PokemonTextEdition.Classes;
+using System.Collections.Generic;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Collections
 {
     /// <summary>
     /// //A list of all the Pokemon species currently in the game.
@@ -37,157 +37,158 @@ namespace PokemonTextEdition
 
         #region Normal Type
 
-        static public Move Pound = new Move(1, "Pound", Type.Normal, 40, 100, "Physical", 0, false, false, 0, 0);
-        static public Move DoubleSlap = new Move(3, "Double Slap", Type.Normal, 15, 85, "Physical", 0, false, false, 13, 5);
-        static public Move CometPunch = new Move(4, "Comet Punch", Type.Normal, 18, 85, "Physical", 0, false, false, 13, 5);
-        static public Move Scratch = new Move(10, "Scratch", Type.Normal, 40, 100, "Physical", 0, false, false, 0, 0);
-        static public Move Cut = new Move(15, "Cut", Type.Normal, 70, 95, "Physical", 0, false, false, 0, 0);
-        static public Move HornAttack = new Move(30, "Horn Attack", Type.Normal, 65, 100, "Physical", 0, false, false, 0, 0);
-        static public Move FuryAttack = new Move(31, "Fury Attack", Type.Normal, 15, 85, "Physical", 0, false, false, 13, 5);
-        static public Move Tackle = new Move(33, "Tackle", Type.Normal, 50, 100, "Physical", 0, false, false, 0, 0);
-        static public Move BodySlam = new Move(34, "Body Slam", Type.Normal, 85, 100, "Physical", 0, false, true, 2, 31);
-        static public Move Wrap = new Move(35, "Wrap", Type.Normal, 15, 90, "Physical", 0, false, false, 13, 5);
-        static public Move TakeDown = new Move(36, "Take Down", Type.Normal, 90, 85, "Physical", 0, false, false, 8, 0.25f);
-        static public Move DoubleEdge = new Move(38, "Double-Edge", Type.Normal, 120, 100, "Physical", 0, false, false, 8, 0.33f);
-        static public Move Sing = new Move(47, "Sing", Type.Normal, 0, 55, "Status", 0, false, false, 7, 0);
-        static public Move Supersonic = new Move(48, "Supersonic", Type.Normal, 0, 55, "Status", 0, false, false, 20, 0);
-        static public Move Disable = new Move(50, "Disable", Type.Normal, 0, 100, "Status", 0, false, false, 14, 0);
-        static public Move QuickAttack = new Move(98, "Quick Attack", Type.Normal, 40, 100, "Physical", 1, false, false, 0, 0);    
-        static public Move Rage = new Move(99, "Rage", Type.Normal, 20, 100, "Physical", 0, false, false, 4, 0);
-        static public Move Swift = new Move(129, "Swift", Type.Normal, 60, 100, "Special", 0, true, false, 0, 0);
-        static public Move Glare = new Move(137, "Glare", Type.Normal, 0, 100, "Status", 0, false, false, 17, 0);
-        static public Move DizzyPunch = new Move(146, "Dizzy Punch", Type.Normal, 70, 100, "Physical", 0, false, true, 15, 21);
-        static public Move FurySwipes = new Move(154, "Fury Swipes", Type.Normal, 18, 80, "Physical", 0, false, false, 13, 5);
-        static public Move HyperFang = new Move(158, "Hyper Fang", Type.Normal, 80, 90, "Physical", 0, false, true, 3, 16);
-        static public Move Protect = new Move(182, "Protect", Type.Normal, 0, 100, "Status", 4, true, false, 12, 0);        
-        static public Move RapidSpin = new Move(229, "Rapid Spin", Type.Normal, 20, 100, "Physical", 0, false, true, 11, 0);
-        static public Move Covet = new Move(343, "Covet", Type.Normal, 60, 100, "Physical", 0, false, true, 18, 0);
-        static public Move DoubleHit = new Move(458, "Double Hit", Type.Normal, 35, 90, "Physical", 0, false, false, 13, 2);
+        static public Move Pound = new Move(1, "Pound", Type.Normal, 40, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.None, 0);
+        static public Move DoubleSlap = new Move(3, "Double Slap", Type.Normal, 15, 85, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 5);
+        static public Move CometPunch = new Move(4, "Comet Punch", Type.Normal, 18, 85, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 5);
+        static public Move Scratch = new Move(10, "Scratch", Type.Normal, 40, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.None, 0);
+        static public Move Cut = new Move(15, "Cut", Type.Normal, 70, 95, MoveAttribute.Physical, 0, false, false, MoveEffect.None, 0);
+        static public Move HornAttack = new Move(30, "Horn Attack", Type.Normal, 65, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.None, 0);
+        static public Move FuryAttack = new Move(31, "Fury Attack", Type.Normal, 15, 85, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 5);
+        static public Move Tackle = new Move(33, "Tackle", Type.Normal, 50, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.None, 0);
+        static public Move BodySlam = new Move(34, "Body Slam", Type.Normal, 85, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.Paralysis, 30);
+        static public Move Wrap = new Move(35, "Wrap", Type.Normal, 15, 90, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 5);
+        static public Move TakeDown = new Move(36, "Take Down", Type.Normal, 90, 85, MoveAttribute.Physical, 0, false, false, MoveEffect.Recoil, 0.25f);
+        static public Move DoubleEdge = new Move(38, "Double-Edge", Type.Normal, 120, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.Recoil, 0.33f);
+        static public Move Sing = new Move(47, "Sing", Type.Normal, 0, 55, MoveAttribute.Status, 0, false, false, MoveEffect.Sleep, 0);
+        static public Move Supersonic = new Move(48, "Supersonic", Type.Normal, 0, 55, MoveAttribute.Status, 0, false, false, MoveEffect.Confusion, 0);
+        static public Move Disable = new Move(50, "Disable", Type.Normal, 0, 100, MoveAttribute.Status, 0, false, false, MoveEffect.Disable, 0);
+        static public Move QuickAttack = new Move(98, "Quick Attack", Type.Normal, 40, 100, MoveAttribute.Physical, 1, false, false, 0, 0);    
+        static public Move Rage = new Move(99, "Rage", Type.Normal, 20, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.ConsecutiveDamage, 0);
+        static public Move Swift = new Move(129, "Swift", Type.Normal, 60, 100, MoveAttribute.Special, 0, true, false, 0, 0);
+        static public Move Glare = new Move(137, "Glare", Type.Normal, 0, 100, MoveAttribute.Status, 0, false, false, MoveEffect.Paralysis, 0);
+        static public Move DizzyPunch = new Move(146, "Dizzy Punch", Type.Normal, 70, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.Confusion, 20);
+        static public Move FurySwipes = new Move(154, "Fury Swipes", Type.Normal, 18, 80, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 5);
+        static public Move HyperFang = new Move(158, "Hyper Fang", Type.Normal, 80, 90, MoveAttribute.Physical, 0, false, true, MoveEffect.Poison, 15);
+        static public Move Protect = new Move(182, "Protect", Type.Normal, 0, 100, MoveAttribute.Status, 4, true, false, MoveEffect.Protect, 0);        
+        static public Move RapidSpin = new Move(229, "Rapid Spin", Type.Normal, 20, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.ClearHazards, 0);
+        static public Move Covet = new Move(343, "Covet", Type.Normal, 60, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.ItemSteal, 0);
+        static public Move DoubleHit = new Move(458, "Double Hit", Type.Normal, 35, 90, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 2);
 
         #endregion
 
         #region Rock Type
 
-        static public Move RockThrow = new Move(88, "Rock Throw", Type.Rock, 50, 90, "Physical", 0, false, false, 0, 0);
-        static public Move Rollout = new Move(205, "Rollout", Type.Rock, 30, 90, "Physical", 0, false, false, 4, 1);
-        static public Move RockTomb = new Move(317, "Rock Tomb", Type.Rock, 60, 95, "Physical", 0, false, false, 0, 0);
+        static public Move RockThrow = new Move(88, "Rock Throw", Type.Rock, 50, 90, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move Rollout = new Move(205, "Rollout", Type.Rock, 30, 90, MoveAttribute.Physical, 0, false, false, MoveEffect.ConsecutiveDamage, 2);
+        static public Move RockTomb = new Move(317, "Rock Tomb", Type.Rock, 60, 95, MoveAttribute.Physical, 0, false, false, 0, 0);
 
         #endregion
 
         #region Ground Type
 
-        static public Move MudSlap = new Move(189, "Mud-Slap", Type.Ground, 20, 100, "Special", 0, false, false, 0, 0);
+        static public Move MudSlap = new Move(189, "Mud-Slap", Type.Ground, 20, 100, MoveAttribute.Special, 0, false, false, 0, 0);
 
         #endregion
 
         #region Ghost Type
 
-        static public Move Astonish = new Move(310, "Astonish", Type.Ghost, 30, 100, "Physical", 0, false, false, 0, 0);
+        static public Move Astonish = new Move(310, "Astonish", Type.Ghost, 30, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
 
         #endregion
 
         #region Grass Type
 
-        static public Move VineWhip = new Move(22, "Vine Whip", Type.Grass, 45, 100, "Physical", 0, false, false, 0, 0);
-        static public Move LeechSeed = new Move(73, "Leech Seed", Type.Grass, 0, 90, "Status", 0, false, false, 5, 0);
-        static public Move RazorLeaf = new Move(75, "Razor Leaf", Type.Grass, 55, 95, "Physical", 0, false, false, 9, 2);
-        static public Move StunSpore = new Move(78, "Stun Spore", Type.Grass, 0, 75, "Status", 0, false, false, 17, 0);
-        static public Move SleepPowder = new Move(79, "Sleep Powder", Type.Grass, 0, 75, "Status", 0, false, false, 7, 0);
+        static public Move VineWhip = new Move(22, "Vine Whip", Type.Grass, 45, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move LeechSeed = new Move(73, "Leech Seed", Type.Grass, 0, 90, MoveAttribute.Status, 0, false, false, MoveEffect.LeechSeed, 0);
+        static public Move RazorLeaf = new Move(75, "Razor Leaf", Type.Grass, 55, 95, MoveAttribute.Physical, 0, false, false, MoveEffect.IncreasedCritChance, 2);
+        static public Move StunSpore = new Move(78, "Stun Spore", Type.Grass, 0, 75, MoveAttribute.Status, 0, false, false, MoveEffect.Paralysis, 0);
+        static public Move SleepPowder = new Move(79, "Sleep Powder", Type.Grass, 0, 75, MoveAttribute.Status, 0, false, false, MoveEffect.Sleep, 0);
 
         #endregion
 
         #region Fire Type
 
-        static public Move Ember = new Move(52, "Ember", Type.Fire, 40, 100, "Special", 0, false, true, 1, 11);
-        static public Move FireFang = new Move(424, "Fire Fang", Type.Fire, 65, 95, "Physical", 0, false, true, 1, 11);
+        static public Move Ember = new Move(52, "Ember", Type.Fire, 40, 100, MoveAttribute.Special, 0, false, true, MoveEffect.Burn, 10);
+        static public Move FireFang = new Move(424, "Fire Fang", Type.Fire, 65, 95, MoveAttribute.Physical, 0, false, true, MoveEffect.Burn, 10);
 
         #endregion
 
         #region Water Type
 
-        static public Move WaterGun = new Move(55, "Water Gun", Type.Water, 40, 100, "Special", 0, false, false, 0, 0);
-        static public Move Bubble = new Move(145, "Bubble", Type.Water, 40, 100, "Special", 0, false, true, 2, 11);
+        static public Move WaterGun = new Move(55, "Water Gun", Type.Water, 40, 100, MoveAttribute.Special, 0, false, false, 0, 0);
+        static public Move Bubble = new Move(145, "Bubble", Type.Water, 40, 100, MoveAttribute.Special, 0, false, true, MoveEffect.Paralysis, 10);
 
         #endregion
 
         #region Electric Type
 
-        static public Move ThunderShock = new Move(84, "Thunder Shock", Type.Electric, 40, 100, "Special", 0, false, true, 2, 11);
-        static public Move ThunderWave = new Move(86, "Thunder Wave", Type.Electric, 0, 100, "Status", 0, false, false, 17, 0);
-        static public Move ElectroBall = new Move(486, "Electro Ball", Type.Electric, 90, 100, "Special", 0, false, false, 0, 0);
+        static public Move ThunderShock = new Move(84, "Thunder Shock", Type.Electric, 40, 100, MoveAttribute.Special, 0, false, true, MoveEffect.Paralysis, 10);
+        static public Move ThunderWave = new Move(86, "Thunder Wave", Type.Electric, 0, 100, MoveAttribute.Status, 0, false, false, MoveEffect.Paralysis, 0);
+        static public Move ElectroBall = new Move(486, "Electro Ball", Type.Electric, 90, 100, MoveAttribute.Special, 0, false, false, 0, 0);
 
         #endregion
 
         #region Fighting Type
 
-        static public Move KarateChop = new Move(2, "Karate Chop", Type.Fighting, 50, 100, "Physical", 0, false, false, 9, 2);
-        static public Move DoubleKick = new Move(24, "Double Kick", Type.Fighting, 30, 100, "Physical", 0, false, false, 13, 2);
-        static public Move LowKick = new Move(67, "Low Kick", Type.Fighting, 70, 100, "Physical", 0, false, false, 0, 0);
-        static public Move SeismicToss = new Move(69, "Seismic Toss", Type.Fighting, 0, 100, "Physical", 0, false, false, 19, 0);
+        static public Move KarateChop = new Move(2, "Karate Chop", Type.Fighting, 50, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.IncreasedCritChance, 2);
+        static public Move DoubleKick = new Move(24, "Double Kick", Type.Fighting, 30, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.MultipleHits, 2);
+        static public Move LowKick = new Move(67, "Low Kick", Type.Fighting, 70, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move SeismicToss = new Move(69, "Seismic Toss", Type.Fighting, 0, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.SetDamagePerLevel, 0);
 
         #endregion
 
         #region Bug Type
 
-        static public Move Twineedle = new Move(41, "Twineedle", Type.Bug, 60, 100, "Physical", 0, false, true, 3, 21);
-        static public Move BugBite = new Move(450, "Bug Bite", Type.Bug, 60, 100, "Physical", 0, false, false, 0, 0);
+        static public Move Twineedle = new Move(41, "Twineedle", Type.Bug, 60, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.Poison, 20);
+        static public Move BugBite = new Move(450, "Bug Bite", Type.Bug, 60, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
 
         #endregion
 
         #region Poison Type
 
-        static public Move PoisonSting = new Move(40, "Poison Sting", Type.Poison, 15, 100, "Physical", 0, false, true, 3, 31);
-        static public Move Acid = new Move(51, "Acid", Type.Poison, 40, 100, "Special", 0, false, true, 3, 16);
-        static public Move PoisonPowder = new Move(77, "Poison Powder", Type.Poison, 0, 75, "Status", 0, false, false, 6, 0);
+        static public Move PoisonSting = new Move(40, "Poison Sting", Type.Poison, 15, 100, MoveAttribute.Physical, 0, false, true, MoveEffect.Poison, 30);
+        static public Move Acid = new Move(51, "Acid", Type.Poison, 40, 100, MoveAttribute.Special, 0, false, true, MoveEffect.Poison, 15);
+        static public Move PoisonPowder = new Move(77, "Poison Powder", Type.Poison, 0, 75, MoveAttribute.Status, 0, false, false, MoveEffect.Poison, 0);
 
         #endregion
 
         #region Psychic Type
 
-        static public Move Confusion = new Move(93, "Confusion", Type.Psychic, 50, 100, "Special", 0, false, true, 15, 16);
+        static public Move Confusion = new Move(93, "Confusion", Type.Psychic, 50, 100, MoveAttribute.Special, 0, false, true, MoveEffect.Confusion, 15);
 
         #endregion
 
         #region Flying Type
 
-        static public Move Gust = new Move(16, "Gust", Type.Flying, 40, 100, "Special", 0, false, false, 0, 0);
-        static public Move WingAttack = new Move(17, "Wing Attack", Type.Flying, 60, 100, "Physical", 0, false, false, 0, 0);
-        static public Move Peck = new Move(64, "Peck", Type.Flying, 35, 100, "Physical", 0, false, false, 0, 0);
-        static public Move AerialAce = new Move(332, "Aerial Ace", Type.Flying, 60, 100, "Physical", 0, true, false, 0, 0);
+        static public Move Gust = new Move(16, "Gust", Type.Flying, 40, 100, MoveAttribute.Special, 0, false, false, 0, 0);
+        static public Move WingAttack = new Move(17, "Wing Attack", Type.Flying, 60, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move Peck = new Move(64, "Peck", Type.Flying, 35, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move AerialAce = new Move(332, "Aerial Ace", Type.Flying, 60, 100, MoveAttribute.Physical, 0, true, false, 0, 0);
 
         #endregion
 
         #region Dragon Type
 
-        static public Move DragonRage = new Move(82, "Dragon Rage", Type.Dragon, 0, 100, "Special", 0, false, false, 10, 40);
-        static public Move Twister = new Move(239, "Twister", Type.Dragon, 40, 100, "Special", 0, false, false, 0, 0);
+        static public Move DragonRage = new Move(82, "Dragon Rage", Type.Dragon, 0, 100, MoveAttribute.Special, 0, false, false, MoveEffect.SetDamage, 40);
+        static public Move Twister = new Move(239, "Twister", Type.Dragon, 40, 100, MoveAttribute.Special, 0, false, false, 0, 0);
 
         #endregion
 
         #region Dark Type
 
-        static public Move Bite = new Move(44, "Bite", Type.Dark, 60, 100, "Physical", 0, false, false, 0, 0);
-        static public Move Pursuit = new Move(228, "Pursuit", Type.Dark, 40, 100, "Physical", 0, false, false, 16, 0);
-        static public Move Crunch = new Move(242, "Crunch", Type.Dark, 80, 100, "Physical", 0, false, false, 0, 0);
+        static public Move Bite = new Move(44, "Bite", Type.Dark, 60, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move Pursuit = new Move(228, "Pursuit", Type.Dark, 40, 100, MoveAttribute.Physical, 0, false, false, MoveEffect.Pursuit, 0);
+        static public Move Crunch = new Move(242, "Crunch", Type.Dark, 80, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
 
         #endregion
 
         //DEBUG
         #region Test Type
 
-        static public Move test1 = new Move(-1, "Test Move - MovesList.cs", Type.Normal, 60, 100, "Physical", 0, false, false, 0, 0);
-        static public Move test2 = new Move(-2, "Test Move - Generator.cs", Type.Normal, 60, 100, "Physical", 0, false, false, 0, 0);
+        static public Move test1 = new Move(-1, "Test Move 1", Type.Normal, 60, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
+        static public Move test2 = new Move(-2, "Test Move 2", Type.Normal, 60, 100, MoveAttribute.Physical, 0, false, false, 0, 0);
 
         #endregion
 
-        public static List<Move> allMoves = new List<Move> 
+        public static List<Move> AllMoves = new List<Move> 
         {
-            test1, test2,
+            
             Pound, DoubleSlap, CometPunch, Scratch, Cut, Gust, WingAttack, VineWhip, DoubleKick, HornAttack, FuryAttack, Tackle, BodySlam, Wrap, TakeDown,
             DoubleEdge, PoisonSting, Twineedle, Bite, Sing, Supersonic, Disable, Acid, Ember, WaterGun, Peck, LowKick, SeismicToss, LeechSeed, RazorLeaf,
             PoisonPowder, StunSpore, DragonRage, ThunderShock, ThunderWave, RockThrow, Confusion, QuickAttack, Rage, Swift, Glare, Bubble, DizzyPunch,
             FurySwipes, HyperFang, Protect, MudSlap, Rollout, Pursuit, RapidSpin, Twister, Crunch, Astonish, RockTomb, AerialAce, Covet, FireFang, 
-            BugBite, DoubleHit, ElectroBall
+            BugBite, DoubleHit, ElectroBall,
+            test1, test2
         };
 
         /// <summary>

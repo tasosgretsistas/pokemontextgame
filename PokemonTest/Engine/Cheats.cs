@@ -1,5 +1,6 @@
-﻿using System;
-using PokemonTextEdition.Classes;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,15 +13,52 @@ namespace PokemonTextEdition.Engine
     {
         #region Cheats 
 
+        public static void Authentication(string command)
+        {
+            if (Settings.Game_GodMode)
+            {
+                switch (command)
+                {
+                    case "testbattle":
+                        TestBattle();
+                        break;
+
+                    case "list pokemon":
+                        ListAllPokemon();
+                        break;
+
+                    case "list pokemon bst":
+                        DisplayBSTs();
+                        break;
+
+                    case "list pokemon evolution":
+                        DisplayEvolutions();
+                        break;
+
+                    case "list moves":
+                        ListAllMoves();
+                        break;
+
+                    case "list items":
+                        ListAllItems();
+                        break;
+                }
+            }
+
+            else
+                UI.InvalidInput();
+
+        }
+
         /// <summary>
         /// Lists the Individual Values of each Pokemon in the player's party, which are normally hidden from the player.
         /// </summary>
         public static void TellMe()
         {
-            foreach (Pokemon p in Overworld.player.party)
-                p.PrintIVs();
+            foreach (Pokemon p in Overworld.Player.party)
+                UI.WriteLine(p.PrintIVs());
 
-            Console.WriteLine("");
+            UI.WriteLine("");
         }
 
         /// <summary>
@@ -28,9 +66,9 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ScrewTheRules()
         {
-            Console.WriteLine("I have money!\n");
+            UI.WriteLine("I have money!\n");
 
-            foreach (Pokemon p in Overworld.player.party)
+            foreach (Pokemon p in Overworld.Player.party)
             {
                 p.HPIV = 31;
                 p.AttackIV = 31;
@@ -40,57 +78,74 @@ namespace PokemonTextEdition.Engine
                 p.SpeedIV = 31;
             }
 
-            Overworld.player.PartyHeal();
+            Overworld.Player.PartyHeal(true);
         }
 
         #endregion
 
         #region Developer Tools
-        
+
+        public static void GodMode()
+        {
+            if (Settings.Game_GodMode == false)
+            {
+                Settings.Game_GodMode = true;
+
+                UI.WriteLine("Yes! I am a god!\n");
+            }
+
+            else
+            {
+                Settings.Game_GodMode = false;
+
+                UI.WriteLine("A god no longer.\n");
+            }
+        }
+
         /// <summary>
-        /// Starts a test battle between 2 Pokemon of the player's choice, including their current level.
+        /// Starts a test battle between 2 Pokemon of the player's choice at a specified level.
         /// </summary>
         public static void TestBattle()
         {
-            Generator gen = new Generator();
-            Battle battle = new Battle();
-
-            try
+            if (Settings.Game_GodMode)
             {
-                Console.Write("Your Pokemon name: ");
+                PokemonGenerator generator = new PokemonGenerator();
 
-                string playerPokemon = Console.ReadLine();
+                try
+                {
+                    UI.Write("Enter your Pokemon's name: ");
 
-                Console.Write("Your Pokemon level: ");
+                    string playerPokemon = UI.ReceiveInput();
 
-                int playerLevel = Convert.ToInt32(Console.ReadLine());
+                    UI.Write("Enter your Pokemon's level: ");
 
-                Pokemon player = gen.Create(playerPokemon, playerLevel);
+                    int playerLevel = Convert.ToInt32(UI.ReceiveInput());
 
-                Overworld.player.party.Add(player);
+                    Overworld.Player.party.Add(generator.Create(playerPokemon, playerLevel));
 
-                Console.Write("Enemy Pokemon name: ");
+                    UI.Write("Enemy Pokemon name: ");
 
-                string enemyPokemon = Console.ReadLine();
+                    string enemyPokemon = UI.ReceiveInput();
 
-                Console.Write("Enemy Pokemon level: ");
+                    UI.Write("Enemy Pokemon level: ");
 
-                int enemyLevel = Convert.ToInt32(Console.ReadLine());
+                    int enemyLevel = Convert.ToInt32(UI.ReceiveInput());
 
-                Pokemon enemy = gen.Create(enemyPokemon, enemyLevel);
+                    UI.WriteLine("");
 
-                Console.WriteLine("");
+                    Battle battle = new Battle(generator.Create(enemyPokemon, enemyLevel));
+                }
 
-                battle.Wild(enemy);
+                catch (Exception ex)
+                {
+                    UI.Error(ex.Message, "", 0);
+
+                    TestBattle();
+                }
             }
 
-            catch (Exception ex)
-            {
-                Console.WriteLine("You fucked up. Reason: " + ex.Message);
-                Console.WriteLine("Try again.\n");
-
-                TestBattle();
-            }
+            else
+                UI.InvalidInput();
         }
 
         /// <summary>
@@ -98,17 +153,20 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ListAllPokemon()
         {
-            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            if (Settings.Game_GodMode)
             {
-                string evolutionMessage = "";
+                foreach (PokemonSpecies p in PokemonList.AllPokemon)
+                {
+                    string evolutionMessage = "";
 
-                if (p.Evolves)
-                    evolutionMessage = ", evolves into " + p.EvolvesInto;
+                    if (p.Evolves)
+                        evolutionMessage = ", evolves into " + p.EvolvesInto;
 
-                Console.WriteLine(p.Name + evolutionMessage);
+                    UI.WriteLine(p.PokedexNumber.ToString().PadLeft(3, '0') + " - " + p.Name + evolutionMessage);
+                }
+
+                UI.WriteLine("");
             }
-
-            Console.WriteLine("");
         }
 
         /// <summary>
@@ -116,19 +174,25 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void DisplayBSTs()
         {
-            Dictionary<string, int> totals = new Dictionary<string, int>();
-
-            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            if (Settings.Game_GodMode)
             {
-                int BST = p.BaseHP + p.BaseAttack + p.BaseDefense + p.BaseSpecialAttack + p.BaseSpecialDefense + p.BaseSpeed;
-                totals.Add(p.Name, BST);
-            }
 
-            totals = totals.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+                Dictionary<string, int> totals = new Dictionary<string, int>();
 
-            foreach (var i in totals)
-            {
-                Console.WriteLine("{0} - {1}", i.Key, i.Value);
+                foreach (PokemonSpecies pokemon in PokemonList.AllPokemon)
+                {
+                    int BST = pokemon.BaseHP + pokemon.BaseAttack + pokemon.BaseDefense + pokemon.BaseSpecialAttack + pokemon.BaseSpecialDefense + pokemon.BaseSpeed;
+                    totals.Add(pokemon.Name, BST);
+                }
+
+                totals = totals.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
+
+                foreach (var i in totals)
+                {
+                    UI.WriteLine(i.Key.PadRight(11, ' ') + " - " + i.Value);
+                }
+
+                UI.WriteLine("");
             }
         }
 
@@ -137,10 +201,14 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void DisplayEvolutions()
         {
-            foreach (PokemonSpecies p in PokemonList.allPokemon)
+            if (Settings.Game_GodMode)
             {
-                if (p.Evolves)
-                    Console.WriteLine("{0} evolves into {1}.", p.Name, p.EvolvesInto);
+
+                foreach (PokemonSpecies pokemon in PokemonList.AllPokemon)
+                {
+                    if (pokemon.Evolves)
+                        UI.WriteLine(pokemon.Name + " evolves into " + pokemon.EvolvesInto + ".");
+                }
             }
         }
 
@@ -149,14 +217,22 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ListAllMoves()
         {
-            Console.WriteLine(MoveList.allMoves.Count + " moves found.\n");
-
-            foreach (Move move in MoveList.allMoves)
+            if (Settings.Game_GodMode)
             {
-                Console.WriteLine(move.Name.PadRight(15) + ": Type: " + move.Type + ", Power: " + move.Damage + ", Effect ID: " + move.EffectID);
-            }
+                UI.WriteLine(MoveList.AllMoves.Count + " moves found.\n");
 
-            Console.WriteLine("");
+
+                UI.WriteLine("Move Name".PadLeft(11) + "Type".PadLeft(9) + "Power".PadLeft(9) + "Effect".PadLeft(12) + "Coefficient".PadLeft(15));
+                UI.WriteLine("".PadRight(60, '-'));
+
+                foreach (Move move in MoveList.AllMoves)
+                {
+                    UI.WriteLine(move.Name.PadRight(15) + move.Type.ToString().PadRight(10) + move.Damage.ToString().PadRight(5) +
+                                 move.Effect.ToString().PadRight(20) + move.EffectCoefficient.ToString().PadRight(3));
+                }
+
+                UI.WriteLine("");
+            }
         }
 
         /// <summary>
@@ -164,12 +240,12 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ListAllItems()
         {
-            foreach (Item i in ItemList.allItems)
+            foreach (Item i in ItemList.AllItems)
             {
-                Console.WriteLine(i.Name);
+                UI.WriteLine(i.Name);
             }
 
-            Console.WriteLine("");
+            UI.WriteLine("");
         }
 
         #endregion

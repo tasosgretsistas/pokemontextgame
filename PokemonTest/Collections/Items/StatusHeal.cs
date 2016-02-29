@@ -1,59 +1,79 @@
-﻿using System;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition.Items
 {
-    [Serializable]
+    /// <summary>
+    /// This class represents status heal type items, which are used by the player in order to cure Pokemon of their status ailments, such as burn and poison.
+    /// </summary>
     class StatusHeal : Item
     {
-        public PokemonStatus healType; //The type of status ailment this particular item heals.
+        /// <summary>
+        /// The type of status ailment this particular item can cure. Set to FullHeal if the item can cure any status.
+        /// </summary>
+        public StatusCondition CureType { get; set; }
 
-        public StatusHeal(int iID, string iName, string iDescription, bool iMultiple, int iValue, PokemonStatus iHeal)
-            : base(iID, iName, iDescription, iMultiple, iValue)
-        {
-            healType = iHeal;
-            Type = "statusheal";
+        /// <summary>
+        /// Main status heal item constructor. Creates a generic potion with the specified parameters, and sets its type to <see cref="ItemType.StatusHeal"/>.
+        /// </summary>
+        /// <param name="iID">The status heal item's unique ID number.</param>
+        /// <param name="iName">The status heal item's name.</param>
+        /// <param name="iDescription">A description of the status heal item's purpose.</param>
+        /// <param name="iValue">The status heal item's value when buying from a store.</param>
+        /// <param name="iCureType">The type of status ailment that this particular status heal item can cure. Set to FullHeal if the item can cure any status.</param>
+        public StatusHeal(int iID, string iName, string iDescription, int iValue, StatusCondition iCureType)
+            : base(iID, iName, iDescription, iValue)
+        {            
+            Type = ItemType.StatusHeal;
+
+            CureType = iCureType;
         }
 
+        /// <summary>
+        /// Attempts to use a StatusHeal type item.
+        /// </summary>
+        /// <returns>True if the player succesfully used the item, or false if he did not.</returns>
         public override bool Use()
         {
-            //Code for using a Healing type item. Since using a Healing item inside and outside of combat 
-            //does the exact same thing, the UseCombat() method simply redirects here again.
-
             Program.Log("The player is trying to use a " + Name + ".", 0);
 
-            Console.WriteLine("Use {0} on which Pokemon?\n(Valid input: 1-{0} or press Enter to return)\n", Name, Overworld.player.party.Count);
+            UI.WriteLine("Use " + Name + " on which Pokemon?\n(Valid input: 1-" + Overworld.Player.party.Count + " or press Enter to return)\n");
 
-            Pokemon pokemon = Overworld.player.SelectPokemon(false);
+            //First, the player is asked to select a Pokemon in his party.
+            Pokemon pokemon = Overworld.Player.SelectPokemon(false);
 
-            //If the Pokemon the user selected is alive and is suffering from a status this item can cure, it gets healed for the healAmount and this method returns
-            // "true" for operation success. Otherwise, an appropriate error message is displayed and the method returns "false" for operation failure.
+            //If the player's input was valid, the operation carries on.
             if (pokemon.Name != null)
             {
-                if (pokemon.CurrentHP > 0 && pokemon.Status == healType)
+                //If the Pokemon the user selected is alive and is suffering from a status condition that can be cured by this item, then...
+                if (!pokemon.Fainted && pokemon.Status == CureType)
                 {
-                    pokemon.Status = PokemonStatus.None;
+                    //One of this item is removed from the player's bag.
+                    Remove(1, RemoveType.Use);
 
-                    Console.WriteLine("\n{0} was cured of its {1}.", pokemon.Name, healType);
+                    //Then, the Pokemon's status is cured.
+                    pokemon.CureStatus(true);
 
-                    Program.Log("The uses a " + Name + " on " + pokemon.Name + ", curing it of its " + healType + ".", 1);
-
-                    Remove(1, "use");
+                    Program.Log("The uses a " + Name + " on " + pokemon.Name + ", curing it of its " + CureType + ".", 1);                    
 
                     return true;
                 }
 
                 else if (pokemon.CurrentHP <= 0)
                 {
+                    UI.WriteLine("You cannot use a " + Name + " on a Pokemon that has fainted.");
+
                     Program.Log("The player selected a Pokemon that has fainted.", 0);
-                    Console.WriteLine("\nYou cannot use a {0} on a Pokemon that has fainted.", Name);
+                    
 
                     return false;
                 }
 
                 else
                 {
-                    Program.Log("The Pokemon the user selected was not afflicted by " + healType + ".", 0);
-                    Console.WriteLine("\n{0} is not suffering from {1}.", Name, healType);
+                    UI.WriteLine(Name + " is not suffering from " + CureType + ".");
+
+                    Program.Log("The Pokemon the user selected was not afflicted by " + CureType + ".", 0);                    
 
                     return false;
                 }
@@ -63,6 +83,10 @@ namespace PokemonTextEdition.Items
                 return false;
         }
 
+        /// <summary>
+        /// Attempts to use a status heal type item during combat. As status heal items have the same effect inside and outside of combat, this simply calls the Use() method.
+        /// </summary>
+        /// <returns>True if the player succesfully used the item, or false if he did not.</returns>
         public override bool UseCombat()
         {
             return Use();

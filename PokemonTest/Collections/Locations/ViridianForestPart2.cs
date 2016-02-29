@@ -1,96 +1,112 @@
-﻿using PokemonTextEdition.Engine;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Collections;
+using PokemonTextEdition.Engine;
 using System;
 
 namespace PokemonTextEdition.Locations
 {
-    [Serializable]
     class ViridianForestPart2 : Location
-        {
-        Generator generator = new Generator();
-        Random rng = new Random();
+    {
+        Random random = new Random();
+        PokemonGenerator generator = new PokemonGenerator();
 
-        Trainer eric = TrainerList.trainers.Find(t => t.ID == 2);
-        Trainer ericr = TrainerList.trainers.Find(t => t.ID == -2);
+        Trainer eric = TrainerList.AllTrainers.Find(t => t.TrainerID == 3);
+        Trainer ericr = TrainerList.AllTrainers.Find(t => t.TrainerID == -3);
 
         public ViridianForestPart2()
         {
             Name = "Viridian Forest's center";
             Type = LocationType.Forest;
-            Tag = "forest2";
+            Tag = LocationTag.ViridianForestCenter;
 
-            South = "forest1";
-            North = "forest3";
+            South = LocationTag.ViridianForestSouth;
+            North = LocationTag.ViridianForestNorth;
 
-            Description = "the forest's grove";
-            LongDescription = "The deepest part of the Viridian Forest. A big grove lies in the middle.\nCareful - you never know what kind of danger could lurk around the corner.";
-            ConnectionsMessage = "The edges of the forest are located in each direction. The Viridian City end\nto the south, and the Pewter City end to the north.";
-            HelpMessage = "\"north\" or \"go north\" - moves you to the north part of the forest.\n\"south\" or \"go south\" - moves you to the south part of the forest.\n\"fight\" - attempts to start a fight with a wild Pokemon.\n\"battle\" - attempts to start a battle with a previously defeated trainer.";
+            FlavorMessage = "the forest's grove";
+
+            Description = "The deepest part of the Viridian Forest. A big grove lies in the middle.\n" +
+                          "Careful - you never know what kind of danger could lurk around the corner.";
+
+            ConnectionsMessage = "The edges of the forest are located in each direction. The Viridian City end\n" + 
+                                 "to the south, and the Pewter City end to the north.";
+
+            HelpMessage = "\"north\" or \"go north\" - moves you to the north part of the forest.\n" + 
+                          "\"south\" or \"go south\" - moves you to the south part of the forest.\n" +
+                          "\"fight\" - attempts to start a fight with a wild Pokemon.\n" +
+                          "\"battle\" - attempts to start a battle with a previously defeated trainer.";
         }
 
         public override void Trainer()
-        {   
-            if (eric.HasBeenDefeated)
-                ericr.Encounter();           
+        {
+            if (eric.HasBeenDefeated(Overworld.Player))
+                ericr.Encounter();
 
             else
-                Console.WriteLine("You need to defeat all of the trainers in this area before using this command!\n");            
+                UI.WriteLine("You need to defeat all of the trainers in this area before using this command!\n");
         }
 
         public override void Encounter()
-        {   
-            int level = rng.Next(3, 6);
-            int species = rng.Next(1, 101);
+        {
+            //Determines which Pokemon the player will encounter.
+            int species = random.Next(1, 101);
 
-            Battle battle = new Battle();
+            //The level range for Metapod, Kakuna and Pikachu.
+            int level = random.Next(3, 6);
 
-            if (species > 92)
-            {
-                battle.Wild(generator.Create("Pidgeotto", 7));
-            }            
-            else if (species > 84)
-            {
-                battle.Wild(generator.Create("Pikachu", level));
-            }
-            else if (species > 42)
-            {
-                battle.Wild(generator.Create("Metapod", level));
-            }
+            Pokemon pokemon;
+
+            //10% probability of a Pidgeotto.
+            if (species <= 10)
+                pokemon = generator.Create("Pidgeotto", 7);
+
+            //10% probability of a Pikachu.
+            else if (species <= 20)
+                pokemon = generator.Create("Pikachu", level);
+
+            //40% probability of a Metapod.
+            else if (species <= 60)
+                pokemon = generator.Create("Metapod", level);
+
+            //40% probability of a Kakuna.
             else
-            {
-                battle.Wild(generator.Create("Kakuna", level));
-            }
+                pokemon = generator.Create("Kakuna", level);
+
+            Battle battle = new Battle(pokemon);
         }
 
         public override void GoNorth()
         {
-            if (rng.Next(1, 11) > 6)
-            {
-                Console.WriteLine("You decide to stay away from the big grove, where you would be a sitting");
-                Console.WriteLine("duck for wild Pokemon. Instead, you move through the less dense parts of");
-                Console.WriteLine("the forest until you find the path that leads to the northern side.");
+            //Determines if the player will encounter a wild Pokemon while traversing this zone.
+            int encounter = random.Next(1, 11);
 
-                UI.AnyKey();
-            }
-
-            else
+            //60% probability that the player will encounter a wild Pokemon.
+            if (encounter <= 6)
             {
-                Console.WriteLine("Fascinated by the gorgeous view, you run into the wide grove - at the cost");
-                Console.WriteLine("of your sense of direction. You decide it's time to look at the map when a");
-                Console.WriteLine("wild Pokemon, attracted by the smell of the food in your bag, attacks you!");
-                Console.WriteLine("");
-                
+                UI.WriteLine("Fascinated by the gorgeous view, you run into the wide grove - at the cost\n" +
+                             "of your sense of direction. You decide it's time to look at the map when a\n" +
+                             "wild Pokemon, attracted by the smell of the food in your bag, attacks you!\n");
+
                 Encounter();
 
-                Console.WriteLine("Both you and your food are safe - for now. You go back to reading the map,");
-                Console.WriteLine("which points you in the way north and once again back into the forest.");
-
-                UI.AnyKey();
+                UI.WriteLine("Both you and your food are safe - for now. You go back to reading the map,\n" +
+                             "which points you in the way north and once again back into the forest.");                
             }
 
-            if (!eric.HasBeenDefeated)
+            //40% probability that the player will make it through the zone peacefully.
+            else
             {
-                Console.WriteLine("On your way further north, you run into another kid with a net -- is it");
-                Console.WriteLine("a new fashion or something? Either way, you already know what this means!");
+                UI.WriteLine("You decide to stay away from the big grove, where you would be a sitting\n" +
+                                  "duck for wild Pokemon. Instead, you move through the less dense parts of\n" +
+                                  "the forest until you find the path that leads to the northern side.");            
+            }
+
+            UI.AnyKey();
+
+            //If the player has not defeated Nick before, he has to battle him.
+            if (!eric.HasBeenDefeated(Overworld.Player))
+            {
+                UI.WriteLine("On your way further north, you run into another kid with a net -- is it\n" +
+                             "a new fashion or something? Either way, you already know what this means!\n");
 
                 eric.Encounter();
             }
@@ -98,25 +114,29 @@ namespace PokemonTextEdition.Locations
 
         public override void GoSouth()
         {
-            if (rng.Next(1, 11) > 5)
-            {
-                Console.WriteLine("You know this path fairly well by now, so you feel confident in your ability");
-                Console.WriteLine("to get around this part with no hiccups. You even stop by the glade for a");
-                Console.WriteLine("moment to see the view before you're on your way to the southern side.");
-            }
+            //Determines if the player will encounter a wild Pokemon while traversing this zone.
+            int encounter = random.Next(1, 11);
 
-            else
+            //50% probability that the player will encounter a wild Pokemon.
+            if (random.Next(1, 11) <= 5)
             {
-                Console.WriteLine("It seems you've become a bit more confident in how well you know the forest");
-                Console.WriteLine("than you should be - you've gotten lost. Luckily, you can see the glade in");
-                Console.WriteLine("the distance - but it turns out that it was the wrong glade!");
-                Console.WriteLine("");
-                
+                UI.WriteLine("It seems you've become a bit more confident in how well you know the forest\n" +
+                             "than you should be - you've gotten lost. Luckily, you can see the glade in\n" +
+                             "the distance - but it turns out that it was the wrong glade!\n");
+
                 Encounter();
 
-                Console.WriteLine("Looking at the map, you realize that you're at the completely wrong place.");
-                Console.WriteLine("Heading due east, you reach the big glade in the middle with the beautiful");
-                Console.WriteLine("view, and then the path that leads to the southern side of the forest.");
+                UI.WriteLine("Looking at the map, you realize that you're at the completely wrong place.\n" +
+                                  "Heading due east, you reach the big glade in the middle with the beautiful\n" +
+                                  "view, and then the path that leads to the southern side of the forest.");
+            }
+
+            //50% probability that the player will make it through the zone peacefully.
+            else
+            {
+                UI.WriteLine("You know this path fairly well by now, so you feel confident in your ability\n" +
+                             "to get around this part with no hiccups. You even stop by the glade for a\n"+
+                             "moment to see the view before you're on your way to the southern side.");
             }
 
             UI.AnyKey();

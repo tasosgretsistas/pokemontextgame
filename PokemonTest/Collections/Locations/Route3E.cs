@@ -1,76 +1,90 @@
-﻿using System;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Collections;
+using PokemonTextEdition.Engine;
+using System;
 
 namespace PokemonTextEdition.Locations
 {
-    [Serializable]
     class Route3E : Location
     {
-        Random rng = new Random();
-        Generator generator = new Generator();
+        Random random = new Random();
+        PokemonGenerator generator = new PokemonGenerator();
 
         public Route3E()
             : base()
         {
             Name = "Route 3";
             Type = LocationType.Route;
-            Tag = "route3e";
+            Tag = LocationTag.Route3East;
 
-            West = "route3w";
-            East = "mtmoon1";
+            West = LocationTag.Route3West;
+            East = LocationTag.MtMoonWest;
 
-            Description = "the mountain's plateau";
-            LongDescription = "Atop the plateau at the east end of this route lies the entrance to Mt. Moon.\nMost people stop at the Pokemon Center here to rest after that long uphill\njourney before heading into the perilous cave.";
-            ConnectionsMessage = "Following the mountain trail down to the west leads to the west end of Route 3\nand to the east lies a cave - the entrance to Mt. Moon's interior.";
-            HelpMessage = "\"west\" or \"go west\" - moves you to western Route 3.\n\"east\" or \"go east\" - moves you to Mt. Moon.\n\"fight\" - attempts to start a fight with a wild Pokemon.";
+            FlavorMessage = "the mountain's plateau";
+
+            Description = "Atop the plateau at the east end of this route lies the entrance to Mt. Moon.\n" + 
+                          "Most people stop at the Pokemon Center here to rest after that long uphill\n" + 
+                          "journey before heading into the pitch-black cave.";
+
+            ConnectionsMessage = "Following the mountain trail down to the west leads to the west end of Route 3\n" + 
+                                 "and to the east lies a cave - the entrance to Mt. Moon's interior.";
+
+            HelpMessage = "\"west\" or \"go west\" - moves you to western Route 3.\n" + 
+                          "\"east\" or \"go east\" - moves you to Mt. Moon.\n" + 
+                          "\"fight\" - attempts to start a fight with a wild Pokemon.";
         }
 
         public override void Encounter()
         {
-            int level = rng.Next(7, 10);
-            int level2 = rng.Next(6, 9);
-            int species = rng.Next(1, 101);
+            //Determines which Pokemon the player will encounter.
+            int species = random.Next(1, 101);
 
-            Battle battle = new Battle();
+            //The level range for Nidoran♀ and Nidoran♂.
+            int level = random.Next(6, 9);
 
-            if (species > 75)
-            {
-                battle.Wild(generator.Create("Spearow", level));
-            }
-            else if (species > 50)
-            {
-                battle.Wild(generator.Create("Pidgey", level));
-            }
-            else if (species > 35)
-            {
-                battle.Wild(generator.Create("Nidoran♀", level2));
-            }
-            else if (species > 20)
-            {
-                battle.Wild(generator.Create("Nidoran♂", level2));
-            }
-            else if (species > 10)
-            {
-                battle.Wild(generator.Create("Jigglypuff", 8));
-            }
+            //The level range for Spearow and Pidgey.
+            int level2 = random.Next(7, 10); 
+
+            Pokemon pokemon;
+
+            //25% probability of a Spearow.
+            if (species < 26)
+                pokemon = generator.Create("Spearow", level);
+
+            //25% probability of a Pidgey.
+            else if (species < 51)
+                pokemon = generator.Create("Pidgey", level);
+
+            //15% probability of a Nidoran♀.
+            else if (species < 66)
+                pokemon = generator.Create("Nidoran♀", level2);
+
+            //15% probability of a Nidoran♂.
+            else if (species < 71)
+                pokemon = generator.Create("Nidoran♂", level2);
+
+            //15% probability of a Mankey.
+            else if (species < 86)
+                pokemon = generator.Create("Mankey", 8);
+
+            //15% probability of a Jigglypuff.
             else
-            {
-                battle.Wild(generator.Create("Mankey", 8));
-            }
+                pokemon = generator.Create("Jigglypuff", 8);
 
 
-            return;
+            Battle battle = new Battle(pokemon);
         }
 
         public override void GoWest()
         {
-            Console.WriteLine("Enjoying a leisurely downhill stroll, you head down the mountain and towards");
-            Console.WriteLine("the western end of route 3, where you can see Pewter City from the high ground.");
+            UI.WriteLine("Enjoying a leisurely downhill stroll, you head down the mountain and towards\n" +
+                         "the western end of route 3, where you can see Pewter City from the high ground.\n");
         }
 
         public override void GoEast()
         {
-            Console.WriteLine("Feeling confident in your ability to take on whatever challenges await inside");
-            Console.WriteLine("the cave, you turn on your flashlight as you head inside with a sure step.");
+            UI.WriteLine("Feeling confident in your ability to take on whatever challenges await inside\n" +
+                         "the cave, you turn on your flashlight as you head inside with a sure step.\n");
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using PokemonTextEdition.Engine;
 
 namespace PokemonTextEdition.Classes
 {
@@ -19,18 +16,19 @@ namespace PokemonTextEdition.Classes
         public CompactPlayer Player;
 
         /// <summary>
-        /// This is the default constructor of the SaveState class for the Windows Console platform. It receives input in the form of strings, int, DateTime and Lists of objects.
+        /// This is the default constructor of the SaveState class for the Windows Console platform.
         /// </summary>
         /// <param name="version">The version of the game.</param>
         /// <param name="beginDate">The date when the user selected his first Pokemon.</param>
         /// <param name="date">The date of the save state's creation.</param>        
+        /// <param name="player">The CompactPlayer object representing the player.</param>
         public SaveState(string version, DateTime beginDate, DateTime date, CompactPlayer player)
         {
-            this.GameVersion = version;
-            this.BeginDate = beginDate;
-            this.SaveDate = date;
+            GameVersion = version;
+            BeginDate = beginDate;
+            SaveDate = date;
 
-            this.Player = player;
+            Player = player;
         }
     }
 

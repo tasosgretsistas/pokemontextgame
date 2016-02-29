@@ -1,142 +1,151 @@
-﻿using System;
+﻿using PokemonTextEdition.Engine;
 using System.Collections.Generic;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Classes
 {
+    /// <summary>
+    /// This class represents the various enemy trainers that the player can battle within the game.
+    /// <para>This class can represent either generic trainers by creating an object in the TrainerList.allTrainers list,
+    /// or signify unique trainers with their own respective scripts through inheritance.</para>
+    /// </summary>
     class Trainer
     {
-        //A class that represents enemy trainers within the game.
-
         #region Fields
 
         //A unique identifier that marks each and every trainer in the TrainerList class individually. 
-        //A negative number identifies that the trainer has already been defeated once and the battle is a rematch.
-        public int ID { get; set; }
+        //A negative ID identifies that the trainer has already been defeated once and the battle is a rematch.
+        public int TrainerID { get; set; }
 
         public string Name { get; set; } //The trainer's name.
         public string Type { get; set; } //The trainer's "class" - i.e., Hiker, Bug Catcher, etc.
 
-        public string DisplayName //The trainer's displayed name - a combination of his trainer type (if any) and name.
+        //The trainer's displayed name - a combination of his trainer type (if any) and name.
+        public string DisplayName 
         {
             get
             {
-                string n = Name;
-
                 if (Type != "")
-                    n = Type + " " + Name;
+                    return Type + " " + Name;
 
-                return n;
+                return Name;
             }
         }
 
-        public string Greeting { get; set; }  //The trainer's generic greeting.
-        public string DefeatSpeech { get; set; }  //The trainer's generic message upon losing.
-        public string VictorySpeech { get; set; } //The trainer's generic message upon winning.
+        //The trainer's money yield upon defeat.
+        public int Money { get; set; }
 
-        
+        //The various chit-chat that the trainer produces.
+        public string Greeting { get; set; }
+        public string DefeatSpeech { get; set; }
+        public string VictorySpeech { get; set; }
 
-        public int Money { get; set; }  //The trainer's money yield upon defeat.
-
-        public List<Pokemon> party = new List<Pokemon>(); //The trainer's party.
-
-        //Determines if the player has defeated the trainer by checking whether the player's defeatedTrainers list contains the trainer's ID.
-        public bool HasBeenDefeated
-        {
-            get
-            {
-                if (Overworld.player.defeatedTrainers.Contains(ID))
-                    return true;                
-
-                else
-                    return false;
-            }
-        }
+        //The trainer's party of Pokemon.
+        public List<Pokemon> Party;
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        ///  Constructor for blank trainers. Creates a Trainer named "Undefined Trainer" with an empty party and all of its other attributes set to 0, false and empty strings.
+        /// </summary>
         public Trainer()
         {
-            Type = "Undefined Type";
-            Name = "Unnamed Trainer";
+            Type = string.Empty;
+            Name = "Undefined Trainer";
 
-            Greeting = "Greetings! You shouldn't be seeing this. If you do, please contact the author.";
-            DefeatSpeech = "Unspecified trainer defeat speech";
-            VictorySpeech = "Unspecified trainer victory speech";
+            Greeting = string.Empty;
+            DefeatSpeech = string.Empty;
+            VictorySpeech = string.Empty;
 
-            party = new List<Pokemon> { new Generator().Create("Mewtwo", 100) };
+            Party = new List<Pokemon> { };
 
-            ID = 0;
+            TrainerID = 0;
             Money = 0;
         }
 
         /// <summary>
-        /// The default constructor for initializing an enemy trainer NPC.
+        /// Constructor for creating generic trainers. Most enemy trainers will be generic so this should be used most of the time.
         /// </summary>
+        /// <param name="tid">The trainer's ID.</param>
+        /// <param name="tType">The trainer's type, i.e. "Pokemon Trainer" or "Hiker".</param>
         /// <param name="tName">The trainer's name.</param>
-        /// <param name="tGreeting">The trainer's greeting pre-combat.</param>
-        /// <param name="tDefeat">The trainer's message upon being defeated.</param>
-        /// <param name="tVictory">The trainer's message if he defeats a player.</param>
-        /// <param name="tParty">The trainer's party of Pokemon. Maximum size is 6.</param>
         /// <param name="tMoney">The amount of money the trainer yields upon being defeated.</param>
-        /// <param name="tid">The trainer's unique identifier number for the TrainerList list.</param>
+        /// <param name="tGreeting">The trainer's greeting message upon being encountered.</param>
+        /// <param name="tDefeat">The message the trainer displays upon being defeated.</param>
+        /// <param name="tVictory">The message the trainer displays upon defeating the player.</param>
+        /// <param name="tParty">The trainer's party of Pokemon, as a list of Pokemon.</param>
         public Trainer(int tid, string tType, string tName, int tMoney, string tGreeting, string tDefeat, string tVictory, List<Pokemon> tParty)
         {
-            ID = tid;
+            TrainerID = tid;
 
             Type = tType;
             Name = tName;
 
             Money = tMoney;
 
-            Greeting = "\n\"" + tGreeting + "\"";
-            DefeatSpeech = "\n\"" + tDefeat + "\"";
-            VictorySpeech = "\n\"" + tVictory + "\"";
+            Greeting = "\"" + tGreeting + "\"";
+            DefeatSpeech = "\"" + tDefeat + "\"";
+            VictorySpeech = "\"" + tVictory + "\"";
 
-            party = tParty;
+            Party = tParty;
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Determines if the player has defeated the trainer by checking whether the player's DefeatedTrainers list contains the trainer's ID.
+        /// </summary>
+        public bool HasBeenDefeated(Player player)
+        {
+            if (player.defeatedTrainers.Contains(TrainerID))
+                    return true;
+
+                else
+                    return false;
+            
+        }
+
+        /// <summary>
+        /// Begins an encounter with the trainer.
+        /// </summary>
         public virtual void Encounter()
         {
-            //Code for triggering an encounter with an enemy trainer.
-            //First, all of the trainer's Pokemon are healed, then the trainer plays his specific greeting, and finally battle starts.
-
-            foreach (Pokemon p in party)
+            //First, all of the trainer's Pokemon are healed, just as a failsafe.
+            foreach (Pokemon p in Party)
             {
-                p.CurrentHP = p.MaxHP;
-                p.Status = PokemonStatus.None;
+                p.HealFull(false);
+                p.CureStatus(false);
             }
 
-            Console.WriteLine(Greeting);
+            //Then, the trainer's greeting message is displayed.
+            UI.WriteLine(Greeting + "\n");
 
-            Console.WriteLine("");
+            //Finally, battle with the trainer commences.
+            Battle battle = new Battle(this);
 
-            new Battle().Start(this, "trainer");
+            //if (battle.PlayerVictory)
         }
 
-        public virtual void Defeat()
+        /// <summary>
+        /// Handles the events which need to take place when the trainer is defeated.
+        /// </summary>
+        public virtual void Defeat(Player player)
         {
-            //Code that triggers upon defeating a trainer.
+            player.defeatedTrainers.Add(TrainerID);
 
-            Overworld.player.defeatedTrainers.Add(ID);
+            UI.AnyKey();
 
-            Console.WriteLine("Press any key to continue.");
-            Console.ReadKey(true);
-
-            Console.WriteLine(DefeatSpeech);
+            UI.WriteLine(DefeatSpeech + "\n");
         }
 
-        public virtual void Victory()
+        public virtual void Victory(Player player)
         {            
-            Console.WriteLine(VictorySpeech);
-            Console.WriteLine("");
+            UI.WriteLine(VictorySpeech + "\n");
 
-            Overworld.player.BlackOut();
+            player.BlackOut();
         }
 
         #endregion

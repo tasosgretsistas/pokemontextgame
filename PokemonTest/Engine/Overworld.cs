@@ -1,102 +1,96 @@
-﻿using PokemonTextEdition.Engine;
-using PokemonTextEdition.Locations;
-using System;
-using System.Collections.Generic;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Collections;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Engine
 {
     /// <summary>
-    /// The overworld class, used to allow the player to move and act within the world.
-    /// For all intents and purposes, this is the main part of the game, where all other classes will return.
-    /// This is enforced by the fact that every option in the Options() screen redirects back to Options().
+    /// This class allows the player to move and act within the world.
+    /// <para>For all intents and purposes, this is the main part of the game when the player is not battling, where all other classes will return.
+    /// This is enforced by the fact that every option in the <see cref="Options()"/> screen redirects back to itself.</para>
     /// </summary>
     class Overworld
-    {       
+    {
         //This object represents the player globally - most classes and methods will call this player.
-        public static Player player = new Player();
+        public static Player Player;
 
         //An object that represents the player's current location.
-        public static Location currentLocation = new Location();        
+        public static Location CurrentLocation; 
 
-        //A list of every available location.
-        static List<Location> allLocations = new List<Location>() 
-        { 
-            new PalletTown(), 
-            new Route1(), 
-            new ViridianCity(), 
-            new Route2S(), 
-            new ViridianForestPart1(), 
-            new ViridianForestPart2(), 
-            new ViridianForestPart3(), 
-            new Route2N(), 
-            new PewterCity(), 
-            new Route3W(), 
-            new Route3E() 
-        };
-
-        public static void LoadLocation(string l)
+        public static void LoadLocation(LocationTag location)
         {
-            //This method simply loads a location, prints its information and then moves on to the options menu.
+            Location tempLocation = LocationList.AllLocations.Find(l => l.Tag == location);
 
-            currentLocation = allLocations.Find(location => location.Tag == l);
-            currentLocation.PrintLocation();
+            ChangeLocation(tempLocation);
+        }
 
-            Program.Log("The player moved to " + currentLocation.Name + " (" + currentLocation.Tag + ").", 1);
+        public static void LoadLocationString(string location)
+        {
+            Location tempLocation = LocationList.AllLocations.Find(l => l.Tag.ToString() == location);
 
-            Console.WriteLine("");
+            ChangeLocation(tempLocation);
+        }
+
+        /// <summary>
+        /// Changes the current location, effectively moving the player to a different location within the game.
+        /// </summary>
+        /// <param name="location">The tag of the location to load.</param>
+        public static void ChangeLocation(Location location)
+        { 
+            if (location != null)
+            {
+                CurrentLocation = location;
+
+                UI.WriteLine(CurrentLocation.PrintInfo());
+
+                Program.Log("The player moved to " + CurrentLocation.Name + " (" + CurrentLocation.Tag + ").", 1);
+            }
+
             Options();
         }
 
         public static void Options()
         {
-            Console.WriteLine("What will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
+            UI.WriteLine("What will you do?\n(Type \"(h)elp\" for a list of commands for your current location.)");
 
-            string action = Console.ReadLine();
-
-            if (action != "")
-                Console.WriteLine("");
+            string action = UI.ReceiveInput();
 
             switch (action.ToLower())
             {
                 case "go north":
                 case "north":
-                    currentLocation.GoNorth();
+                    CurrentLocation.GoNorth();
 
-                    if (allLocations.Exists(location => location.Tag == currentLocation.North))                    
-                        LoadLocation(currentLocation.North);
+                    LoadLocation(CurrentLocation.North);
                     
                     break;
 
                 case "go south":
                 case "south":
-                    currentLocation.GoSouth();
+                    CurrentLocation.GoSouth();
 
-                    if (allLocations.Exists(location => location.Tag == currentLocation.South))                    
-                        LoadLocation(currentLocation.South);
+                    LoadLocation(CurrentLocation.South);
                     
                     break;
 
                 case "go east":
                 case "east":
-                    currentLocation.GoEast();
+                    CurrentLocation.GoEast();
 
-                    if (allLocations.Exists(location => location.Tag == currentLocation.East))
-                        LoadLocation(currentLocation.East);
+                    LoadLocation(CurrentLocation.East);
 
                     break;
 
                 case "go west":
                 case "west":
-                    currentLocation.GoWest();
+                    CurrentLocation.GoWest();
 
-                    if (allLocations.Exists(location => location.Tag == currentLocation.West))
-                        LoadLocation(currentLocation.West);
+                    LoadLocation(CurrentLocation.West);
 
                     break;
 
                 case "fight":
                 case "f":
-                    currentLocation.Encounter();
+                    CurrentLocation.Encounter();
 
                     Options();
 
@@ -104,7 +98,7 @@ namespace PokemonTextEdition
 
                 case "battle":
                 case "b":
-                    currentLocation.Trainer();
+                    CurrentLocation.Trainer();
 
                     Options();
 
@@ -113,7 +107,7 @@ namespace PokemonTextEdition
                 case "center":
                 case "heal":
                 case "c":
-                    currentLocation.Center();
+                    CurrentLocation.Center();
 
                     Options();
 
@@ -121,7 +115,7 @@ namespace PokemonTextEdition
 
                 case "mart":
                 case "m":
-                    currentLocation.Mart();
+                    CurrentLocation.Mart();
 
                     Options();
 
@@ -129,7 +123,7 @@ namespace PokemonTextEdition
 
                 case "gym":
                 case "g":
-                    currentLocation.Gym();
+                    CurrentLocation.Gym();
 
                     Options();
 
@@ -145,7 +139,7 @@ namespace PokemonTextEdition
 
                 case "player":
                 case "p":
-                    Overworld.player.PlayerInfo();
+                    Player.PlayerInfo();
 
                     Options();
 
@@ -153,7 +147,7 @@ namespace PokemonTextEdition
 
                 case "status":
                 case "s":
-                    Overworld.player.PartyStatus();
+                    Player.PartyStatus();
 
                     Options();
 
@@ -161,7 +155,7 @@ namespace PokemonTextEdition
 
                 case "switch":
                 case "w":
-                    player.SwitchAround();
+                    Player.SwitchAround();
 
                     Options();
 
@@ -169,7 +163,7 @@ namespace PokemonTextEdition
 
                 case "items":
                 case "i":
-                    player.ItemsMain();
+                    Player.ItemsMain();
 
                     Options();
 
@@ -195,8 +189,8 @@ namespace PokemonTextEdition
                     Options();
                     break;
 
-                default:                    
-                    Console.WriteLine("Invalid command.\n");
+                default:
+                    UI.InvalidInput();
 
                     Options();
 
@@ -207,15 +201,15 @@ namespace PokemonTextEdition
 
         static void ShowHelpMenu()
         {
-            currentLocation.Help();
+            UI.WriteLine(CurrentLocation.HelpMessage);
 
-            Console.WriteLine("");
-            Console.WriteLine("\"(p)layer\" - displays your player information, such as name and money on hand.");
-            Console.WriteLine("\"(s)tatus\" - displays the current status for each Pokemon in your party.");
-            Console.WriteLine("\"s(w)itch\" - allows you to change the order of the Pokemon in your party.");
-            Console.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
-            Console.WriteLine("\"s(a)ve\" - saves your progress in the game.");
-            Console.WriteLine("");
+            UI.WriteLine("");
+            UI.WriteLine("\"(p)layer\" - displays your player information, such as name and money on hand.");
+            UI.WriteLine("\"(s)tatus\" - displays the current status for each Pokemon in your party.");
+            UI.WriteLine("\"s(w)itch\" - allows you to change the order of the Pokemon in your party.");
+            UI.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
+            UI.WriteLine("\"s(a)ve\" - saves your progress in the game.");
+            UI.WriteLine("");
         }
     
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Engine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,34 +9,32 @@ namespace PokemonTextEdition.NPCs
     {
         public Rival1() :base()
         {
-            Name = Overworld.player.RivalName;
+            Name = Overworld.Player.RivalName;
             Type = "Pokemon Trainer";
 
-            party = new List<Pokemon> {  };
+            Party = new List<Pokemon> {  };
 
             Money = 500;
-            ID = 1;
+            TrainerID = 1;
         }
 
         //Narration after the rival battle, with different dialogue based on the result of the battle.
 
-        public override void Defeat()
+        public override void Defeat(Player player)
         {
-            Console.WriteLine("{0} looks devastated by his defeat.", Name);
-            Console.WriteLine("He quickly withdraws {0} back into its Pokeball.", party.ElementAt(0).Name);
-            Console.WriteLine("");
+            UI.WriteLine(Name + " looks devastated by his defeat.");
+            UI.WriteLine("He quickly withdraws " + Party.ElementAt(0).Name + " back into its Pokeball.\n");
 
-            Console.WriteLine("\"This can't be happening! Did I make the wrong choice, picking {0}?", party.ElementAt(0).Name);
-            Console.WriteLine(" Gah...\"");
+            UI.WriteLine("\"This can't be happening! Did I make the wrong choice, picking " + Party.ElementAt(0).Name  + "? ");
+            UI.WriteLine(" Gah...\"");
         }
 
-        public override void Victory()
+        public override void Victory(Player player)
         {
-            Console.WriteLine("{0} has a smug look on his face as he looks at you.", Name);
-            Console.WriteLine("");
+            UI.WriteLine(Name + " has a smug look on his face as he looks at you.\n");
 
-            Console.WriteLine("\"Ha ha ha! I told you {0} is a weak Pokemon! ", Overworld.player.party.ElementAt(0).Name);
-            Console.WriteLine("\n My {0} was clearly stronger!\"", party.ElementAt(0).Name);
+            UI.WriteLine("\"Ha ha ha! I told you " + Overworld.Player.StartingPokemon + " is a weak Pokemon! ");
+            UI.WriteLine(" My " + Party.ElementAt(0).Name + " was clearly stronger!\"");
         }
 
     }

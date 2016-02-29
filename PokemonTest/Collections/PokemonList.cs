@@ -1,7 +1,7 @@
 ﻿using PokemonTextEdition.Classes;
 using System.Collections.Generic;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Collections
 {
     /// <summary>
     /// A list of all the Pokemon species currently in the game.
@@ -10,7 +10,7 @@ namespace PokemonTextEdition
     {          
         #region All Pokemon
 
-        public static List<PokemonSpecies> allPokemon = new List<PokemonSpecies>() 
+        public static List<PokemonSpecies> AllPokemon = new List<PokemonSpecies>() 
         {             
                 new PokemonSpecies(0, "MissingNo", Type.Normal, Type.None, "Debug", 1, 20, 20, 20, 20, 20, 20), //DEBUG
 
@@ -47,34 +47,34 @@ namespace PokemonTextEdition
                 new PokemonSpecies(23, "Ekans", Type.Poison, Type.None, "Snake", 1, 35, 60, 44, 40, 54, 55, "Arbok", 22),
                 new PokemonSpecies(24, "Arbok", Type.Poison, Type.None, "Cobra", 1, 60, 85, 69, 65, 79, 80),
 
-                new PokemonSpecies(25, "Pikachu", Type.Electric, Type.None, "Mouse", 1, 35, 55, 40, 50, 50, 90, "Raichu", "Thunderstone", 0),
+                new PokemonSpecies(25, "Pikachu", Type.Electric, Type.None, "Mouse", 1, 35, 55, 40, 50, 50, 90, "Raichu", EvolutionType.ThunderStone, 0),
                 new PokemonSpecies(26, "Raichu", Type.Electric, Type.None, "Mouse", 1, 60, 90, 55, 90, 80, 110),
 
                 new PokemonSpecies(27, "Sandshrew", Type.Ground, Type.None, "Mouse", 1, 50, 75, 85, 20, 30, 40, "Sandslash", 22),
                 new PokemonSpecies(28, "Sandslash", Type.Ground, Type.None, "Mouse", 1, 75, 100, 110, 45, 55, 65),
 
                 new PokemonSpecies(29, "Nidoran♀", Type.Poison, Type.None, "Poison Pin", 1, 55, 47, 52, 40, 40, 41, "Nidorina", 16),
-                new PokemonSpecies(30, "Nidorina", Type.Poison, Type.None, "Poison Pin", 1, 70, 62, 67, 55, 55, 56, "Nidoqueen", "Moon Stone", 0),
+                new PokemonSpecies(30, "Nidorina", Type.Poison, Type.None, "Poison Pin", 1, 70, 62, 67, 55, 55, 56, "Nidoqueen", EvolutionType.MoonStone, 0),
                 new PokemonSpecies(31, "Nidoqueen", Type.Poison, Type.Ground, "Drill", 1, 90, 92, 87, 75, 85, 76),
 
                 new PokemonSpecies(32, "Nidoran♂", Type.Poison, Type.None, "Poison Pin", 1, 46, 57, 40, 40, 40, 50, "Nidorino", 16),
-                new PokemonSpecies(33, "Nidorino", Type.Poison, Type.None, "Poison Pin", 1, 61, 72, 57, 55, 55, 65, "Nidoking", "Moon Stone", 0),
+                new PokemonSpecies(33, "Nidorino", Type.Poison, Type.None, "Poison Pin", 1, 61, 72, 57, 55, 55, 65, "Nidoking", EvolutionType.MoonStone, 0),
                 new PokemonSpecies(34, "Nidoking", Type.Poison, Type.Ground, "Drill", 1, 81, 102, 77, 85, 75, 85),
 
-                new PokemonSpecies(35, "Clefairy", Type.Fairy, Type.None, "Fairy", 1, 70, 45, 48, 60, 65, 35, "Clefable", "Moon Stone", 0),
+                new PokemonSpecies(35, "Clefairy", Type.Fairy, Type.None, "Fairy", 1, 70, 45, 48, 60, 65, 35, "Clefable", EvolutionType.MoonStone, 0),
                 new PokemonSpecies(36, "Clefable", Type.Fairy, Type.None, "Fairy", 1, 95, 70, 73, 95, 90, 60),
 
-                new PokemonSpecies(37, "Vulpix", Type.Fire, Type.None, "Fox", 1, 38, 41, 40, 50, 65, 65, "Ninetales", "Fire Stone", 0),
+                new PokemonSpecies(37, "Vulpix", Type.Fire, Type.None, "Fox", 1, 38, 41, 40, 50, 65, 65, "Ninetales", EvolutionType.FireStone, 0),
                 new PokemonSpecies(38, "Ninetales", Type.Fire, Type.None, "Fox", 1, 73, 76, 75, 81, 100, 100),
 
-                new PokemonSpecies(39, "Jigglypuff", Type.Normal, Type.Fairy, "Balloon", 1, 115, 45, 20, 45, 25, 20, "Wigglytuff", "Moon Stone", 0),
+                new PokemonSpecies(39, "Jigglypuff", Type.Normal, Type.Fairy, "Balloon", 1, 115, 45, 20, 45, 25, 20, "Wigglytuff", EvolutionType.MoonStone, 0),
                 new PokemonSpecies(40, "Wigglytuff", Type.Normal, Type.Fairy, "Balloon", 1, 140, 70, 45, 85, 50, 45),
 
                 new PokemonSpecies(41, "Zubat", Type.Poison, Type.Flying, "Bat", 1, 40, 45, 35, 30, 40, 55, "Golbat", 22),
                 new PokemonSpecies(42, "Golbat", Type.Poison, Type.Flying, "Bat", 1, 75, 80, 70, 65, 75, 90),
 
                 new PokemonSpecies(43, "Oddish", Type.Grass, Type.Poison, "Weed", 1, 45, 50, 55, 75, 65, 30, "Gloom", 21),
-                new PokemonSpecies(44, "Gloom", Type.Grass, Type.Poison, "Weed", 1, 60, 65, 70, 85, 75, 40, "Vileplume", "Leaf Stone", 0),
+                new PokemonSpecies(44, "Gloom", Type.Grass, Type.Poison, "Weed", 1, 60, 65, 70, 85, 75, 40, "Vileplume", EvolutionType.LeafStone, 0),
                 new PokemonSpecies(45, "Vileplume", Type.Grass, Type.Poison, "Flower", 1, 75, 80, 85, 110, 90, 50),
 
                 new PokemonSpecies(46, "Paras", Type.Bug, Type.Grass, "Mushroom", 1, 35, 70, 55, 45, 55, 25, "Parasect", 24),
@@ -95,11 +95,11 @@ namespace PokemonTextEdition
                 new PokemonSpecies(56, "Mankey", Type.Fighting, Type.None, "Pig Monkey", 1, 40, 80, 35, 35, 45, 70, "Primeape", 28),
                 new PokemonSpecies(57, "Primeape", Type.Fighting, Type.None, "Pig Monkey", 1, 65, 105, 60, 60, 70, 95),
 
-                new PokemonSpecies(58, "Growlithe", Type.Fire, Type.None, "Puppy", 1, 55, 70, 45, 70, 50, 60, "Arcanine", "Fire Stone", 0),
+                new PokemonSpecies(58, "Growlithe", Type.Fire, Type.None, "Puppy", 1, 55, 70, 45, 70, 50, 60, "Arcanine", EvolutionType.FireStone, 0),
                 new PokemonSpecies(59, "Arcanine", Type.Fire, Type.None, "Legendary", 1, 90, 110, 80, 100, 80, 95),
 
                 new PokemonSpecies(60, "Poliwag", Type.Water, Type.None, "Tadpole", 1, 40, 50, 40, 40, 40, 90, "Poliwhirl", 25),
-                new PokemonSpecies(61, "Poliwhirl", Type.Water, Type.None, "Tadpole", 1, 65, 65, 65, 50, 50, 90, "Poliwrath", "Water Stone", 0),
+                new PokemonSpecies(61, "Poliwhirl", Type.Water, Type.None, "Tadpole", 1, 65, 65, 65, 50, 50, 90, "Poliwrath", EvolutionType.WaterStone, 0),
                 new PokemonSpecies(62, "Poliwrath", Type.Water, Type.Fighting, "Tadpole", 1, 90, 95, 95, 70, 90, 70),
 
                 new PokemonSpecies(63, "Abra", Type.Psychic, Type.None, "Psi", 1, 25, 20, 15, 105, 55, 90, "Kadabra", 16),
@@ -111,7 +111,7 @@ namespace PokemonTextEdition
                 new PokemonSpecies(68, "Machamp", Type.Fighting, Type.None, "Superpower", 1, 90, 130, 80, 65, 85, 55),
 
                 new PokemonSpecies(69, "Bellsprout", Type.Grass, Type.Poison, "Flower", 1, 50, 75, 35, 70, 30, 40, "Weepinbell", 21),
-                new PokemonSpecies(70, "Weepinbell", Type.Grass, Type.Poison, "Flycatcher", 1, 65, 90, 50, 85, 45, 55, "Victreebel", "Leaf Stone", 0),
+                new PokemonSpecies(70, "Weepinbell", Type.Grass, Type.Poison, "Flycatcher", 1, 65, 90, 50, 85, 45, 55, "Victreebel", EvolutionType.LeafStone, 0),
                 new PokemonSpecies(71, "Victreebel", Type.Grass, Type.Poison, "Flycatcher", 1, 80, 105, 65, 100, 70, 70),
 
                 new PokemonSpecies(72, "Tentacool", Type.Water, Type.Poison, "Jellyfish", 1, 40, 40, 35, 50, 100, 70, "Tentacruel", 30),
@@ -141,7 +141,7 @@ namespace PokemonTextEdition
                 new PokemonSpecies(88, "Grimer", Type.Poison, Type.None, "Sludge", 1, 80, 80, 50, 40, 50, 25, "Muk", 38),
                 new PokemonSpecies(89, "Muk", Type.Poison, Type.None, "Sludge", 1, 105, 105, 75, 65, 100, 50),
 
-                new PokemonSpecies(90, "Shellder", Type.Water, Type.None, "Bivalve", 1, 30, 65, 100, 45, 25, 40, "Cloyster", "Water Stone", 0),
+                new PokemonSpecies(90, "Shellder", Type.Water, Type.None, "Bivalve", 1, 30, 65, 100, 45, 25, 40, "Cloyster", EvolutionType.WaterStone, 0),
                 new PokemonSpecies(91, "Cloyster", Type.Water, Type.Ice, "Bivalve", 1, 50, 95, 180, 85, 45, 70),
 
                 new PokemonSpecies(92, "Gastly", Type.Ghost, Type.Poison, "Gas", 1, 30, 35, 30, 100, 35, 80, "Haunter", 25),
@@ -159,7 +159,7 @@ namespace PokemonTextEdition
                 new PokemonSpecies(100, "Voltorb", Type.Electric, Type.None, "Ball", 1, 40, 30, 50, 55, 55, 100, "Electrode", 30),
                 new PokemonSpecies(101, "Electrode", Type.Electric, Type.None, "Ball", 1, 60, 50, 70, 80, 80, 140),
 
-                new PokemonSpecies(102, "Exeggcute", Type.Grass, Type.Psychic, "Egg", 1, 60, 40, 80, 60, 45, 40, "Exeggutor", "Leaf Stone", 0),
+                new PokemonSpecies(102, "Exeggcute", Type.Grass, Type.Psychic, "Egg", 1, 60, 40, 80, 60, 45, 40, "Exeggutor", EvolutionType.LeafStone, 0),
                 new PokemonSpecies(103, "Exeggutor", Type.Grass, Type.Psychic, "Coconut", 1, 95, 95, 85, 125, 65, 55),
 
                 new PokemonSpecies(104, "Cubone", Type.Ground, Type.None, "Lonely", 1, 50, 50, 95, 40, 50, 35, "Marowak", 28),
@@ -189,7 +189,7 @@ namespace PokemonTextEdition
                 new PokemonSpecies(118, "Goldeen", Type.Water, Type.None, "Goldfish", 1, 45, 67, 60, 35, 50, 63, "Seaking", 33),
                 new PokemonSpecies(119, "Seaking", Type.Water, Type.None, "Goldfish", 1, 80, 92, 65, 65, 80, 68),
 
-                new PokemonSpecies(120, "Staryu", Type.Water, Type.None, "Star Shape", 1, 30, 45, 55, 70, 55, 85, "Starmie", "Water Stone", 0),
+                new PokemonSpecies(120, "Staryu", Type.Water, Type.None, "Star Shape", 1, 30, 45, 55, 70, 55, 85, "Starmie", EvolutionType.WaterStone, 0),
                 new PokemonSpecies(121, "Starmie", Type.Water, Type.Psychic, "Mysterious", 1, 60, 75, 85, 100, 85, 115), 
 
                 new PokemonSpecies(122, "Mr. Mime", Type.Psychic, Type.Fairy, "Barrier", 1, 40, 45, 65, 100, 120, 90), 

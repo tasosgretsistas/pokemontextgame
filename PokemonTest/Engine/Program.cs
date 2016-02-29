@@ -1,47 +1,23 @@
 ﻿using PokemonTextEdition.Classes;
-using PokemonTextEdition.Engine;
 using System;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Engine
 {
-    public class Program
+    class Program
     {
-        #region Constants & Variables
-
-        //Current game version.
-        public const string version = "v0.2 [BETA]";
-
-        //The platform the program is running on.
-        public const string platform = "console";
-
-        //This parameter determines how important a message needs to be in order to get logged.
-        //0 = trivial, 1 = important, 2 = vital.
-        private static int logLevel = 1;
-
-        //Developer mode.
-        public static bool GodMode { get; set; }
-
-        //The font colour for each kind of message. (If I ever decide to implement this)
-        public static ConsoleColor eventColor = ConsoleColor.Yellow;
-
-        #endregion
-
         #region Main Menu
 
         static void Main(string[] args)
         {
             //Introduction code. Keep this updated!
 
-            Console.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! " + version);
-            Console.WriteLine("All 151 Pokemon are now in the game! Hurray!");
-            Console.WriteLine("Pokemon can now evolve and you can use items! :-)");
-            Console.WriteLine("");
+            UI.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! " + Settings.Game_Version);
+            UI.WriteLine("All 151 Pokemon are now in the game! Hurray!");
+            UI.WriteLine("Pokemon can now evolve and you can use items! :-)\n");
 
-            Console.WriteLine("A letter in parentheses represents a command shortcut. For instance, (f)ight");
-            Console.WriteLine("means that you only need to type \"f\" to input this particular command.");
-            Console.WriteLine("");
+            UI.WriteLine("A letter in parentheses represents a command shortcut. For instance, (f)ight");
+            UI.WriteLine("means that you only need to type \"f\" to input this particular command.\n");
 
             MainMenu();
         }
@@ -51,15 +27,19 @@ namespace PokemonTextEdition
         /// </summary>
         public static void MainMenu()
         {
-            Console.WriteLine("Type \"(l)oad\" to load game, \"(s)kip\" to skip the intro or press enter to begin.");
+            UI.WriteLine("Type \"(l)oad\" to load game, \"(s)kip\" to skip the intro or press enter to begin.");
 
-            string input = Console.ReadLine();
-
-            if (input != "")
-                Console.WriteLine();
+            string input = UI.ReceiveInput();
 
             switch (input.ToLower())
             {
+                case "":
+                    Overworld.Player = new Player();
+
+                    Story.Introduction();
+
+                    break;
+
                 case "skip":
                 case "s":
                     SkipIntro();
@@ -72,28 +52,24 @@ namespace PokemonTextEdition
 
                     break;
 
+                case "god mode":
+                    Cheats.GodMode();
+                    MainMenu();
+                    break;
+                    
                 case "testbattle":
-                    Cheats.TestBattle();
-
-                    break;
-
-                case "list items":
-                    Cheats.ListAllItems();
-                    MainMenu();
-                    break;
-
                 case "list pokemon":
-                    Cheats.ListAllPokemon();
-                    MainMenu();
-                    break;
-
+                case "list pokemon bst":
+                case "list pokemon evolution":
                 case "list moves":
-                    Cheats.ListAllMoves();
+                case "list items":
+                    Cheats.Authentication(input.ToLower());
                     MainMenu();
                     break;
 
                 default:
-                    Story.Introduction();
+                    UI.InvalidInput();
+                    MainMenu();
 
                     break;
             }
@@ -104,7 +80,9 @@ namespace PokemonTextEdition
         /// </summary>
         static void SkipIntro()
         {
-            Console.WriteLine("By default the player will be named \"{0}\" and the rival \"{1}\".\n", Overworld.player.Name, Overworld.player.RivalName);
+            Overworld.Player = new Player();
+
+            UI.WriteLine("By default the player will be named \"" + Overworld.Player.Name + "\" and the rival \"" + Overworld.Player.RivalName + "\".\n");
 
             Story.SelectPokemon();
         }
@@ -127,7 +105,7 @@ namespace PokemonTextEdition
             {
                 //If the message's level of importance is higher than the current logLevel, it gets written. Otherwise, it gets ignored.
 
-                if (messageLevel >= logLevel)
+                if (messageLevel >= Settings.Program_LogLevel)
                     writer.WriteLine("{0} - {1}", DateTime.Now, message);
             }
         }

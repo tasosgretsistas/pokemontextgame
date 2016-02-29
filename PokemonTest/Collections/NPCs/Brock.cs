@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using PokemonTextEdition.Classes;
+using System.Collections.Generic;
 
 namespace PokemonTextEdition.NPCs
 {
     class Brock : Trainer
     {
-        Generator generator = new Generator();
+        PokemonGenerator generator = new PokemonGenerator();
 
         public Brock()
             : base()
@@ -16,16 +17,16 @@ namespace PokemonTextEdition.NPCs
             DefeatSpeech = "\n\"Amazing! Your style of battle, your technique - it was as if you are one\n with your Pokemon.\n\n Here, take this Boulder Badge - you've earned it. With this badge, you can\n use Cut outside of battle, and you can access Mt. Moon to the east. You'll\n want to head that way in order to get to Cerulean City and challenge the gym.\n\n Good luck on your journey, and if you ever want a rematch, I'll be waiting.\"\n";
             VictorySpeech = "\n\"An honest effort, but not quite good enough yet. Feel free to try again!\"";
 
-            party = new List<Pokemon> { generator.Create("Geodude", 9), generator.Create("Onix", 10) };
+            Party = new List<Pokemon> { generator.Create("Geodude", 9), generator.Create("Onix", 10) };
 
             Money = 1200;
-            ID = 7;
+            TrainerID = 7;
         }
 
-        public override void Defeat()
+        public override void Defeat(Player player)
         {
-            Overworld.player.badgeList.Add("Boulder Badge");
-            base.Defeat();            
+            player.badgeList.Add("Boulder Badge");
+            base.Defeat(player);            
         }
     }
 }

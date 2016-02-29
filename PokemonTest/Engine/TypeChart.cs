@@ -1,9 +1,7 @@
 ﻿using PokemonTextEdition.Classes;
 
-namespace PokemonTextEdition
-{
-    
-
+namespace PokemonTextEdition.Engine
+{ 
     /// <summary>
     /// This class determines the damage type multiplers of an attack during combat.
     /// </summary>

@@ -1,9 +1,10 @@
-﻿using PokemonTextEdition.Engine;
+﻿using PokemonTextEdition.Classes;
+using PokemonTextEdition.Collections;
 using PokemonTextEdition.NPCs;
 using System;
 using System.Linq;
 
-namespace PokemonTextEdition
+namespace PokemonTextEdition.Engine
 {
     /// <summary>
     /// This class holds any non-generic events within the game.
@@ -18,111 +19,123 @@ namespace PokemonTextEdition
 
         public static void Introduction()
         {
-            //The story's narration.
-            Console.WriteLine("Welcome to the world of Pokemon! In this world, boys and girls can choose to");
-            Console.WriteLine("become Pokemon trainers when they come of age. Pokemon trainers are people who");
-            Console.WriteLine("train Pokemon in order to battle other Pokemon. It just so happens that today");
-            Console.WriteLine("is the day you finally become a Pokemon trainer yourself!");
-            Console.WriteLine("");
+            Overworld.Player = new Player();
 
-            Console.WriteLine("You wake up to the buzzing sound of your alarm clock. It's already 11 AM!");
-            Console.WriteLine("Uh oh, you're gonna be late! You quickly put on the first set of clothes you");
-            Console.WriteLine("find and head straight for Professor Oak's lab. The Professor is standing");
-            Console.WriteLine("beside a table with three Pokeballs on it.");
+            //The story's narration.
+            UI.WriteLine("Welcome to the world of Pokemon! In this world, boys and girls can choose to");
+            UI.WriteLine("become Pokemon trainers when they come of age. Pokemon trainers are people who");
+            UI.WriteLine("train Pokemon in order to battle other Pokemon. It just so happens that today");
+            UI.WriteLine("is the day you finally become a Pokemon trainer yourself!\n");
+
+            UI.WriteLine("You wake up to the buzzing sound of your alarm clock. It's already 11 AM!");
+            UI.WriteLine("Uh oh, you're gonna be late! You quickly put on the first set of clothes you");
+            UI.WriteLine("find and head straight for Professor Oak's lab. The Professor is standing");
+            UI.WriteLine("beside a table with three Pokeballs on it.");
 
             UI.AnyKey();
 
-            Console.WriteLine("\"Ah, there you are -- I've been waiting all morning for you. Say, could you");
-            Console.WriteLine(" remind me what your name was again?\"");
-            Console.WriteLine("");
+            UI.WriteLine("\"Ah, there you are -- I've been waiting all morning for you. Say, could you");
+            UI.WriteLine(" remind me what your name was again?\"\n");
 
-            NameSelection();
+            Overworld.Player.Name = PlayerNameSelection();
+
+            UI.WriteLine("\"Oh yes, of course, how could I forget! Which reminded me, my grandson has yet");
+            UI.WriteLine(" to arrive. You remember him, right? You two used to be rivals for the longest");
+            UI.WriteLine(" time when you were children. His name is...\"\n");
+
+            Overworld.Player.RivalName = RivalName();
+            rival.Name = Overworld.Player.RivalName;
+
+            UI.WriteLine("\"He should be joining us shortly. I know you've been waiting for this moment");
+            UI.WriteLine(" for a long time, so let's get right to it - pick your first Pokemon!\n");
+
+            SelectPokemon();
         }
 
-        static void NameSelection()
+        /// <summary>
+        /// Asks the player to select a name for himself. Maximum of 14 characters is enforced.
+        /// </summary>
+        /// <returns>The name that the player selected.</returns>
+        static string PlayerNameSelection()
         {
-            Console.WriteLine("To begin with, choose your name. 14 characters maximum.");
+            string name;
+            bool validInput = false;
 
-            string name = Console.ReadLine();
-
-            int charCount = 0; 
-
-            foreach (char c in name)
-                charCount++; //Count the characters in the player's selection.           
-
-            if (name == "")
+            do
             {
-                Console.WriteLine("Please select a valid name.");
-                Console.WriteLine("");  
+                UI.WriteLine("To begin with, choose your name. 14 characters maximum.");
 
-                NameSelection();
+                name = UI.ReceiveInput();
+
+                int charCount = 0;
+
+                foreach (char c in name)
+                    charCount++; //Count the characters in the player's selection.           
+
+                if (name == "")
+                {
+                    UI.WriteLine("Please select a valid name.\n");
+                }
+
+                else if (charCount > 14)
+                {
+                    UI.WriteLine("Name too long. Maximum name size is 14 characters.\n");
+                }
+
+                else
+                {
+                    Program.Log("The player named him/herself " + name + ". How imaginative.", 0);
+
+                    validInput = true;                   
+                }
             }
 
-            else if (charCount > 14)
-            {
-                Console.WriteLine("Name too long. Maximum name size is 14 characters.");
-                Console.WriteLine("");
+            while (!validInput);
 
-                NameSelection();                
-            }
-
-            else
-            {
-                Overworld.player.Name = name;
-
-                Program.Log("The player named him/herself " + name + ". How imaginative.", 0);
-
-                Console.WriteLine(""); 
-                Console.WriteLine("\"Oh yes, of course, how could I forget! Which reminded me, my grandson has yet");
-                Console.WriteLine(" to arrive. You remember him, right? You two used to be rivals for the longest");
-                Console.WriteLine(" time when you were children. His name is...\"");
-                Console.WriteLine("");
-
-                RivalName();
-            }
+            return name;
         }
 
-        static void RivalName()
+        /// <summary>
+        /// Asks the player to select a name for his rival. Maximum of 14 characters is enforced.
+        /// </summary>
+        /// <returns>The name that the player selected.</returns>
+        static string RivalName()
         {
-            Console.WriteLine("What will your rival's name be? 14 characters maximum.");
+            string name;
+            bool validInput = false;
 
-            string name = Console.ReadLine();
-
-            int charCount = 0;
-
-            foreach (char c in name)
-                charCount++; //Count the characters in the player's selection.           
-
-            if (name == "")
+            do
             {
-                Console.WriteLine("Please select a valid name.");
-                Console.WriteLine("");
+                UI.WriteLine("What will your rival's name be? 14 characters maximum.");
 
-                RivalName();
+                name = UI.ReceiveInput();
+
+                int charCount = 0;
+
+                foreach (char c in name)
+                    charCount++; //Count the characters in the player's selection.           
+
+                if (name == "")
+                {
+                    UI.WriteLine("Please select a valid name.\n");
+                }
+
+                else if (charCount > 14)
+                {
+                    UI.WriteLine("Name too long. Maximum name size is 14 characters.\n");
+                }
+
+                else
+                {
+                    Program.Log("The player named the rival " + name + ". He must be getting tired of these offensive names.", 0);
+
+                    validInput = true;                    
+                }
             }
 
-            else if (charCount > 14)
-            {
-                Console.WriteLine("Name too long. Maximum name size is 14 characters.");
-                Console.WriteLine("");
+            while (!validInput);
 
-                RivalName();
-            }
-
-            else
-            {
-                Overworld.player.RivalName = name;
-                rival.Name = name;
-
-                Program.Log("The player named the rival " + name + ". He must be getting tired of these offensive names.", 0);
-
-                Console.WriteLine("");
-                Console.WriteLine("\"He should be joining us shortly. I know you've been waiting for this moment");
-                Console.WriteLine(" for a long time, so let's get right to it - pick your first Pokemon!");
-                Console.WriteLine("");
-
-                SelectPokemon();
-            }
+            return name;
         }
 
         /// <summary>
@@ -132,195 +145,183 @@ namespace PokemonTextEdition
         {
             beginDate = DateTime.Now;
 
-            Console.WriteLine("Select the Pokemon you wish to start your adventure with!");
-            Console.WriteLine("Available choices: (B)ulbasaur (Grass), (C)harmander (Fire), (S)quirtle (Water)");
+            PokemonGenerator generator = new PokemonGenerator();
 
-            Generator generator = new Generator();
-
-            Pokemon pokemon; //The player's Pokemon.
+            Pokemon playerPokemon; //The player's Pokemon.
             Pokemon rivalPokemon; //The rival's Pokemon.
 
-            string selection = Console.ReadLine();
             bool validInput = false;
-         
-            if (selection != "")
-                Console.WriteLine("");
 
-            //The Generator is invoked to create two Pokemon, based on the player's input.
-            //One for the player depending on his input, and a Pokemon that's strong vs the player's Pokemon for the rival.
-            switch (selection.ToLower())
+            do
             {
-                case "bulbasaur":
-                case "b":
-                    pokemon = generator.Create("Bulbasaur", 5);
-                    rivalPokemon = generator.Create("Charmander", 4);
+                UI.WriteLine("Select the Pokemon you wish to start your adventure with!");
+                UI.WriteLine("Available choices: (B)ulbasaur (Grass), (C)harmander (Fire), (S)quirtle (Water)");
 
-                    validInput = true;
+                string selection = UI.ReceiveInput();
 
-                    break;
+                //The PokemonGenerator is invoked to create two Pokemon based on the player's input.
+                //One for the player depending on his input, and a Pokemon that's strong vs the player's Pokemon for the rival.
+                switch (selection.ToLower())
+                {
+                    case "bulbasaur":
+                    case "b":
+                        playerPokemon = generator.Create("Bulbasaur", 5);
+                        rivalPokemon = generator.Create("Charmander", 4);
 
-                case "charmander":
-                case "c":
-                    pokemon = generator.Create("Charmander", 5);
-                    rivalPokemon = generator.Create("Squirtle", 4);
+                        validInput = true;
 
-                    validInput = true;
+                        break;
 
-                    break;
+                    case "charmander":
+                    case "c":
+                        playerPokemon = generator.Create("Charmander", 5);
+                        rivalPokemon = generator.Create("Squirtle", 4);
 
-                case "squirtle":
-                case "s":
-                    pokemon = generator.Create("Squirtle", 5);
-                    rivalPokemon = generator.Create("Bulbasaur", 4);
+                        validInput = true;
 
-                    validInput = true;
+                        break;
 
-                    break;
+                    case "squirtle":
+                    case "s":
+                        playerPokemon = generator.Create("Squirtle", 5);
+                        rivalPokemon = generator.Create("Bulbasaur", 4);
 
-                //Pikachu! He will serve as a little cheat of sorts for me to debug the game.
-                case "pikachu":
-                case "p":
-                    pokemon = generator.Create("Pikachu", 25);
-                    rivalPokemon = generator.Create("Eevee", 5);
+                        validInput = true;
 
-                    validInput = true;
+                        break;
 
-                    Console.WriteLine("Quite the cheater, aren't you...\n");
+                    //Pikachu! He will serve as a little cheat of sorts for me to debug the game.
+                    case "pikachu":
+                    case "p":
+                        playerPokemon = generator.Create("Pikachu", 25);
+                        rivalPokemon = generator.Create("Eevee", 5);
 
-                    break;
+                        validInput = true;
 
-                default:
-                    Console.WriteLine("Invalid selection! Please try again.\n");
+                        UI.WriteLine("Quite the cheater, aren't you...\n");
 
-                    pokemon = new Pokemon();
-                    rivalPokemon = new Pokemon();
+                        break;
 
-                    break;
+                    default:
+                        UI.InvalidInput();
+
+                        playerPokemon = null;
+                        rivalPokemon = null;
+
+                        break;
+                }
             }
 
-            if (validInput)
-            {
-                Program.Log("The player selected " + pokemon.Name + ".", 1);
+            while (!validInput);
 
-                Overworld.player.AddPokemon(pokemon, false);
+            Program.Log("The player selected " + playerPokemon.Name + " as his starting Pokemon.", 1);
 
-                rival.party.Add(rivalPokemon);
+            Overworld.Player.AddPokemon(playerPokemon, false);
+            Overworld.Player.StartingPokemon = playerPokemon.Name;
 
-                Overworld.player.StartingPokemon = pokemon.Name;
+            rival.Party.Add(rivalPokemon);
 
-                //A short introduction for the Pokemon.
-
-                Console.WriteLine("\"So you selected {0}, the {1} Pokemon, Pokedex #{2}!", pokemon.Name, pokemon.species.PokedexSpecies, pokemon.species.PokedexNumber);
-                Console.WriteLine(" His maximum HP is {0}, and his starting move is {1}.", pokemon.MaxHP, pokemon.knownMoves.ElementAt(0).Name);
-                Console.WriteLine(" An excellent choice - I hope you and {0} become great friends!\"", pokemon.Name);
-                Console.WriteLine("");
-
-                Console.WriteLine("Just as you pick up the Pokeball containing {0}, you hear someone", pokemon.Name);
-                Console.WriteLine("calling your name from behind you. It's your rival, {0} - it seems", rival.Name);
-                Console.WriteLine("that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
-
-                UI.AnyKey();
-
-                Console.WriteLine("\"So, {0}, huh? I figured you'd pick a chump Pokemon like that!", pokemon.Name);
-                Console.WriteLine(" Very well - let me show you why my {0} is the superior Pokemon!\"", rivalPokemon.Name);
-                Console.WriteLine("");
-
-                //The first battle with the rival then starts.
-
-                rival.party.Add(generator.Create("Mewtwo", 1));
-
-                new Battle().Start(rival, "trainer");
-
-                UI.AnyKey();
-
-                PostRival();
-            }
-
-            else
-                SelectPokemon();
+            StartStory(playerPokemon, rivalPokemon);            
         }
 
-        static void PostRival()
+        static void StartStory(Pokemon playerPokemon, Pokemon rivalPokemon)
         {
-            //When the battle with the rival ends (regardless of outcome) this code will run.
-            //It is supposed to give the player some context for the adventure.
+            //A short introduction for the Pokemon.
 
-            Console.WriteLine("\"It looks like we both need practice. Or well, mostly you. I'm planning to");
-            Console.WriteLine(" take on the Pokemon League, so I'm heading out to earn the 8 gym badges.");
-            Console.WriteLine(" If you aspire to become half as good as me, I suggest you do the same!\"");
-            Console.WriteLine("");
+            UI.WriteLine("\"So you selected " + playerPokemon.Name + ", the " + playerPokemon.species.PokedexSpecies + " Pokemon, Pokedex #" + 
+                playerPokemon.species.PokedexNumber + "!" +
+                         " His maximum HP is " + playerPokemon.MaxHP + ", and his starting move is " + playerPokemon.knownMoves.ElementAt(0).Name + "." +
+                         " An excellent choice - I hope you and " + playerPokemon.Name + " become great friends!\"\n");
 
-            Console.WriteLine("And just like that, {0} took off.", rival.Name);
-
-            UI.AnyKey();
-
-            Console.WriteLine("\"That kid might be a bit rude sometimes, but he really means you no ill.");
-            Console.WriteLine(" Either way, you'd better chase after him - I know you've always dreamed");
-            Console.WriteLine(" of collecting the gym badges and battling at the Pokemon League too. The");
-            Console.WriteLine(" closest gym is the one in Pewter City to the north. Off you go then!\"");
-            Console.WriteLine("");
-
-            Console.WriteLine("The Professor is right. You leave the lab and head back home. You pack some");
-            Console.WriteLine("basic things and start heading towards Route 1 to the north, but suddenly you");
-            Console.WriteLine("hear a voice calling out to you from behind.");
-            Console.WriteLine("");           
-
-            Console.WriteLine("\"{0}!! Hold on!!\"", Overworld.player.Name);
+            UI.WriteLine("Just as you pick up the Pokeball containing " + playerPokemon.Name + ", you hear someone\n" +
+                         "calling your name from behind you. It's your rival, " + rival.Name + " - it seems\n" +
+                         "that he just became a Pokemon trainer as well. Which Pokemon did he pick...?");
 
             UI.AnyKey();
 
-            Console.WriteLine("It's your mum, and she appears to be holding something.");
-            Console.WriteLine("");
+            UI.WriteLine("\"So, " + playerPokemon.Name + ", huh? I figured you'd pick a chump Pokemon like that!\n" +
+                         " Very well - let me show you why my " + rivalPokemon.Name + " is the superior Pokemon!\"\n");
 
-            Console.WriteLine("\"I almost forgot! I was supposed to give you these before you leave. They are ");
-            Console.WriteLine(" called Pokeballs and they are used for catching Pokemon. I have heard that");
-            Console.WriteLine("  it is easier to capture wild Pokemon if you weaken them a bit first, though.\"");
-            Console.WriteLine("");
+            //The first battle with the rival then starts.
 
-            ItemList.pokeball.Add(5, "obtain");
-
-            Console.WriteLine("");
-            Console.WriteLine("You can use the Pokeballs by typing \"catch\" during a battle with a wild Pokemon");
-            Console.WriteLine("in order to attempt to capture it.");
+            Battle battle = new Battle(rival);
 
             UI.AnyKey();
 
-            Console.WriteLine("\"Oh, and take these Potions too! You can use them to heal your injured Pokemon.");
-            Console.WriteLine(" The poor critters will faint if they run out of vitality, and that's bad!\"");
-            Console.WriteLine("");
+            StoryContext();
+        }
 
-            ItemList.potion.Add(5, "obtain");
+        /// <summary>
+        /// This code is meant to run when the first battle with the rival ends, regardless of the outcome.
+        /// It gives the player some context in regards to the adventure as well as general help.
+        /// </summary>
+        static void StoryContext()
+        {
+            UI.WriteLine("\"It looks like we both need practice. Or well, mostly you. I'm planning to");
+            UI.WriteLine(" take on the Pokemon League, so I'm heading out to earn the 8 gym badges.");
+            UI.WriteLine(" If you aspire to become half as good as me, I suggest you do the same!\"\n");
 
-            Console.WriteLine("");
-            Console.WriteLine("You can use Potions by typing \"item\", both during and outside of a battle.");
+            UI.WriteLine("And just like that, " + rival.Name + " took off.");
+
+            UI.AnyKey();
+
+            UI.WriteLine("\"That kid might be a bit rude sometimes, but he really means you no ill.");
+            UI.WriteLine(" Either way, you'd better chase after him - I know you've always dreamed");
+            UI.WriteLine(" of collecting the gym badges and battling at the Pokemon League too. The");
+            UI.WriteLine(" closest gym is the one in Pewter City to the north. Off you go then!\"\n");
+
+            UI.WriteLine("The Professor is right. You leave the lab and head back home. You pack some");
+            UI.WriteLine("basic things and start heading towards Route 1 to the north, but suddenly you");
+            UI.WriteLine("hear a voice calling out to you from behind.\n");
+
+            UI.WriteLine("\"" + Overworld.Player.Name + "!! Hold on!!\"");
+
+            UI.AnyKey();
+
+            UI.WriteLine("It's your mum, and she appears to be holding something.\n");
+
+            UI.WriteLine("\"I almost forgot! I was supposed to give you these before you leave. They are ");
+            UI.WriteLine(" called Pokeballs and they are used for catching Pokemon. I have heard that");
+            UI.WriteLine("  it is easier to capture wild Pokemon if you weaken them a bit first, though.\"\n");
+
+            ItemList.pokeball.Add(5, AddType.Obtain);
+
+            UI.WriteLine("You can use the Pokeballs by typing \"catch\" during a battle with a wild Pokemon");
+            UI.WriteLine("in order to attempt to capture it.");
+
+            UI.AnyKey();
+
+            UI.WriteLine("\"Oh, and take these Potions too! You can use them to heal your injured Pokemon.");
+            UI.WriteLine(" The poor critters will faint if they run out of vitality, and that's bad!\"\n");
+
+            ItemList.potion.Add(5, AddType.Obtain);
+
+            UI.WriteLine("You can use Potions by typing \"item\", both during and outside of a battle.");
 
             UI.AnyKey();
            
-            Console.WriteLine("\"Oh, and don't forget - you can also heal your Pokemon at Pokemon Centers.");
-            Console.WriteLine(" It's free, but you can only find Pokemon Centers in towns and cities.\"");
+            UI.WriteLine("\"Oh, and don't forget - you can also heal your Pokemon at Pokemon Centers.");
+            UI.WriteLine(" It's free, but you can only find Pokemon Centers in towns and cities.\"\n");
 
-            Console.WriteLine("");
-            Console.WriteLine("In many locations, you can type \"center\" or \"heal\" to fully heal your Pokemon");
-            Console.WriteLine("at the local Pokemon Center.");
-
-            UI.AnyKey();
-
-            Console.WriteLine("Your mother sobs for a bit before finally speaking again.");
-            Console.WriteLine("");
-
-            Console.WriteLine("\"Good luck in your journey honey! And don't forget to change underpants daily!\"");
-            Console.WriteLine("");
-
-            Console.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
-            Console.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, {0}!", Overworld.player.StartingPokemon);
+            UI.WriteLine("In many locations, you can type \"center\" or \"heal\" to fully heal your Pokemon");
+            UI.WriteLine("at the local Pokemon Center.");
 
             UI.AnyKey();
 
-            //The user's Pokemon is then healed and the game moves on to the Overworld, where the player can navigate and perform additional actions.
+            UI.WriteLine("Your mother quietely sobs for a bit before finally speaking again.\n");
 
-            Overworld.player.PartyHeal();
+            UI.WriteLine("\"Good luck in your journey honey! And don't forget to change underpants daily!\"\n");
 
-            Overworld.LoadLocation("pallet");
+            UI.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
+            UI.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, " + Overworld.Player.StartingPokemon + "!");
+
+            UI.AnyKey();
+
+            //The user's Pokemon is healed to full.
+            Overworld.Player.PartyHeal(false);
+
+            //The game finally moves on to the Overworld, where the player can navigate about in the world and perform additional actions.
+            Overworld.ChangeLocation(LocationList.pallet);
         }
     }
 }
