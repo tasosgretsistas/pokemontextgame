@@ -13,9 +13,33 @@ namespace PokemonTextEdition.Engine
     {
         #region Cheats 
 
+        public static void CheatListener()
+        {
+            UI.WriteLine("I'm listening...");
+
+            string input = UI.ReceiveInput().ToLower();
+
+            switch (input)
+            {
+                case "god mode":
+                    GodMode();
+                    CheatListener();
+                    break;
+
+                case "testbattle":
+                case "list pokemon":
+                case "list pokemon bst":
+                case "list pokemon evolution":
+                case "list moves":
+                case "list items":
+                    Authentication(input.ToLower());
+                    break;
+            }
+        }
+
         public static void Authentication(string command)
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
                 switch (command)
                 {
@@ -55,7 +79,7 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void TellMe()
         {
-            foreach (Pokemon p in Overworld.Player.party)
+            foreach (Pokemon p in Game.Player.Party)
                 UI.WriteLine(p.PrintIVs());
 
             UI.WriteLine("");
@@ -68,7 +92,7 @@ namespace PokemonTextEdition.Engine
         {
             UI.WriteLine("I have money!\n");
 
-            foreach (Pokemon p in Overworld.Player.party)
+            foreach (Pokemon p in Game.Player.Party)
             {
                 p.HPIV = 31;
                 p.AttackIV = 31;
@@ -78,7 +102,7 @@ namespace PokemonTextEdition.Engine
                 p.SpeedIV = 31;
             }
 
-            Overworld.Player.PartyHeal(true);
+            Game.PartyHeal(true);
         }
 
         #endregion
@@ -87,16 +111,16 @@ namespace PokemonTextEdition.Engine
 
         public static void GodMode()
         {
-            if (Settings.Game_GodMode == false)
+            if (Settings.GodMode == false)
             {
-                Settings.Game_GodMode = true;
+                Settings.GodMode = true;
 
                 UI.WriteLine("Yes! I am a god!\n");
             }
 
             else
             {
-                Settings.Game_GodMode = false;
+                Settings.GodMode = false;
 
                 UI.WriteLine("A god no longer.\n");
             }
@@ -107,12 +131,14 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void TestBattle()
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
                 PokemonGenerator generator = new PokemonGenerator();
 
                 try
                 {
+                    Game.Player = new Player();
+
                     UI.Write("Enter your Pokemon's name: ");
 
                     string playerPokemon = UI.ReceiveInput();
@@ -121,7 +147,7 @@ namespace PokemonTextEdition.Engine
 
                     int playerLevel = Convert.ToInt32(UI.ReceiveInput());
 
-                    Overworld.Player.party.Add(generator.Create(playerPokemon, playerLevel));
+                    Game.Player.Party.Add(generator.Create(playerPokemon, playerLevel));
 
                     UI.Write("Enemy Pokemon name: ");
 
@@ -153,7 +179,7 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ListAllPokemon()
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
                 foreach (PokemonSpecies p in PokemonList.AllPokemon)
                 {
@@ -174,7 +200,7 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void DisplayBSTs()
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
 
                 Dictionary<string, int> totals = new Dictionary<string, int>();
@@ -201,7 +227,7 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void DisplayEvolutions()
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
 
                 foreach (PokemonSpecies pokemon in PokemonList.AllPokemon)
@@ -217,7 +243,7 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void ListAllMoves()
         {
-            if (Settings.Game_GodMode)
+            if (Settings.GodMode)
             {
                 UI.WriteLine(MoveList.AllMoves.Count + " moves found.\n");
 

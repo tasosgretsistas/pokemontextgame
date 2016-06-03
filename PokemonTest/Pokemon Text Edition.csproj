@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ItemInstance.cs" />
     <Compile Include="Classes\PokemonSpecies.cs" />
     <Compile Include="Classes\SaveState.cs" />
     <Compile Include="Collections\LocationList.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Classes\Move.cs" />
     <Compile Include="Collections\MoveList.cs" />
     <Compile Include="Collections\NPCs\Brock.cs" />
+    <Compile Include="Engine\Game.cs" />
     <Compile Include="Engine\Overworld.cs" />
     <Compile Include="Classes\Player.cs" />
     <Compile Include="Classes\Pokemon.cs" />

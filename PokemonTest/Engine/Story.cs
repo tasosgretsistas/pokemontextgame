@@ -2,6 +2,7 @@
 using PokemonTextEdition.Collections;
 using PokemonTextEdition.NPCs;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PokemonTextEdition.Engine
@@ -13,14 +14,12 @@ namespace PokemonTextEdition.Engine
     class Story
     {
         //Declaration for the rival.
-        static Rival1 rival = new Rival1();
+        public static Rival1 rival = new Rival1();
 
         public static DateTime beginDate;
 
         public static void Introduction()
         {
-            Overworld.Player = new Player();
-
             //The story's narration.
             UI.WriteLine("Welcome to the world of Pokemon! In this world, boys and girls can choose to");
             UI.WriteLine("become Pokemon trainers when they come of age. Pokemon trainers are people who");
@@ -37,14 +36,13 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine("\"Ah, there you are -- I've been waiting all morning for you. Say, could you");
             UI.WriteLine(" remind me what your name was again?\"\n");
 
-            Overworld.Player.Name = PlayerNameSelection();
+            Game.Player.Name = PlayerName();
 
             UI.WriteLine("\"Oh yes, of course, how could I forget! Which reminded me, my grandson has yet");
             UI.WriteLine(" to arrive. You remember him, right? You two used to be rivals for the longest");
             UI.WriteLine(" time when you were children. His name is...\"\n");
 
-            Overworld.Player.RivalName = RivalName();
-            rival.Name = Overworld.Player.RivalName;
+            rival.Name = RivalName();
 
             UI.WriteLine("\"He should be joining us shortly. I know you've been waiting for this moment");
             UI.WriteLine(" for a long time, so let's get right to it - pick your first Pokemon!\n");
@@ -56,7 +54,7 @@ namespace PokemonTextEdition.Engine
         /// Asks the player to select a name for himself. Maximum of 14 characters is enforced.
         /// </summary>
         /// <returns>The name that the player selected.</returns>
-        static string PlayerNameSelection()
+        static string PlayerName()
         {
             string name;
             bool validInput = false;
@@ -154,16 +152,18 @@ namespace PokemonTextEdition.Engine
 
             do
             {
-                UI.WriteLine("Select the Pokemon you wish to start your adventure with!");
-                UI.WriteLine("Available choices: (B)ulbasaur (Grass), (C)harmander (Fire), (S)quirtle (Water)");
+                UI.WriteLine("Select the Pokemon you wish to start your adventure with!\n");
 
-                string selection = UI.ReceiveInput();
+                UI.WriteLine("[B] - Bulbasaur, the Grass Pokemon. High Special Attack and Special Defense.");
+                UI.WriteLine("[C] - Charmander, the Fire Pokemon. High Special Attack and Speed.");
+                UI.WriteLine("[S] - Squirtle, the Water Pokemon. High Defense and Special Defense.");
+
+                string selection = UI.ReceiveKey();
 
                 //The PokemonGenerator is invoked to create two Pokemon based on the player's input.
                 //One for the player depending on his input, and a Pokemon that's strong vs the player's Pokemon for the rival.
-                switch (selection.ToLower())
+                switch (selection)
                 {
-                    case "bulbasaur":
                     case "b":
                         playerPokemon = generator.Create("Bulbasaur", 5);
                         rivalPokemon = generator.Create("Charmander", 4);
@@ -171,8 +171,7 @@ namespace PokemonTextEdition.Engine
                         validInput = true;
 
                         break;
-
-                    case "charmander":
+                        
                     case "c":
                         playerPokemon = generator.Create("Charmander", 5);
                         rivalPokemon = generator.Create("Squirtle", 4);
@@ -180,8 +179,7 @@ namespace PokemonTextEdition.Engine
                         validInput = true;
 
                         break;
-
-                    case "squirtle":
+                        
                     case "s":
                         playerPokemon = generator.Create("Squirtle", 5);
                         rivalPokemon = generator.Create("Bulbasaur", 4);
@@ -191,7 +189,6 @@ namespace PokemonTextEdition.Engine
                         break;
 
                     //Pikachu! He will serve as a little cheat of sorts for me to debug the game.
-                    case "pikachu":
                     case "p":
                         playerPokemon = generator.Create("Pikachu", 25);
                         rivalPokemon = generator.Create("Eevee", 5);
@@ -216,8 +213,8 @@ namespace PokemonTextEdition.Engine
 
             Program.Log("The player selected " + playerPokemon.Name + " as his starting Pokemon.", 1);
 
-            Overworld.Player.AddPokemon(playerPokemon, false);
-            Overworld.Player.StartingPokemon = playerPokemon.Name;
+            Game.Player.AddPokemon(playerPokemon, false);
+            Game.StarterPokemon = playerPokemon.Name;
 
             rival.Party.Add(rivalPokemon);
 
@@ -226,11 +223,15 @@ namespace PokemonTextEdition.Engine
 
         static void StartStory(Pokemon playerPokemon, Pokemon rivalPokemon)
         {
+            Game.RivalName = rival.Name;
+            Game.Location = "Pallet";
+            Game.LastHealLocation = "Pallet";
+
             //A short introduction for the Pokemon.
 
             UI.WriteLine("\"So you selected " + playerPokemon.Name + ", the " + playerPokemon.species.PokedexSpecies + " Pokemon, Pokedex #" + 
-                playerPokemon.species.PokedexNumber + "!" +
-                         " His maximum HP is " + playerPokemon.MaxHP + ", and his starting move is " + playerPokemon.knownMoves.ElementAt(0).Name + "." +
+                playerPokemon.species.PokedexNumber + "!\n" +
+                         " His maximum HP is " + playerPokemon.MaxHP + ", and his starting move is " + playerPokemon.knownMoves.ElementAt(0).Name + ".\n" +
                          " An excellent choice - I hope you and " + playerPokemon.Name + " become great friends!\"\n");
 
             UI.WriteLine("Just as you pick up the Pokeball containing " + playerPokemon.Name + ", you hear someone\n" +
@@ -274,7 +275,7 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine("basic things and start heading towards Route 1 to the north, but suddenly you");
             UI.WriteLine("hear a voice calling out to you from behind.\n");
 
-            UI.WriteLine("\"" + Overworld.Player.Name + "!! Hold on!!\"");
+            UI.WriteLine("\"" + Game.Player.Name + "!! Hold on!!\"");
 
             UI.AnyKey();
 
@@ -284,7 +285,8 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine(" called Pokeballs and they are used for catching Pokemon. I have heard that");
             UI.WriteLine("  it is easier to capture wild Pokemon if you weaken them a bit first, though.\"\n");
 
-            ItemList.pokeball.Add(5, AddType.Obtain);
+            // [FIX]
+            //ItemList.pokeball.Add(5, AddType.Obtain);
 
             UI.WriteLine("You can use the Pokeballs by typing \"catch\" during a battle with a wild Pokemon");
             UI.WriteLine("in order to attempt to capture it.");
@@ -294,7 +296,8 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine("\"Oh, and take these Potions too! You can use them to heal your injured Pokemon.");
             UI.WriteLine(" The poor critters will faint if they run out of vitality, and that's bad!\"\n");
 
-            ItemList.potion.Add(5, AddType.Obtain);
+            // [FIX]
+            //ItemList.potion.Add(5, AddType.Obtain);
 
             UI.WriteLine("You can use Potions by typing \"item\", both during and outside of a battle.");
 
@@ -313,12 +316,16 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine("\"Good luck in your journey honey! And don't forget to change underpants daily!\"\n");
 
             UI.WriteLine("She waves you goodbye one last time before heading back home. You are finally");
-            UI.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, " + Overworld.Player.StartingPokemon + "!");
+            UI.WriteLine("ready to go out on your own Pokemon adventure with your new buddy, " + Game.StarterPokemon + "!");
 
             UI.AnyKey();
 
+            Game.DefeatedTrainers = new List<int> { 1 };
+
             //The user's Pokemon is healed to full.
-            Overworld.Player.PartyHeal(false);
+            Game.PartyHeal(false);
+
+            Game.LastHealLocation = Game.Location;
 
             //The game finally moves on to the Overworld, where the player can navigate about in the world and perform additional actions.
             Overworld.ChangeLocation(LocationList.pallet);

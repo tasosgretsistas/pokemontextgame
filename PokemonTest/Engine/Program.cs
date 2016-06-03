@@ -6,18 +6,27 @@ namespace PokemonTextEdition.Engine
 {
     class Program
     {
+        /// <summary>
+        /// This is the game's main random number generator. Any function that requires generic randomness will invoke this instance of Random.
+        /// </summary>
+        public static Random random = new Random(DateTime.Now.Second);
+
         #region Main Menu
 
         static void Main(string[] args)
         {
             //Introduction code. Keep this updated!
 
-            UI.WriteLine("Welcome to Pokemon Red/Blue: Text Edition, by Tasos Gretsistas! " + Settings.Game_Version);
-            UI.WriteLine("All 151 Pokemon are now in the game! Hurray!");
-            UI.WriteLine("Pokemon can now evolve and you can use items! :-)\n");
+            Log("---------- NEW SESSION ----------", 1);
 
-            UI.WriteLine("A letter in parentheses represents a command shortcut. For instance, (f)ight");
-            UI.WriteLine("means that you only need to type \"f\" to input this particular command.\n");
+            string welcome = "Welcome to Pokemon Red/Blue: Text Edition v" + Settings.GameVersion + ", by Tasos Gretsistas!";
+
+            string news = "This version features an engine clean-up and some new minor features.";
+
+            string help = "A letter in square brackets represents a command shortcut. For instance, [F]ight\n" +
+                          "means that you only need to press the \"F\" key to input this particular command.";
+
+            UI.WriteLine(welcome + "\n" + news + "\n\n" + help + "\n");
 
             MainMenu();
         }
@@ -27,62 +36,41 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static void MainMenu()
         {
-            UI.WriteLine("Type \"(l)oad\" to load game, \"(s)kip\" to skip the intro or press enter to begin.");
+            UI.WriteLine("[L]oad game, [S]kip introduction or press any other key to begin.");
 
-            string input = UI.ReceiveInput();
+            string input = UI.ReceiveKey();
 
-            switch (input.ToLower())
+            switch (input)
             {
-                case "":
-                    Overworld.Player = new Player();
-
-                    Story.Introduction();
-
-                    break;
-
-                case "skip":
-                case "s":
-                    SkipIntro();
-
-                    break;
-
-                case "load":
                 case "l":
                     SaveLoad.Load();
-
                     break;
 
-                case "god mode":
-                    Cheats.GodMode();
-                    MainMenu();
+                case "s":
+                    SkipIntro();
                     break;
-                    
-                case "testbattle":
-                case "list pokemon":
-                case "list pokemon bst":
-                case "list pokemon evolution":
-                case "list moves":
-                case "list items":
-                    Cheats.Authentication(input.ToLower());
+
+                case "c":
+                    Cheats.CheatListener();
                     MainMenu();
                     break;
 
+                case "enter":
                 default:
-                    UI.InvalidInput();
-                    MainMenu();
-
-                    break;
+                    Game.Player = new Player();
+                    Story.Introduction();
+                    break; 
             }
         }
 
         /// <summary>
-        /// Skips the story's introduction segment and automatically instantiates the Overworld.player and Overworld.rival objects with their default names.
+        /// Skips the story's introduction segment and automatically instantiates the Game.Player and Overworld.rival objects with their default names.
         /// </summary>
         static void SkipIntro()
         {
-            Overworld.Player = new Player();
+            Game.Player = new Player();
 
-            UI.WriteLine("By default the player will be named \"" + Overworld.Player.Name + "\" and the rival \"" + Overworld.Player.RivalName + "\".\n");
+            UI.WriteLine("By default the player will be named \"" + Game.Player.Name + "\" and the rival \"" + Story.rival.Name + "\".\n");
 
             Story.SelectPokemon();
         }
@@ -105,13 +93,12 @@ namespace PokemonTextEdition.Engine
             {
                 //If the message's level of importance is higher than the current logLevel, it gets written. Otherwise, it gets ignored.
 
-                if (messageLevel >= Settings.Program_LogLevel)
+                if (messageLevel >= Settings.LogLevel)
                     writer.WriteLine("{0} - {1}", DateTime.Now, message);
             }
         }
 
         #endregion
-
     }
 }
 

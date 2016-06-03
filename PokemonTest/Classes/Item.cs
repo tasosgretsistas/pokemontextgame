@@ -66,37 +66,6 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         public string Description { get; set; }
 
-        protected int count;
-
-        /// <summary>
-        /// Represents how many instances of the item the player holds.
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return count;
-            }
-            set
-            {
-                if (value < 0)
-                {
-                    count = 0;
-
-                    UI.Error("The game tried to set the count of an item to less than 0.",
-                             "The game tried to set the count of " + Name + " to " + value + ", which is less than 0.", 2);
-                }
-
-                else if (value > 99)
-                {
-                    count = 99;
-                }
-
-                else
-                    count = value;
-            }
-        }
-
         protected int value;
 
         /// <summary>
@@ -138,7 +107,6 @@ namespace PokemonTextEdition.Classes
             Type = ItemType.None;
             Description = string.Empty;
 
-            Count = 0;
             Value = 0;
 
             //CanUseMultiple = false;            
@@ -178,24 +146,15 @@ namespace PokemonTextEdition.Classes
             : this(iID, iName, iDescription, iValue)
         {
             Type = iType;
-        }        
+        }
 
         #endregion
 
-        #region General Methods
+        #region Methods
 
-        /// <summary>
-        /// Displays the item's information among with the quantity presently in the bag.
-        /// </summary>
-        /// <returns>A formatted string listing the item's information. Example: "2x Potion - Heals a Pokemon"</returns>
         public string PrintInfo()
         {
-            string countMessage = Name;
-
-            if (Count > 1)
-                countMessage = Name + "s";
-
-            return Count + "x " + countMessage + " - " + Description;
+            return this.Name + " - " + this.Description;
         }
 
         /// <summary>
@@ -206,7 +165,7 @@ namespace PokemonTextEdition.Classes
         {
             UI.WriteLine("This item cannot be used outside of combat.");
 
-            Program.Log("The player tried to use a " + Name + " outside of combat.", 0);            
+            Program.Log("The player tried to use a " + Name + " outside of combat.", 0);
 
             return false;
         }
@@ -219,79 +178,9 @@ namespace PokemonTextEdition.Classes
         {
             UI.WriteLine("This item cannot be used during combat.");
 
-            Program.Log("The player tried to use a " + Name + " during combat.", 0);            
+            Program.Log("The player tried to use a " + Name + " during combat.", 0);
 
             return false;
-        }
-
-        #endregion
-
-        #region Adding & Removing        
-
-        /// <summary>
-        /// Attemps to add a quantity of an item to the player's bag, regardless of how it is added.
-        /// </summary>
-        /// <param name="quantity">The amount to add.</param>
-        /// <param name="method">The method of acquisition of the item.</param>
-        public void Add(int quantity, AddType method)
-        {
-            //First the game searches whether there's an item in the player's inventory with the same name as this item. If so, that many of the item are added.
-            if (Overworld.Player.items.Exists(i => i.Equals(this)))
-                Overworld.Player.items.Find(i => i.ItemID == ItemID).Count += quantity;
-            
-            //If an item with this item's name doesn't exist in the player's bag, this item gets added instead, with a starting count of "quantity".
-            else
-            {
-                Overworld.Player.items.Add(this);
-                Count += quantity;
-            }
-
-            //A message is then printed depending on method of acquisition.
-            if (method == AddType.Obtain)
-                UI.WriteLine("You obtained " + AddRemoveQuantityFormat(quantity) + "!\n");
-        }
-
-        /// <summary>
-        /// Attemps to remove a quantity of an item from the player's bag, regardless of how it is removed.
-        /// </summary>
-        /// <param name="quantity">The amount to remove.</param>
-        /// <param name="method">The method of acquisition of the item, i.e. "sold" or "used".</param>
-        public void Remove(int quantity, RemoveType method)
-        {
-            //First the game checls wether the item exists in the player's inventory. If so, a "quantity" amount of it is removed.
-            if (Overworld.Player.items.Exists(i => i.Equals(this)))
-            {
-                Overworld.Player.items.Find(i => i.ItemID == ItemID).Count -= quantity;
-
-                //If there are less than 1 of the item, it gets removed from the player's bag.
-                if (Overworld.Player.items.Find(i => i.ItemID == ItemID).Count < 1)
-                    Overworld.Player.items.Remove(Overworld.Player.items.Find(i => i.ItemID == ItemID));
-            }
-            
-            //This is just for the freak scenario where the game tries to remove an item from the player's bag that doesn't exist.
-            //This should never happen ideally, but I've added this error message to facilitate for the case I ever make a silly mistake like that.
-            else
-            {
-                UI.Error("The game tried to remove an item that does not exist in the player's bag.",
-                         "The game tried to remove " + Name + " from the bag, but there were none.", 2);
-            }
-            
-            if (method == RemoveType.Use)
-                UI.WriteLine("You used " + AddRemoveQuantityFormat(quantity) + "!");
-        }
-
-        /// <summary>
-        /// Quickly formats the name of the item depending on the quantity to be added/removed.
-        /// </summary>
-        /// <param name="quantity">The amount to be added or removed.</param>
-        /// <returns>The item's name formatted by quantity. Example: "a Potion" or "5 Potions"</returns>
-        protected string AddRemoveQuantityFormat(int quantity)
-        {
-            if (quantity == 1)
-                return "a " + Name;
-
-            else
-                return quantity + " " + Name + "s";
         }
 
         #endregion

@@ -49,7 +49,7 @@ namespace PokemonTextEdition.Locations
         public override void GoEast()
         {
             //The player may not progress until Brock has been defeated.
-            if (!Overworld.Player.defeatedTrainers.Contains(brock.TrainerID))
+            if (!Game.DefeatedTrainers.Contains(brock.TrainerID))
             {
                 UI.WriteLine("Just as you start walking towards the rocky path that leads eastward, a man\n" +
                              "equipped in mountain gear comes running your way.\n\n" +
@@ -72,7 +72,7 @@ namespace PokemonTextEdition.Locations
         public override void Gym()
         {
             //If Brock hasn't been defeated already, the Gym challenge begins.
-            if (!brock.HasBeenDefeated(Overworld.Player))
+            if (!brock.HasBeenDefeated(Game.Player))
             {
                 UI.WriteLine("You're standing before a 5-meter tall door - the entrance to the Pewter Gym.\n" + 
                              "You can't help but feel a bit uneasy at the thought of what challenges await.\n\n" +
@@ -88,7 +88,7 @@ namespace PokemonTextEdition.Locations
                     case "y":
 
                         //If the player has not defeated Fred before, he has to battle him.
-                        if (!fred.HasBeenDefeated(Overworld.Player))
+                        if (!fred.HasBeenDefeated(Game.Player))
                         {
                             fred.Encounter();
 
@@ -96,7 +96,7 @@ namespace PokemonTextEdition.Locations
                         }
 
                         //If the player has not defeated Dave before, he has to battle him.
-                        else if (!dave.HasBeenDefeated(Overworld.Player))
+                        else if (!dave.HasBeenDefeated(Game.Player))
                         {
                             dave.Encounter();
 
@@ -104,7 +104,7 @@ namespace PokemonTextEdition.Locations
                         }
 
                         //Finally, if the player has defeated both Fred and Dave, he may challenge Brock.
-                        else if (!brock.HasBeenDefeated(Overworld.Player))
+                        else if (!brock.HasBeenDefeated(Game.Player))
                         {
                             brock.Encounter();
 

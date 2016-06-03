@@ -315,7 +315,8 @@ namespace PokemonTextEdition.Classes
         #region Constructors
 
         /// <summary>
-        ///  Constructor for blank Pokemon. Creates a Pokemon of species MissingNo at level 1 with all of its other attributes set to 0, false and empty strings.
+        ///  Constructor for blank Pokemon. 
+        ///  Creates a Pokemon of species MissingNo at level 1 with all of its other attributes set to 0, false and empty strings.
         /// </summary>
         public Pokemon()
         {

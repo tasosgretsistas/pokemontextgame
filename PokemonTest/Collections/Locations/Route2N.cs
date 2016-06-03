@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class Route2N : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         public Route2N()
@@ -37,10 +36,10 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range of all Pokemon in this area.
-            int level = random.Next(3, 5); 
+            int level = Program.random.Next(3, 5); 
 
             Pokemon pokemon;
 

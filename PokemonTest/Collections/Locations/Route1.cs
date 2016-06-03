@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class Route1 : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         public Route1()
@@ -36,10 +35,10 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Rattata and Pidgey. 
-            int level = random.Next(3, 5);            
+            int level = Program.random.Next(3, 5);            
 
             Pokemon pokemon;
 
@@ -57,7 +56,7 @@ namespace PokemonTextEdition.Locations
         public override void GoNorth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this route.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //60% probability that the player will encounter a wild Pokemon.
             if (encounter <= 6)
@@ -84,7 +83,7 @@ namespace PokemonTextEdition.Locations
         public override void GoSouth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this route.         
-            int encounter = random.Next(1, 3);
+            int encounter = Program.random.Next(1, 3);
 
             //50% probability that the player will encounter a wild Pokemon.
             if (encounter <= 1)

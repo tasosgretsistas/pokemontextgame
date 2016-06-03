@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class MtMoonPart1 : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         Trainer lana = TrainerList.AllTrainers.Find(t => t.TrainerID == 12);
@@ -43,10 +42,10 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Zubat and Geodude.
-            int level = random.Next(7, 11);
+            int level = Program.random.Next(7, 11);
 
             Pokemon pokemon;
 
@@ -72,7 +71,7 @@ namespace PokemonTextEdition.Locations
         public override void GoWest()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //50% probability that the player will encounter a wild Pokemon.
             if (encounter <= 5)
@@ -105,7 +104,7 @@ namespace PokemonTextEdition.Locations
         public override void GoEast()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //60% probability that the player will encounter a wild Pokemon.
             if (encounter <= 6)
@@ -135,10 +134,10 @@ namespace PokemonTextEdition.Locations
             }
 
             //Enemy trainer routine.
-            if (!simon.HasBeenDefeated(Overworld.Player))
+            if (!simon.HasBeenDefeated(Game.Player))
             {
                 //If the player has not defeated Lana before, he has to battle her.
-                if (!lana.HasBeenDefeated(Overworld.Player))
+                if (!lana.HasBeenDefeated(Game.Player))
                 {
                     UI.WriteLine("The light in the cave is ever dimming, and you eventually find yourself before\n" +
                                  "a round hole in the wall, big enough for you to walk through. Just as you are\n" +

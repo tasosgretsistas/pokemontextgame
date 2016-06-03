@@ -11,27 +11,27 @@ namespace PokemonTextEdition.Classes
         //The mart's "stock" - a list of items it can sell.
         List<Item> Stock = new List<Item>();
 
-        //The item that is currently being purchased/sold.
-        Item Item;   
+        public Mart(List<Item> stock)
+        {
+            //Then, the mart's stock is loaded.
+            if (stock != null && stock.Count > 0)
+                Stock = stock;
+
+            //This is a failsafe in the event that a mart is loaded with no stock for whatever reason.
+            else
+                Stock = new List<Item> { ItemList.potion };
+        }
 
         /// <summary>
         /// The "start" method of the mart.
         /// </summary>
         /// <param name="martStock">The mart's stock. This should be provided by each specific location.</param>
-        public void Welcome(List<Item> martStock)
+        public void Welcome()
         {
-            //First, a generic greeting for all stores is displayed.
-            UI.WriteLine("Welcome to the Pokemon Mart! We've got goods of all kinds! Take a look!\n");
+            //A generic greeting for all stores is displayed.
+            UI.WriteLine("Welcome to the Pokemon Mart! We've got goods of all kinds! Take a look!\n");            
 
-            //Then, the mart's stock is loaded.
-            if (martStock != null && martStock.Count > 0)
-                Stock = martStock;
-
-            //This is a failsafe in the event that a mart is loaded with no stock for whatever reason.
-            else
-                Stock = new List<Item> { ItemList.potion }; 
-
-            //Finally, the player is taken to the options screen, where he may decide what to do.
+            //The player is taken to the options screen, where he may decide what to do.
             Options();
         }
 
@@ -40,18 +40,14 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         void Options()
         {
-            //The item object is nulled so as to reset which item is currently being selected in the Buy and Sell methods.
-            Item = null;
-
             UI.WriteLine("What would you like to do at the mart?\n(Available actions: (b)uy, (s)ell, (e)xit)");
 
             //Input is requested of the player.
             string action = UI.ReceiveInput();
 
             //Then, the respective method is triggered.
-            switch (action)
+            switch (action.ToLower())
             {
-                case "Buy":
                 case "buy":
                 case "b":
 
@@ -59,15 +55,13 @@ namespace PokemonTextEdition.Classes
 
                     break;
 
-                case "Sell":
                 case "sell":
                 case "s":
 
                     Sell();
 
                     break;
-
-                case "Exit":
+                    
                 case "exit":
                 case "e":
                     break;
@@ -90,19 +84,19 @@ namespace PokemonTextEdition.Classes
             UI.WriteLine("Of course! What are you after? We have the following items in stock:\n");
 
             //The player is asked to select an item.
-            Item = DisplayStock();
+            Item itemToBuy = DisplayStock();
 
             //If the player selected a valid item, its properties are displayed, and the operation carries on.
-            if (Item != null)
+            if (itemToBuy != null)
             {
                 int itemCount = 0;
 
                 //This part searches for the selected item in the player's bag and returns how many of the item the player has.
-                if (Overworld.Player.items.Contains(Overworld.Player.items.Find(i => i.ItemID == Item.ItemID)))
-                    itemCount = Overworld.Player.items.Find(i => i.ItemID == Item.ItemID).Count; 
+                if (Game.Player.Bag.Contains(Game.Player.Bag.Find(i => i.BaseItem.ItemID == itemToBuy.ItemID)))
+                    itemCount = Game.Player.Bag.Find(i => i.BaseItem.ItemID == itemToBuy.ItemID).Count; 
 
-                UI.WriteLine(Item.Name + "s, huh? They're $" + Item.Value + " each. How many would you like to buy?" +
-                            "\n(You have " + itemCount + " " + Item.Name + "s on you. Money: $" + Overworld.Player.Money +
+                UI.WriteLine(itemToBuy.Name + "s, huh? They're $" + itemToBuy.Value + " each. How many would you like to buy?" +
+                            "\n(You have " + itemCount + " " + itemToBuy.Name + "s on you. Money: $" + Game.Player.Money +
                             "\nEnter amount to buy or press enter to return.)");
 
                 //Next, the player is asked to provide input as to how many of the selected item to purchase.
@@ -114,18 +108,18 @@ namespace PokemonTextEdition.Classes
                 if (validInput && amount > 0)
                 {
                     //... If he has enough money, that many of that item are added to the player's items list.
-                    if (Overworld.Player.Money >= (Item.Value * amount))
+                    if (Game.Player.Money >= (itemToBuy.Value * amount))
                     {
-                        string formattedName = Item.Name;
+                        string formattedName = itemToBuy.Name;
 
                         if (amount > 1)
                             formattedName += "s";
+                        // [FIX]
+                        //Item.Add(amount, AddType.Buy);
 
-                        Item.Add(amount, AddType.Buy);
+                        Game.Player.Money -= (itemToBuy.Value * amount);
 
-                        Overworld.Player.Money -= (Item.Value * amount);
-
-                        UI.WriteLine("There you go! " + amount + " " + formattedName + ", $" + (Item.Value * amount) + " all in all!\nThank you, come again!\n");
+                        UI.WriteLine("There you go! " + amount + " " + formattedName + ", $" + (itemToBuy.Value * amount) + " all in all!\nThank you, come again!\n");
                     }
 
                     //Otherwise, the player is informed that he doesn't have enough money.
@@ -161,21 +155,21 @@ namespace PokemonTextEdition.Classes
         void Sell()
         {
             //First, the game checks to see whether the player has at least one item in his bag.
-            if (Overworld.Player.items.Count > 0)
+            if (Game.Player.Bag.Count > 0)
             {
                 UI.WriteLine("Selling? No problem! What would you like to sell?\n");
 
                 //If so, he is asked to select an item from his bag.
-                Item = Overworld.Player.SelectItem("sell");
+                ItemInstance itemToSell = Game.Player.SelectItem("sell");
 
                 //If the player selected a valid item, its properties are displayed, and the operation carries on.
-                if (Item != null)
+                if (itemToSell != null)
                 {
-                    int saleValue = (int)(Item.Value / 2); //The item's price for selling - half the purchasing price.
-                    int itemCount = Item.Count;
+                    int saleValue = (int)(itemToSell.BaseItem.Value / 2); //The item's price for selling - half the purchasing price.
+                    int itemCount = itemToSell.Count;
 
-                    UI.WriteLine(Item.Name + "s, right? I can give you $" + saleValue + " a piece. How many are you selling?" +
-                                     "\n(You have " + itemCount + " " + Item.Name + "s on you. Money: $" + Overworld.Player.Money + 
+                    UI.WriteLine(itemToSell.BaseItem.Name + "s, right? I can give you $" + saleValue + " a piece. How many are you selling?" +
+                                     "\n(You have " + itemCount + " " + itemToSell.BaseItem.Name + "s on you. Money: $" + Game.Player.Money + 
                                      "\nEnter amount to sell or press enter to return.)");
 
                     string decision = UI.ReceiveInput();
@@ -185,19 +179,19 @@ namespace PokemonTextEdition.Classes
                     //The player then gives input again as to how many of an item he wants to sll. If the player's input was correct, the operation continues.
                     if (validInput && amount > 0)
                     {
-                        string formattedName = Item.Name;
+                        string formattedName = itemToSell.BaseItem.Name;
 
                         if (amount > 1)
                             formattedName += "s";
 
                         //If the player at least as many of the selected item as the given amount, that many of that item are removed from the player's bag.
-                        if (Item.Count >= amount)
+                        if (itemToSell.Count >= amount)
                         {
-                            Item.Remove(amount, RemoveType.Sell);
+                            Game.Player.Remove(itemToSell.BaseItem, amount, RemoveType.Sell);
 
-                            Overworld.Player.Money += (saleValue * amount);
+                            Game.Player.Money += (saleValue * amount);
 
-                            UI.WriteLine("Alright, here you go, $" + (Item.Value * amount) + " for " + amount + " " + formattedName + "!\nThank you, come again!\n");
+                            UI.WriteLine("Alright, here you go, $" + (itemToSell.BaseItem.Value * amount) + " for " + amount + " " + formattedName + "!\nThank you, come again!\n");
                         }
 
                         //Otherwise, the player is informed that he doesn't that many of that item.

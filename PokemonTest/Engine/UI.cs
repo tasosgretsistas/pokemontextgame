@@ -59,6 +59,16 @@ namespace PokemonTextEdition.Engine
             return input;
         }
 
+        public static string ReceiveKey()
+        {
+            string input = Console.ReadKey(true).Key.ToString().ToLower();
+
+            UI.WriteLine("");
+
+            return input;
+        }
+
+
         /// <summary>
         /// Receives input from the player and then attempts to convert it to an integer number through the "out result" parameter, returning true if the conversion was possible.
         /// I couldn't get this to do anything meaningful that the <c>Int32.TryParse</c> method doesn't do already so I decided against using it for the time being.

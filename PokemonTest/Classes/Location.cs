@@ -241,10 +241,10 @@ namespace PokemonTextEdition.Classes
             if (Type == LocationType.City || Type == LocationType.Town || Tag == LocationTag.Route3East)
             {
                 //All of his Pokemon are healed.
-                Overworld.Player.PartyHeal(true);
+                Game.PartyHeal(true);
 
                 //Then, the player's "lastHeal" tag is updated to the current location.
-                Overworld.Player.LastHealLocation = Tag.ToString();
+                Game.LastHealLocation = Tag.ToString();
             }
 
             //If he is not in a city, an error message is displayed.
@@ -259,7 +259,7 @@ namespace PokemonTextEdition.Classes
         {
             //If the player is in a city, an instance of the Mart class is created with the item stock list provided by this object's mart stock list.
             if (Type == LocationType.City)            
-                new Mart().Welcome(MartStock);
+                new Mart(MartStock).Welcome();
             
             //If the player is not in a city, an error message is displayed.
             else            

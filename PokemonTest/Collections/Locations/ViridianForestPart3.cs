@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class ViridianForestPart3 : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         Trainer michael = TrainerList.AllTrainers.Find(t => t.TrainerID == 4);
@@ -39,7 +38,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Trainer()
         { 
-            if (michael.HasBeenDefeated(Overworld.Player))            
+            if (michael.HasBeenDefeated(Game.Player))            
                 michaelr.Encounter();           
 
             else
@@ -49,13 +48,13 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Caterpie, Weedle and Pidgey.
-            int level = random.Next(3, 6);
+            int level = Program.random.Next(3, 6);
 
             //The level range for Metapod and Kakuna.
-            int level2 = random.Next(4, 7);
+            int level2 = Program.random.Next(4, 7);
 
             Pokemon pokemon;
 
@@ -85,7 +84,7 @@ namespace PokemonTextEdition.Locations
         public override void GoNorth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //60% probability that the player will encounter a wild Pokemon.
             if (encounter <= 6)
@@ -111,7 +110,7 @@ namespace PokemonTextEdition.Locations
             UI.AnyKey();
 
             //If the player has not defeated Michael before, he has to battle him.
-            if (!michael.HasBeenDefeated(Overworld.Player))
+            if (!michael.HasBeenDefeated(Game.Player))
             {
                 UI.WriteLine("You are almost out of the forest when you run into another kid with a net.\n" +
                              "This one doesn't seem as eager to fight you, but you're ready either way!\n");
@@ -123,7 +122,7 @@ namespace PokemonTextEdition.Locations
         public override void GoSouth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //50% probability that the player will encounter a wild Pokemon.
             if (encounter <= 5)

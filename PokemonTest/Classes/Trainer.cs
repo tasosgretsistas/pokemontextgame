@@ -100,7 +100,7 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         public bool HasBeenDefeated(Player player)
         {
-            if (player.defeatedTrainers.Contains(TrainerID))
+            if (Game.DefeatedTrainers.Contains(TrainerID))
                     return true;
 
                 else
@@ -134,7 +134,7 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         public virtual void Defeat(Player player)
         {
-            player.defeatedTrainers.Add(TrainerID);
+            Game.DefeatedTrainers.Add(TrainerID);
 
             UI.AnyKey();
 
@@ -145,7 +145,7 @@ namespace PokemonTextEdition.Classes
         {            
             UI.WriteLine(VictorySpeech + "\n");
 
-            player.BlackOut();
+            Game.BlackOut();
         }
 
         #endregion

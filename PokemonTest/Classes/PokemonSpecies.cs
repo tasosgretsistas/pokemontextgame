@@ -49,35 +49,66 @@
     /// </summary>
     class PokemonSpecies
     {
-        #region Fields
+        #region Fields & Properties
 
-        //The Pokemon's number in the Pokedex - effectively also its unique ID number.
+        /// <summary>
+        /// The Pokemon's number in the Pokedex - effectively also its unique ID number.
+        /// </summary>
         public int PokedexNumber { get; set; }
 
-        //The Pokemon's name.
+        /// <summary>
+        /// //The Pokemon's species name, i.e. "Bulbasaur" or "Pikachu".
+        /// </summary>
         public string Name { get; set; }
 
-        //The Pokemon's elemental types - i.e. Fire, Grass, Water, etc.
+        /// <summary>
+        /// The Pokemon's primary elemental type, i.e. "Grass", "Fire" or "Water".
+        /// </summary>
         public Type Type1 { get; set; }
+
+        /// <summary>
+        /// The Pokemon's secondary elemental type. Many Pokemon do not have a
+        /// secondary type, in which event this will be set to Type.None.
+        /// </summary>
         public Type Type2 { get; set; }
 
-        //The Pokemon's Pokedex species listing - just for flavour.
+        /// <summary>
+        /// The Pokemon's species as it is labeled in the Pokedex, i.e. "Mouse" for Pikachu.
+        /// </summary>
         public string PokedexSpecies { get; set; }        
 
-        //This determines how difficult a Pokemon is to catch. (NYI)
+        /// <summary>
+        /// A modifier that determines the probability a Pokemon will be caught. (NYI)
+        /// </summary>
         public float CatchRate { get; set; }
 
         //This determines how much experience is required for a given species of Pokemon to gain a level.
         //Currently linearly set to 300 across the board.
         public int ExperienceToLevel { get; set; }
-
-        //The Pokemon's evolution properties - what Pokemon it evolves into, how it evolves, and at what level it evolves.
+        
+        /// <summary>
+        /// The way in which the Pokemon evolves, i.e. levelling up or using a special stone such as Fire Stone.
+        /// </summary>
         public EvolutionType EvolutionType { get; set; }
+
+        /// <summary>
+        /// The name of the species this species evolves into, i.e. "Ivysaur" for Bulbasaur's evolution.
+        /// </summary>
         public string EvolvesInto { get; set; }
+        
+        /// <summary>
+        /// The name of the species this species evolved from, if applicable. I.e. "Bulbasaur" for Ivysaur's pre-evolution.
+        /// </summary>
         public string EvolvesFrom { get; set; }
+
+        /// <summary>
+        /// The level at which this Pokemon evolves, if applicable.
+        /// </summary>
         public int EvolutionLevel { get; set; }
 
-        //Quickly determines if a Pokemon evolves.
+        /// <summary>
+        /// Determines if a Pokemon has an evolution.
+        /// </summary>
         public bool Evolves
         {
             get
@@ -90,7 +121,7 @@
             }
         }
 
-        //The base stats for the particular species of Pokemon. These determine its overall potential.
+        //The base stats for the particular species of Pokemon.These determine its overall potential.
         #region Base Stats
 
         private int[] baseStats = new int[6];

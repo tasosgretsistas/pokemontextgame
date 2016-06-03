@@ -9,7 +9,7 @@ namespace PokemonTextEdition.NPCs
     {
         public Rival1() :base()
         {
-            Name = Overworld.Player.RivalName;
+            Name = "Blue";
             Type = "Pokemon Trainer";
 
             Party = new List<Pokemon> {  };
@@ -33,7 +33,7 @@ namespace PokemonTextEdition.NPCs
         {
             UI.WriteLine(Name + " has a smug look on his face as he looks at you.\n");
 
-            UI.WriteLine("\"Ha ha ha! I told you " + Overworld.Player.StartingPokemon + " is a weak Pokemon! ");
+            UI.WriteLine("\"Ha ha ha! I told you " + Game.StarterPokemon + " is a weak Pokemon! ");
             UI.WriteLine(" My " + Party.ElementAt(0).Name + " was clearly stronger!\"");
         }
 

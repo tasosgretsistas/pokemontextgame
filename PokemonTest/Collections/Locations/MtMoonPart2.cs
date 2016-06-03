@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class MtMoonPart2 : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         public MtMoonPart2()
@@ -37,10 +36,10 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Zubat and Geodude.
-            int level = random.Next(8, 11);
+            int level = Program.random.Next(8, 11);
 
             Pokemon pokemon;
 
@@ -71,7 +70,7 @@ namespace PokemonTextEdition.Locations
         public override void GoEast()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //70% probability that the player will encounter a wild Pokemon.
             if (encounter <= 7)

@@ -10,9 +10,6 @@ namespace PokemonTextEdition.Engine
     /// </summary>
     class Overworld
     {
-        //This object represents the player globally - most classes and methods will call this player.
-        public static Player Player;
-
         //An object that represents the player's current location.
         public static Location CurrentLocation; 
 
@@ -139,7 +136,7 @@ namespace PokemonTextEdition.Engine
 
                 case "player":
                 case "p":
-                    Player.PlayerInfo();
+                    ShowPlayerInfo();
 
                     Options();
 
@@ -147,7 +144,7 @@ namespace PokemonTextEdition.Engine
 
                 case "status":
                 case "s":
-                    Player.PartyStatus();
+                    ShowPartyInfo();
 
                     Options();
 
@@ -155,7 +152,7 @@ namespace PokemonTextEdition.Engine
 
                 case "switch":
                 case "w":
-                    Player.SwitchAround();
+                    Game.Player.SwitchAround();
 
                     Options();
 
@@ -163,7 +160,7 @@ namespace PokemonTextEdition.Engine
 
                 case "items":
                 case "i":
-                    Player.ItemsMain();
+                    Game.Player.ItemsMain();
 
                     Options();
 
@@ -210,6 +207,16 @@ namespace PokemonTextEdition.Engine
             UI.WriteLine("\"(i)tems\" - displays the contents of your bag and allows you to use items.");
             UI.WriteLine("\"s(a)ve\" - saves your progress in the game.");
             UI.WriteLine("");
+        }
+
+        static void ShowPlayerInfo()
+        {
+            UI.WriteLine("Your information:\n" + Game.Player.PrintInfo());            
+        }
+
+        static void ShowPartyInfo()
+        {
+            UI.WriteLine("Your party's status:\n" + Game.Player.PrintPartyStatus());
         }
     
     }

@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class Route3E : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         public Route3E()
@@ -37,13 +36,13 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Nidoran♀ and Nidoran♂.
-            int level = random.Next(6, 9);
+            int level = Program.random.Next(6, 9);
 
             //The level range for Spearow and Pidgey.
-            int level2 = random.Next(7, 10); 
+            int level2 = Program.random.Next(7, 10); 
 
             Pokemon pokemon;
 

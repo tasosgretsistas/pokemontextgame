@@ -25,7 +25,7 @@ namespace PokemonTextEdition.NPCs
 
         public override void Defeat(Player player)
         {
-            player.badgeList.Add("Boulder Badge");
+            player.Badges.Add("Boulder Badge");
             base.Defeat(player);            
         }
     }

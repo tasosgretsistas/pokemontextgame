@@ -1,5 +1,6 @@
 ﻿using PokemonTextEdition.Collections;
 using PokemonTextEdition.Engine;
+using PokemonTextEdition.Items;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +44,7 @@ namespace PokemonTextEdition.Classes
 
         #region Battle Properties
 
-        //These are the crucial attributes of the Battle class.
-
-        /// <summary>
-        /// The random number generator that all functions that require randomness will use.
-        /// </summary>
-        Random random = new Random();       
+        //These are the crucial attributes of the Battle class.    
 
         /// <summary>
         /// Determines the type of the encounter, i.e. EncounterType.Wild or EncounterType.Trainer.
@@ -198,7 +194,7 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         protected Battle()
         {
-            Player = Overworld.Player;
+            Player = Game.Player;
 
             PlayerAction = BattleAction.None;
             EnemyAction = BattleAction.None;
@@ -360,7 +356,7 @@ namespace PokemonTextEdition.Classes
             {
                 Program.Log("There was a speed tie between the two Pokemon, which will be resolved using a random number generator.", 1);
 
-                if (random.Next(0, 2) == 0)
+                if (Program.random.Next(0, 2) == 0)
                     return PlayerPokemon;
 
                 else
@@ -544,7 +540,7 @@ namespace PokemonTextEdition.Classes
         {
             Program.Log("The player chooses to switch Pokemon.", 0);
 
-            UI.WriteLine("Send out which Pokemon?\n(Valid input: 1-" + Player.party.Count + ", or press Enter to return.)\n");
+            UI.WriteLine("Send out which Pokemon?\n(Valid input: 1-" + Player.Party.Count + ", or press Enter to return.)\n");
 
             //The player is asked to select a Pokemon from his party.
             Pokemon pokemon = Player.SelectPokemon(false);
@@ -610,7 +606,7 @@ namespace PokemonTextEdition.Classes
                 int escapeFactor = (((PlayerPokemon.Speed * 32) / (EnemyPokemon.Speed / 4)) + 30) * EscapeAttempts;
 
                 //Then, a random number between 0 and 255 is rolled.
-                int chanceToEscape = random.Next(0, 256);
+                int chanceToEscape = Program.random.Next(0, 256);
 
                 //If the player's escape factor is higher than 255 or than the chanceToEscape number, the player succesfully escapes.
                 if (escapeFactor > 255 || escapeFactor > chanceToEscape)
@@ -654,25 +650,30 @@ namespace PokemonTextEdition.Classes
             if (EncounterType == BattleType.Wild)
             {
                 //Then, it checks to see if the player has any remaining Poke Balls. If he does, one of them is used up.
-                if (Player.items.Contains(Player.items.Find(i => i.Type == ItemType.Pokeball)))
+                if (Player.Bag.Contains(Player.Bag.Find(i => i.BaseItem.Type == ItemType.Pokeball)))
                 {
+                    ItemInstance pokeball = Player.Bag.Find(i => i.BaseItem.Type == ItemType.Pokeball);
+
                     PlayerAction = BattleAction.Catch;
 
                     PlayerPokemon.MoveLock = false;
 
-                    Player.items.Find(i => i.Type == ItemType.Pokeball).Remove(1, RemoveType.Throw);
+                    Player.Remove(pokeball.BaseItem, 1, RemoveType.Throw);
+                    
+                    UI.WriteLine("Threw a Poke Ball (" + pokeball.Count + " left) at the wild " + EnemyPokemon.Name + "! 1, 2, 3...");
 
-                    UI.WriteLine("Threw a Poke Ball (" + ItemList.pokeball.Count + " left) at the wild " + EnemyPokemon.Name + "! 1, 2, 3...");
+                    //The enemy Pokemon's life percentage.
+                    float life = (float)EnemyPokemon.PercentLife();
 
-                    float life = (float)EnemyPokemon.PercentLife(); //The enemy Pokemon's life percentage.
-                    float ballBonus = 1; //Each specific PokeBall's catch rate multiplier. (NYI)
+                    //Each specific PokeBall's catch rate multiplier. (NYI)
+                    float ballBonus = 1; 
 
                     //First, the chance to catch the Pokemon is calculated, using its current HP %, its individual catch rate, and the bonus multiplier from the PokeBall used.
                     //The result is a number ranging from 13 to 79, times ballBonus and divided by pokemon.CatchRate. This number expresses the % chance to catch the Pokemon.
                     float catchRate = ((100 - life) + ((life - 60) / 3f)) * ballBonus / EnemyPokemon.species.CatchRate;
 
                     //Then, a random number between 0 and 100 is rolled.
-                    int chance = random.Next(1, 101);
+                    int chance = Program.random.Next(1, 101);
 
                     //If the randomly generated number is smaller than the calculated catch rate, the Pokemon is caught.
                     if (catchRate > chance)
@@ -815,7 +816,7 @@ namespace PokemonTextEdition.Classes
                 {
                     // 10% 5, 10% 4, 40% 3, 40% 2
 
-                    int hitsRNG = random.Next(1, 101);
+                    int hitsRNG = Program.random.Next(1, 101);
 
                     if (CurrentMove.EffectCoefficient == 5 && hitsRNG <= 40)
                         numberOfHits = 5;
@@ -851,11 +852,11 @@ namespace PokemonTextEdition.Classes
                     }
 
                     //Next the game calculates if the attack will be a critical hit.
-                    int critical = random.Next(1, 101);
+                    int critical = Program.random.Next(1, 101);
 
                     //If the randomly rolled number is smaller than the probability of a critical hit, the attack is a critical hit.
-                    if (critical <= Settings.Battle_CriticalStrikeChance ||
-                        CurrentMove.Effect == MoveEffect.IncreasedCritChance && critical <= (Settings.Battle_CriticalStrikeChance * CurrentMove.EffectCoefficient))
+                    if (critical <= Settings.CriticalHitChance ||
+                        CurrentMove.Effect == MoveEffect.IncreasedCritChance && critical <= (Settings.CriticalHitChance * CurrentMove.EffectCoefficient))
                     {
                         Program.Log("The attack was a critical hit.", 0);
 
@@ -863,7 +864,7 @@ namespace PokemonTextEdition.Classes
 
                         damageText += " * 1.2 Crit";
 
-                        damageMultiplier *= Settings.Battle_CriticalStrikeDamageMultiplier;
+                        damageMultiplier *= Settings.CriticalHitDamageMultiplier;
                     }
 
                     //This code simply makes wild Pokemon do 20% less damage. But one day, they'll turn against us!
@@ -1009,7 +1010,7 @@ namespace PokemonTextEdition.Classes
         bool HitCheck()
         {
             //If the attack's accuracy is lower than a randomly generated number or the move has perfect accuracy, the attack hits.
-            if (CurrentMove.PerfectAccuracy || random.Next(1, 101) <= CurrentMove.Accuracy)
+            if (CurrentMove.PerfectAccuracy || Program.random.Next(1, 101) <= CurrentMove.Accuracy)
             {
                 return true;
             }
@@ -1036,7 +1037,7 @@ namespace PokemonTextEdition.Classes
             if (AttackingPokemon.Status == StatusCondition.Paralysis)
             {
                 //If a randomly generated number is lower than the chance to attack, the Pokemon attacks succesfully.
-                if (random.Next(1, 101) <= Settings.Battle_ParalysisAttackChance)
+                if (Program.random.Next(1, 101) <= Settings.ParalysisAttackChance)
                     return true;
 
                 //Otherwise, the Pokemon is prevented from attacking and is no longer move-locked, if it was.
@@ -1169,7 +1170,7 @@ namespace PokemonTextEdition.Classes
                 Program.Log("The user was battling a trainer so he received money. The trainer's defeat speech plays.", 0);
 
                 Player.Money += EnemyTrainer.Money;
-                EnemyTrainer.Defeat(Overworld.Player);
+                EnemyTrainer.Defeat(Game.Player);
             }
 
             else if (EncounterType == BattleType.Wild)
@@ -1197,10 +1198,10 @@ namespace PokemonTextEdition.Classes
 
             //If the player was battling a trainer, the trainer's victory speech plays.
             if (EncounterType == BattleType.Trainer)
-                EnemyTrainer.Victory(Overworld.Player);
+                EnemyTrainer.Victory(Game.Player);
 
             else if (EncounterType == BattleType.Wild)
-                Player.BlackOut();
+                Game.BlackOut();
         }
 
         #endregion               
@@ -1213,7 +1214,7 @@ namespace PokemonTextEdition.Classes
         /// <returns>True if the player's party contains a non-fainted Pokemon, or false if it does not.</returns>
         bool PlayerCanBattle()
         {
-            if (Player.party.Exists(p => !p.Fainted))
+            if (Player.Party.Exists(p => !p.Fainted))
                 return true;
 
             else
@@ -1229,12 +1230,12 @@ namespace PokemonTextEdition.Classes
             if (PlayerCanBattle())
             {
                 //If so, it loops over the entire party until it finds the first Pokemon that's not fainted.
-                for (int i = 0; i < Player.party.Count; i++)
+                for (int i = 0; i < Player.Party.Count; i++)
                 {
-                    if (!Player.party.ElementAt(i).Fainted)
+                    if (!Player.Party.ElementAt(i).Fainted)
                     {
                         //That Pokemon then gets sent out and the operation terminates.
-                        PlayerChangePokemon(Player.party.ElementAt(i));
+                        PlayerChangePokemon(Player.Party.ElementAt(i));
 
                         break;
                     }
@@ -1311,7 +1312,7 @@ namespace PokemonTextEdition.Classes
             {
                 Program.Log("The player has remaining healthy Pokemon.", 0);
 
-                UI.WriteLine("Send out which Pokemon?(Valid input: 1-" + Player.party.Count + ")");
+                UI.WriteLine("Send out which Pokemon?(Valid input: 1-" + Player.Party.Count + ")");
 
                 Pokemon pokemon = Player.SelectPokemon(true);
 
@@ -1365,7 +1366,7 @@ namespace PokemonTextEdition.Classes
         {
             //If the AI's Pokemon is not locked into a move, it picks a random move.
             if (!EnemyPokemon.MoveLock)
-                EnemyMove = EnemyPokemon.knownMoves.ElementAt(random.Next(0, EnemyPokemon.knownMoves.Count));
+                EnemyMove = EnemyPokemon.knownMoves.ElementAt(Program.random.Next(0, EnemyPokemon.knownMoves.Count));
 
             //If it is locked into a move, it simply uses that move again.
             else
@@ -1495,7 +1496,7 @@ namespace PokemonTextEdition.Classes
         /// </summary>
         void BattleFinished()
         {
-            foreach (Pokemon p in Player.party)
+            foreach (Pokemon p in Player.Party)
                 p.ResetTemporaryEffects(true);
 
             if (EncounterType == BattleType.Trainer)
@@ -1606,7 +1607,7 @@ namespace PokemonTextEdition.Classes
         {
             Program.Log("Effect resolution takes place.", 0);
 
-            int chance = random.Next(1, 101);
+            int chance = Program.random.Next(1, 101);
 
             if (CurrentMove.SecondaryEffect)
                 Program.Log(CurrentMove.Name + " has a secondary effect, which will now be resolved. (Coefficient: " + CurrentMove.EffectCoefficient + ", Roll: " + chance + ")", 1);
@@ -1677,7 +1678,7 @@ namespace PokemonTextEdition.Classes
                     {
                         if (DefendingPokemon.Status == StatusCondition.None)
                         {
-                            int sleepRNG = random.Next(1, 101);
+                            int sleepRNG = Program.random.Next(1, 101);
 
                             //The amount of turns that the Pokemon will sleep for.
                             int turns;

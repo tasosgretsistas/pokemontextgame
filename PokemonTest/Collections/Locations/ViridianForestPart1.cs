@@ -7,7 +7,6 @@ namespace PokemonTextEdition.Locations
 {
     class ViridianForestPart1 : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
         
 
@@ -39,7 +38,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Trainer()
         { 
-            if (nick.HasBeenDefeated(Overworld.Player))      
+            if (nick.HasBeenDefeated(Game.Player))      
                 nickr.Encounter();            
 
             else  
@@ -49,13 +48,13 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Caterpie, Weedle and Pidgey.
-            int level = random.Next(3, 6);
+            int level = Program.random.Next(3, 6);
 
             //The level range for Metapod and Kakuna.
-            int level2 = random.Next(4, 7);             
+            int level2 = Program.random.Next(4, 7);             
 
             Pokemon pokemon;
 
@@ -85,7 +84,7 @@ namespace PokemonTextEdition.Locations
         public override void GoNorth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //60% probability that the player will encounter a wild Pokemon.
             if (encounter <= 6)
@@ -113,7 +112,7 @@ namespace PokemonTextEdition.Locations
             UI.AnyKey();
 
             //If the player has not defeated Nick before, he has to battle him.
-            if (!nick.HasBeenDefeated(Overworld.Player))
+            if (!nick.HasBeenDefeated(Game.Player))
             {
                 UI.WriteLine("Right as you take your first step into the innermost part of the forest,\n" +
                              "you hear something behind you. It's a little kid with a bug-catching net.\n\n" +
@@ -128,7 +127,7 @@ namespace PokemonTextEdition.Locations
         public override void GoSouth()
         {
             //Determines if the player will encounter a wild Pokemon while traversing this zone.
-            int encounter = random.Next(1, 11);
+            int encounter = Program.random.Next(1, 11);
 
             //50% probability that the player will encounter a wild Pokemon.
             if (encounter <= 5)

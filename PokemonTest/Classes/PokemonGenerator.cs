@@ -1,4 +1,5 @@
 ﻿using PokemonTextEdition.Collections;
+using PokemonTextEdition.Engine;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +7,6 @@ namespace PokemonTextEdition.Classes
 {
     class PokemonGenerator
     {
-        Random random = new Random();
-
         /// <summary>
         /// Creates a Pokemon with no IVs. This method should only be used by other create methods as it is mandatory for Pokemon to have IVs.
         /// </summary>
@@ -60,12 +59,12 @@ namespace PokemonTextEdition.Classes
 
             //This code gives the Pokemon random Individual Values, ranging from 0 to 31.  
             //These are later factored into the equation that determines the Pokemon's stats.
-            pokemon.HPIV = random.Next(0, 32);
-            pokemon.AttackIV = random.Next(0, 32);
-            pokemon.DefenseIV = random.Next(0, 32);
-            pokemon.SpecialAttackIV = random.Next(0, 32);
-            pokemon.SpecialDefenseIV = random.Next(0, 32);
-            pokemon.SpeedIV = random.Next(0, 32);
+            pokemon.HPIV = Program.random.Next(0, 32);
+            pokemon.AttackIV = Program.random.Next(0, 32);
+            pokemon.DefenseIV = Program.random.Next(0, 32);
+            pokemon.SpecialAttackIV = Program.random.Next(0, 32);
+            pokemon.SpecialDefenseIV = Program.random.Next(0, 32);
+            pokemon.SpeedIV = Program.random.Next(0, 32);
             
             //Finally, the Pokemon gets healed to full life, and is returned to the calling method.
             pokemon.CurrentHP = pokemon.MaxHP;

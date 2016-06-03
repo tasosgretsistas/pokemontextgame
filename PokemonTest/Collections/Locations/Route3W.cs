@@ -8,7 +8,6 @@ namespace PokemonTextEdition.Locations
 {
     class Route3W : Location
     {
-        Random random = new Random();
         PokemonGenerator generator = new PokemonGenerator();
 
         Trainer lenny = TrainerList.AllTrainers.Find(t => t.TrainerID == 8);
@@ -48,7 +47,7 @@ namespace PokemonTextEdition.Locations
 
         public override void Trainer()
         {
-            if (mandy.HasBeenDefeated(Overworld.Player))
+            if (mandy.HasBeenDefeated(Game.Player))
             {
                 UI.WriteLine("Which trainer would you like to have a rematch with?\n" +
                              "(Available trainers: Lenny, Timmy, Mina, Mandy)");
@@ -90,13 +89,13 @@ namespace PokemonTextEdition.Locations
         public override void Encounter()
         {
             //Determines which Pokemon the player will encounter.
-            int species = random.Next(1, 101);
+            int species = Program.random.Next(1, 101);
 
             //The level range for Nidoran♀ and Nidoran♂.
-            int level = random.Next(5, 8);
+            int level = Program.random.Next(5, 8);
 
             //The level range for Spearow and Pidgey.
-            int level2 = random.Next(6, 9);
+            int level2 = Program.random.Next(6, 9);
 
             Pokemon pokemon;
 
@@ -139,10 +138,10 @@ namespace PokemonTextEdition.Locations
             UI.AnyKey();            
 
             //First set of trainers.
-            if (!timmy.HasBeenDefeated(Overworld.Player))
+            if (!timmy.HasBeenDefeated(Game.Player))
             {
                 //If the player has not defeated Lenny before, he has to battle him.
-                if (!lenny.HasBeenDefeated(Overworld.Player))
+                if (!lenny.HasBeenDefeated(Game.Player))
                 {
                     UI.WriteLine("The first trainer to walk up to you is a little kid who's holding a school bag.\n" +
                                  "He doesn't look too strong, but if he's here, he's beaten the Pewter Gym, so he\n" +
@@ -159,7 +158,7 @@ namespace PokemonTextEdition.Locations
 
                 UI.WriteLine("Another kid with a schoolbag walks up to you, but this one looks less confident\n" +
                              "than the previous one. You have learnt not to underestimate anybody though, so\n" +
-                             "you greet him with a nod and quickly grab the Pokeball containing " + Overworld.Player.party.ElementAt(0) + ".\n");
+                             "you greet him with a nod and quickly grab the Pokeball containing " + Game.Player.Party.ElementAt(0) + ".\n");
 
                 //Then, he has to battle Timmy.
                 timmy.Encounter();
@@ -176,10 +175,10 @@ namespace PokemonTextEdition.Locations
             }
 
             //Second set of trainers.
-            if (!mandy.HasBeenDefeated(Overworld.Player))
+            if (!mandy.HasBeenDefeated(Game.Player))
             {
                 //If the player has not defeated Mina before, he has to battle her.
-                if (!mina.HasBeenDefeated(Overworld.Player))
+                if (!mina.HasBeenDefeated(Game.Player))
                 {
                     UI.WriteLine("A teenage girl walks up to you this time. She has an aura of confidence to her,\n" +
                                  "one that tells you that you should by no means underestimate her. After all,\n" +

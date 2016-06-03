@@ -54,10 +54,10 @@ namespace PokemonTextEdition.Items
         {
             Program.Log("The player is trying to use a " + Name + ".", 0);
 
-            UI.WriteLine("Use " + Name + " on which Pokemon?\n(Valid input: 1-" + Overworld.Player.party.Count +  " or press Enter to return)\n");
+            UI.WriteLine("Use " + Name + " on which Pokemon?\n(Valid input: 1-" + Game.Player.Party.Count +  " or press Enter to return)\n");
 
             //First, the player is asked to select a Pokemon in his party.
-            Pokemon pokemon = Overworld.Player.SelectPokemon(false);
+            Pokemon pokemon = Game.Player.SelectPokemon(false);
 
             //If the player's input was valid, the operation carries on.
             if (pokemon != null)
@@ -65,8 +65,9 @@ namespace PokemonTextEdition.Items
                 //If the Pokemon the user selected is alive and not at full life, then...
                 if (!pokemon.Fainted && pokemon.CurrentHP < pokemon.MaxHP)
                 {
+                    // [FIX]
                     //One of this item is removed from the player's bag.
-                    Remove(1, RemoveType.Use);
+                    //Remove(1, RemoveType.Use);
 
                     //Then, the Pokemon gets healed for the HealAmount.
                     int previousHP = pokemon.CurrentHP;
