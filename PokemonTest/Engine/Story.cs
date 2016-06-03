@@ -154,9 +154,9 @@ namespace PokemonTextEdition.Engine
             {
                 UI.WriteLine("Select the Pokemon you wish to start your adventure with!\n");
 
-                UI.WriteLine("[B] - Bulbasaur, the Grass Pokemon. High Special Attack and Special Defense.");
-                UI.WriteLine("[C] - Charmander, the Fire Pokemon. High Special Attack and Speed.");
-                UI.WriteLine("[S] - Squirtle, the Water Pokemon. High Defense and Special Defense.");
+                UI.WriteLine("[B] - Bulbasaur, the Grass Pokemon. An all-around balanced Pokemon.");
+                UI.WriteLine("[C] - Charmander, the Fire Pokemon. A relatively fragile attacker.");
+                UI.WriteLine("[S] - Squirtle, the Water Pokemon. A defensively strong Pokemon.");
 
                 string selection = UI.ReceiveKey();
 

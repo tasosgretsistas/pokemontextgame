@@ -91,7 +91,7 @@ namespace PokemonTextEdition.Classes
         {
             PlayerID = Program.random.Next(1, 10001);
 
-            Name = "Red";
+            Name = Settings.DefaultPlayerName;
             Money = 500;
         }
 

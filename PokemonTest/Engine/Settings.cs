@@ -48,6 +48,9 @@ namespace PokemonTextEdition.Engine
         /// </summary>
         public static ConsoleColor Program_FontColor = ConsoleColor.Yellow;
 
+        public const string DefaultPlayerName = "Red";
+        public const string DefaultRivalName = "Blue"; 
+
         #region Battle-related
 
         /// <summary>

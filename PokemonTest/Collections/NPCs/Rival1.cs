@@ -9,7 +9,7 @@ namespace PokemonTextEdition.NPCs
     {
         public Rival1() :base()
         {
-            Name = "Blue";
+            Name = Settings.DefaultRivalName;
             Type = "Pokemon Trainer";
 
             Party = new List<Pokemon> {  };

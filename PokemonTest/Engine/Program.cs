@@ -70,7 +70,7 @@ namespace PokemonTextEdition.Engine
         {
             Game.Player = new Player();
 
-            UI.WriteLine("By default the player will be named \"" + Game.Player.Name + "\" and the rival \"" + Story.rival.Name + "\".\n");
+            UI.WriteLine("By default the player will be named \"" + Settings.DefaultPlayerName + "\" and the rival \"" + Settings.DefaultRivalName + "\".\n");
 
             Story.SelectPokemon();
         }
